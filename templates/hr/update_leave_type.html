@@ -1,0 +1,39 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<style>
+  /* Error message style */
+  .error-message {
+    color: red;
+    display: none;
+  }
+</style>
+
+<div class="card p-3 shadow-md bg-light">
+  <h3 class="text-dark mt-1 text-center">Update Leave Type</h3>
+  <hr>
+  <form method="post" class="leave-type-form">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-4">
+        <label for="leave_type_name">Leave Type Name</label>
+        <input type="text" name="leave_type_name" id="leave_type_name" value="{{ leave_type.leave_type_name }}"
+          class="form-control" pattern="[A-Za-z\s]+" title="Please enter a valid leave type. Only letters and spaces are allowed." required>
+      </div>
+      <div class="col-md-4">
+        <label for="year">Year</label>
+        <input type="number" name="year" id="year" value="{{ leave_type.year }}" class="form-control"
+          required>
+      </div>
+      <div class="col-md-4">
+        <label for="quantity">Quantity</label>
+        <input type="number" name="quantity" id="quantity" value="{{ leave_type.quantity }}"
+          class="form-control" required>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Update Leave Type</button>
+  </form>
+</div>
+
+
+{% endblock %}

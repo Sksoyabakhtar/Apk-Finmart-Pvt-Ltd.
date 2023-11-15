@@ -1,0 +1,80 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>General Insurance</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+    </head>
+    <body>
+        <div class="card p-3">
+            <h3 class="text-dark mt-3 text-center">General Insurance</h3>
+            <hr><br>
+            <form method="post" action="{% url 'add_general_insurance' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Investor Name -->
+                    <div class="col-md-3">
+                        <label for="investor_name" class="form-label">Investor Name</label>
+                        <input type="text" id="investor_name" name="investor_name" class="form-control" required>
+                    </div>
+                    <!-- PAN No. -->
+                    <div class="col-md-3">
+                        <label for="pan_number" class="form-label">PAN No.</label>
+                        <input type="text" id="pan_number" name="pan_number" class="form-control" required>
+                    </div>
+                    <!-- Date Of Birth -->
+                    <div class="col-md-3">
+                        <label for="date_of_birth" class="form-label">Date Of Birth</label>
+                        <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" required>
+                    </div>
+                    <!-- Email -->
+                    <div class="col-md-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- Mobile -->
+                    <div class="col-md-3">
+                        <label for="mobile" class="form-label">Mobile</label>
+                        <input type="text" id="mobile" name="mobile" class="form-control" required>
+                    </div>
+                    <!-- Category -->
+                    <div class="col-md-3">
+                        <label for="category" class="form-label">Category</label><br>
+                        <input type="text" id="category" name="category" class="form-control" required>
+                    </div>
+                    <!-- Company Name -->
+                    <div class="col-md-3">
+                        <label for="company_name" class="form-label">Company Name</label>
+                        <input type="text" id="company_name" name="company_name" class="form-control" required>
+                    </div>
+                    <!-- Frequency -->
+                    <div class="col-md-3">
+                        <label for="frequency" class="form-label">Frequency</label>
+                        <input type="text" id="frequency" name="frequency" class="form-control" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- Nominee -->
+                    <div class="col-md-3">
+                        <label for="nominee" class="form-label">Nominee</label>
+                        <input type="text" id="nominee" name="nominee" class="form-control" required>
+                    </div>
+                    <!-- Amount -->
+                    <div class="col-md-3">
+                        <label for="amount" class="form-label">Amount</label><br>
+                        <input type="text" id="amount" name="amount" class="form-control" required>
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                <a href="{% url 'query_management' %}" class="btn btn-secondary" style="border-radius: 4px;">Back</a>
+            </form>
+        </div>
+    </body>
+{% endblock %}

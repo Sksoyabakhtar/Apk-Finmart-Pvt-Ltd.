@@ -1,0 +1,453 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Purchase Return</title>
+    <style>
+        /* Your custom CSS styles here */
+        /* ... */
+
+        /* Add your custom CSS styles here */
+        .error-message {
+            color: red;
+            margin-top: 5px;
+            font-weight: bold;
+        }   
+        .error-message-cell.error {
+            color: red;
+            font-weight: bold;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .a{
+            max-width: 88%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .add-product-button {
+            margin-top: 10px;
+        }
+
+        .delete-product-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+
+        .total-price-input {
+            background-color: #f1f1f1;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Add shadow to all fields */
+        input, select {
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Change color of "Add Product" button */
+        .add-product-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px; 
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            height: 40px;
+        }
+
+        /* Change color of "Submit" button */
+        button[type="submit"] {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>New Purchase Return</h1>
+
+    <!-- Supplier Details -->
+    <h2>Supplier Details</h2>
+    <form  action="{% url 'new_purchase_return' %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <label for="invoice_no">Invoice Number:</label>
+                <input class="a" type="text" id="invoice_no" name="invoice_no" required>
+                <label for="supplier_name">Supplier Name:</label>
+                <input class="a" type="text" id="supplier_name" name="supplier_name" required>
+
+                <label for="phone_number">Phone Number:</label>
+                <input class="a" type="text" id="phone_number" name="phone_number" required>
+                <label for="address">Address:</label>
+                <textarea class="a" id="address" name="address" rows="2" required></textarea>
+            </div>
+            <div class="col-md-6">
+
+                <label for="date">Purchase Date:</label>
+                <input class="a" type="date" id="date" name="purchase_date" style="width: 550px; border-radius: 8px; height: 35px;" required>
+                <label for="email">Email:</label>
+                <input class="a" type="email" id="email" name="email">
+
+                <label for="gstin">GSTIN No:</label>
+                <input class="a" type="text" id="gstin" name="gstin">
+
+                <label for="date">Return Date:</label>
+                <input class="a" type="date" id="date" name="return_date" style="width: 550px; border-radius: 8px; height: 35px;">
+            </div>
+        </div>
+
+        <!-- Product Details -->
+        <h2>Product Details</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Stock</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                    <th>GST</th>
+                    <th>GST Price</th>
+                    <th>IGST</th>
+                    <th>IGST Price</th>
+                    <th>Total Price</th>
+                    <th>purchased Quantity</th>
+                    <th></th>
+                    
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="product_table_body">
+                <tr>
+                    <td>
+                        <select name="inventory[]" required onchange="getAvailableQuantity(this)">
+                            <option value="">Select Stock</option>
+                            {% for inventory in inventories %}
+                                <option value="{{ inventory.id }}">{{ inventory.product_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="number" name="price[]" required></td>
+                    <td><input type="number" name="quantity[]" required></td>
+                    <td><input type="number" name="amount[]" required></td>
+                    <td><input type="number" name="gst[]" required></td>
+                    <td><input type="text" name="gstprice[]" required></td>
+                    <td><input type="number" name="igst[]" required></td>
+                    <td><input type="text" name="igstprice[]" required></td>
+                    <td><input type="number" name="total_price[]" required readonly></td>
+                    <td class="available-quantity-cell">
+                        <!-- Placeholder for displaying available quantity -->
+                    </td>
+                    <td class="error-message-cell">
+                        <!-- Placeholder for displaying error message -->
+                    </td>
+                    <td><button type="button" class="delete-product-button">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" class="add-product-button">Add Product</button>
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="success_message" class="hidden success-message">
+        Purchase Return created successfully.
+    </div>
+
+    <!-- JavaScript code remains the same as in the Sale Return page -->
+    <script>
+        // Function to add a new row for adding product
+        function addProductRow() {
+            var tableBody = document.getElementById("product_table_body");
+            var newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>
+                    <select name="inventory[]" required onchange="getAvailableQuantity(this)">
+                        <option value="">Select Stock</option>
+                        {% for inventory in inventories %}
+                            <option value="{{ inventory.id }}">{{ inventory.product_name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td><input type="number" name="price[]" required></td>
+                <td><input type="number" name="quantity[]" required></td>
+                <td><input type="number" name="amount[]" required></td>
+                <td><input type="number" name="gst[]" required></td>
+                <td><input type="text" name="gstprice[]" required></td>
+                <td><input type="number" name="igst[]" required></td>
+                <td><input type="text" name="igstprice[]" required></td>
+                <td><input type="number" name="total_price[]" required readonly></td>
+                <td class="available-quantity-cell">
+                    <!-- Placeholder for displaying available quantity -->
+                </td>
+                <td class="error-message-cell">
+                    <!-- Placeholder for displaying error message -->
+                </td>
+                <td><button type="button" class="delete-product-button">Delete</button></td>
+            `;
+            tableBody.appendChild(newRow);
+
+            // Bind the oninput event to the newly added fields for calculating Total Price
+            var priceInput = newRow.querySelector('input[name="price[]"]');
+            var quantityInput = newRow.querySelector('input[name="quantity[]"]');
+            var amountInput = newRow.querySelector('input[name="amount[]"]');
+            var gstInput = newRow.querySelector('input[name="gst[]"]');
+            var gstPriceInput = newRow.querySelector('input[name="gstprice[]"]');
+            var igstInput = newRow.querySelector('input[name="igst[]"]');
+            var igstPriceInput = newRow.querySelector('input[name="igstprice[]"]');
+            var totalPriceInput = newRow.querySelector('input[name="total_price[]"]');
+
+            var calculateTotalPrice = function() {
+                var price = parseFloat(priceInput.value);
+                var quantity = parseFloat(quantityInput.value);
+                var gstPercentage = parseFloat(gstInput.value) / 100;
+                var igstPercentage = parseFloat(igstInput.value) / 100;
+
+                var amount = price * quantity;
+                var gstPrice = (amount * gstPercentage);
+                var igstPrice = (amount * igstPercentage);
+
+                amountInput.value = amount.toFixed(2);
+                gstPriceInput.value = gstPrice.toFixed(2);
+                igstPriceInput.value = igstPrice.toFixed(2);
+
+                var totalPrice = amount + gstPrice + igstPrice;
+                totalPriceInput.value = totalPrice.toFixed(2);
+            };
+
+            priceInput.addEventListener('input', calculateTotalPrice);
+            quantityInput.addEventListener('input', calculateTotalPrice);
+            gstInput.addEventListener('input', calculateTotalPrice);
+            igstInput.addEventListener('input', calculateTotalPrice);
+
+            // Bind the onchange event to the newly added quantity field for validating available quantity
+            quantityInput.addEventListener('change', validateQuantity);
+
+            calculateTotalPrice();
+        }
+
+        // Function to delete a product row
+        function deleteProductRow(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        // Bind click event to add product button
+        var addProductButton = document.querySelector(".add-product-button");
+        addProductButton.addEventListener("click", addProductRow);
+
+        // Bind click event to delete product buttons
+        var tableBody = document.getElementById("product_table_body");
+        tableBody.addEventListener("click", function(event) {
+            if (event.target.classList.contains("delete-product-button")) {
+                deleteProductRow(event.target);
+            }
+        });
+
+        // Function to get available quantity using AJAX
+        function getAvailableQuantity(selectElement) {
+            var stockId = selectElement.value;
+            var availableQuantityCell = selectElement.parentNode.parentNode.querySelector('.available-quantity-cell');
+            var quantityInput = selectElement.parentNode.parentNode.querySelector('input[name="quantity[]"]');
+            var errorCell = selectElement.parentNode.parentNode.querySelector('.error-message-cell');
+
+            // Make an AJAX request to fetch the available quantity
+            $.ajax({
+                url: '{% url 'get_available_quantity_purchase_return' %}',
+                type: 'GET',
+                data: {
+                    'stock_id': stockId
+                },
+                success: function(response) {
+                    // Update the available quantity in the table cell
+                    availableQuantityCell.textContent = response.available_quantity;
+                    // Check if the selected quantity is greater than the available quantity
+                    var selectedQuantity = parseFloat(quantityInput.value);
+                    var availableQuantity = parseFloat(response.available_quantity);
+                    if (selectedQuantity > availableQuantity) {
+                        errorCell.textContent = "Quantity exceeds available quantity";
+                    } else {
+                        errorCell.textContent = "";
+                    }
+                    calculateTotalPrice();
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // Function to calculate the total price
+        function calculateTotalPrice() {
+            var priceInputs = document.querySelectorAll('input[name="price[]"]');
+            var quantityInputs = document.querySelectorAll('input[name="quantity[]"]');
+            var amountInputs = document.querySelectorAll('input[name="amount[]"]');
+            var gstInputs = document.querySelectorAll('input[name="gst[]"]');
+            var gstPriceInputs = document.querySelectorAll('input[name="gstprice[]"]');
+            var igstInputs = document.querySelectorAll('input[name="igst[]"]');
+            var igstPriceInputs = document.querySelectorAll('input[name="igstprice[]"]');
+            var totalPriceInputs = document.querySelectorAll('input[name="total_price[]"]');
+
+            for (var i = 0; i < priceInputs.length; i++) {
+                var price = parseFloat(priceInputs[i].value);
+                var quantity = parseFloat(quantityInputs[i].value);
+                var gstPercentage = parseFloat(gstInputs[i].value) / 100;
+                var igstPercentage = parseFloat(igstInputs[i].value) / 100;
+
+                var amount = price * quantity;
+                var gstPrice = (amount * gstPercentage);
+                var igstPrice = (amount * igstPercentage);
+
+                amountInputs[i].value = amount.toFixed(2);
+                gstPriceInputs[i].value = gstPrice.toFixed(2);
+                igstPriceInputs[i].value = igstPrice.toFixed(2);
+
+                var totalPrice = amount + gstPrice + igstPrice;
+                totalPriceInputs[i].value = totalPrice.toFixed(2);
+            }
+        }
+
+        function validateQuantity() {
+            var selectElement = this.parentNode.parentNode.querySelector('select[name="inventory[]"]');
+            var quantityInput = this;
+            var availableQuantityCell = this.parentNode.parentNode.querySelector('.available-quantity-cell');
+            var errorCell = this.parentNode.parentNode.querySelector('.error-message-cell');
+
+            var stockId = selectElement.value;
+            var selectedQuantity = parseFloat(quantityInput.value);
+
+            if (selectedQuantity && stockId) {
+                // Make an AJAX request to fetch the available quantity
+                $.ajax({
+                    url: '{% url 'get_available_quantity_purchase_return' %}',
+                    type: 'GET',
+                    data: {
+                        'stock_id': stockId
+                    },
+                    success: function(response) {
+                        // Update the available quantity in the table cell
+                        availableQuantityCell.textContent = response.available_quantity;
+                        var availableQuantity = parseFloat(response.available_quantity);
+
+                        if (selectedQuantity > availableQuantity) {
+                            errorCell.textContent = "Quantity exceeds available quantity";
+                            errorCell.classList.add('error');
+                        } else {
+                            errorCell.textContent = "";
+                            errorCell.classList.remove('error');
+                        }
+                        calculateTotalPrice();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            } else {
+                errorCell.textContent = "";
+                errorCell.classList.remove('error');
+                calculateTotalPrice();
+            }
+        }
+
+        // Call the calculateTotalPrice function whenever any input field is changed
+        var inputFields = document.getElementsByTagName("input");
+        for (var i = 0; i < inputFields.length; i++) {
+            inputFields[i].addEventListener("input", calculateTotalPrice);
+        }
+
+        // Bind the onchange event to the quantity field for validating available quantity
+        var quantityInputs = document.querySelectorAll('input[name="quantity[]"]');
+        for (var i = 0; i < quantityInputs.length; i++) {
+            quantityInputs[i].addEventListener('change', validateQuantity);
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

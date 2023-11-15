@@ -1,0 +1,51 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Product</title>
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    
+</head>
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Update Product</h3>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control " id="name" name="name" value="{{ investment.name }}" required>
+                </div>
+        
+                <div class="col-md-6">
+                    <label for="type">Type</label>
+                    <select class="form-control " id="type" name="type" required>
+                        <option value="Fixed Deposit" {% if investment.type == "Fixed Deposit" %}selected{% endif %}>Fixed Deposit</option>
+                        <option value="Recurring Deposit" {% if investment.type == "Recurring Deposit" %}selected{% endif %}>Recurring Deposit</option>
+                        <option value="SIP" {% if investment.type == "SIP" %}selected{% endif %}>SIP</option>
+                        <option value="Investment" {% if investment.type == "Investment" %}selected{% endif %}>Investment</option>
+                    </select>
+                </div>
+            </div><br>
+                
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="duration_of_years">Duration of Years</label>
+                    <input type="number" class="form-control" id="duration_of_years" name="duration_of_years" value="{{ investment.duration_of_years }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description" required>{{ investment.description }}</textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2">Update</button>
+            <a href="{% url 'investment_list' %}" class="btn btn-secondary mt-2">Back to Product</a>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock content %}

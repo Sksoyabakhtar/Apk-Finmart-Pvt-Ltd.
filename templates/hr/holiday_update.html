@@ -1,0 +1,71 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+  <style>
+    
+    /* Add error styles */
+    .error-message {
+      color: red;
+      display: none;
+    }
+
+    
+    
+  </style>
+
+  <div class="container w-50 shadow-lg mt-5 p-3">
+    <h1 class="page-title text-center">Update Holiday</h1>
+    <hr>
+    <form method="post" class="holiday-form" onsubmit="return validateTitle()">
+      {% csrf_token %}
+      
+      <div class="form-group">
+        <label for="company">Company:</label>
+        <select name="company" id="company" class="form-control shadow-lg" required>
+            {% for company in companies %}
+                <option value="{{ company.id }}"
+                    {% if company.id == holiday.company.id %} selected {% endif %}>
+                    {{ company.company_name }}
+                </option>
+            {% endfor %}
+        </select>
+      </div>
+    
+      <div class="form-group">
+          <label for="title" class="mt-2">Title:</label>
+          <input type="text" name="title" id="title" value="{{ holiday.title }}" class="form-control shadow-lg" required>
+          <div class="error-message" id="title-error">Please enter a valid title (only alphabets and spaces).</div>
+      </div>
+    
+      <div class="form-group">
+          <label for="start_date" class="mt-2">Start Date:</label>
+          <input type="date" name="start_date" id="start_date" value="{{ holiday.start_date }}" class="form-control shadow-lg" required>
+      </div>
+    
+      <div class="form-group">
+          <label for="finish_date" class="mt-2">Finish Date:</label>
+          <input type="date" name="finish_date" id="finish_date" value="{{ holiday.finish_date }}" class="form-control shadow-lg" required>
+      </div>
+    
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary mt-2">Update Holiday</button>
+        <a href="{% url 'holiday_list' %}" class="btn btn-dark mt-2">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function validateTitle() {
+      var title = document.getElementById('title').value;
+      var titleRegex = /^[A-Za-z\s]+$/; // Regex to allow only alphabets and spaces
+
+      if (!titleRegex.test(title)) {
+        document.getElementById('title-error').style.display = 'block';
+        return false; // Prevent form submission
+      } else {
+        document.getElementById('title-error').style.display = 'none';
+        return true; // Allow form submission
+      }
+    }
+  </script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<div class="leave-request-form shadow-lg p-3">
+    <h2 class="text-center mb-3">{{ leave_request|default:'Create' }} Leave</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="company">Company:</label>
+                    <select name="company" id="company" class="form-control shadow-lg" required>
+                        {% for company in companies %}
+                        <option value="{{ company.id }}">{{ company.company_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="department">Department:</label>
+                    <select name="department" id="department" class="form-control shadow-lg mt-2" required>
+                        {% for department in departments %}
+                        <option value="{{ department.id }}">{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" class="form-control shadow-lg mt-2" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="finish_date">Finish Date:</label>
+                    <input type="date" name="finish_date" class="form-control shadow-lg mt-2" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="employee">Employee:</label>
+                    <select name="employee" id="employee" class="form-control shadow-lg mt-2" required>
+                        {% for employee in employees %}
+                        <option value="{{ employee.id }}">{{ employee.full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="leave_type">Leave Type:</label>
+                    <select name="leave_type" id="leave_type" class="form-control shadow-lg mt-2" required>
+                        {% for leave_type in leave_types %}
+                        <option value="{{ leave_type.id }}">{{ leave_type.leave_type_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select name="status" class="form-control shadow-lg mt-2" id="status">
+                        <option value="approved">Approved</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="attachment">Attachment:</label>
+                    <input type="file" class="form-control shadow-lg mt-2" name="attachment">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="leave_reason">Leave Reason:</label>
+            <textarea name="leave_reason" class="form-control shadow-lg mt-2" rows="3" cols="50"></textarea>
+        </div>
+        
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary mt-2">Save</button>
+            <a href="{% url 'leave_request_list' %}" class="btn btn-dark mt-2">Cancel</a>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

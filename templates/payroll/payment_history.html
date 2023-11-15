@@ -1,0 +1,166 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment History</title>
+   
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark mt-3 text-center">Payment History</h3>
+        <hr><br>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black; font-weight: bold;">#</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Payslip Number</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Bank Account</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Employee</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Salary Details</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Salary Month</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Payment Date</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            <tr class="text-dark text-center">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td> <a href="#" class="text-capitalize btn btn-sm bg-dark" data-bs-toggle="modal"
+                                        data-bs-target="#view_p-historyModal"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="18" height="18" fill="white" class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                            <path
+                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                        </svg></a>
+                                    <a href="#" class="text-capitalize btn btn-sm bg-info"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white"
+                                            class="bi bi-download" viewBox="0 0 16 16">
+                                            <path
+                                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                            <path
+                                                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                                        </svg></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    </div>
+    <!-- Modal for Generate Payslip -->
+    <div class="modal fade" id="g_payslipModal" tabindex="-1" aria-labelledby="g_payslipModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="g_payslipModalLabel">Payment Info</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Basic  -->
+                                <div class="mb-3">
+                                    <label for="">Basic</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- HRA  -->
+                                <div class="mb-3">
+                                    <label for="">HRA</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- HRA  -->
+                                <div class="mb-3">
+                                    <label for="">Allowance</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- HRA  -->
+                                <div class="mb-3">
+                                    <label for="">Deduction</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Gross Salary  -->
+                                <div class="mb-3">
+                                    <label for="">Gross Salary</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Net Pay  -->
+                                <div class="mb-3">
+                                    <label for="">Net Pay</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- CTC  -->
+                                <div class="mb-3">
+                                    <label for="">CTC</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Employee EPF  -->
+                                <div class="mb-3">
+                                    <label for="">Employee EPF</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Employee ESI  -->
+                                <div class="mb-3">
+                                    <label for="">Employee ESI</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>
+{% endblock content %}

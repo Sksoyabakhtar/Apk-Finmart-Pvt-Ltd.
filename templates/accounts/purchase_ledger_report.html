@@ -1,0 +1,167 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<style>
+    /* Custom styles for the table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        border: 1px solid #afadad;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    .totals-row {
+        font-weight: bold;
+    }
+    .filter-form {
+        margin-bottom: 10px;
+    }
+
+    .filter-form input,
+    .filter-form button {
+        border-radius: 4px;
+    }
+
+    .filter-form input {
+        margin-right: 10px;
+    }
+
+   
+     /* Print media style */
+     @media print {
+            body * {
+                visibility: hidden;
+            }
+            .ledger-table, .ledger-table * {
+                visibility: visible;
+            }
+            .ledger-table {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+          /* Styles for pagination links */
+          .pagination { 
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 15px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .pagination .current {
+            background-color: rgb(77,114,222);
+            color: #fff;
+            border: 1px solid rgb(77,114,222);
+        }
+
+        .pagination span {
+            margin: 0 5px;
+            padding: 8px 15px;
+           
+            border-radius: 4px;
+            color: #333;
+            font-weight: bold;
+        }
+     
+</style>
+<h1 class="text-center mb-4">Purchase Report</h1>
+<div class="filter-form">
+<form method="GET" action="{% url 'purchase_ledger_report' %}" style="margin-bottom: 20px;">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="name_filter">Filter by Name:</label>
+            <input type="text" class="form-control shadow-lg" id="name_filter" name="name_filter" value="{{ name_filter }}">
+        </div>
+        <div class="col-md-4">
+            <label for="start_date">Start Date:</label>
+            <input type="date" class="form-control shadow-lg" id="start_date" name="start_date" value="{{ start_date }}">
+        </div>
+        <div class="col-md-4">
+            <label for="end_date">End Date:</label>
+            <input type="date" class="form-control shadow-lg" id="end_date" name="end_date" value="{{ end_date }}">
+        </div>
+    </div>
+    
+    
+    <button type="submit" class="btn btn-info mt-2">Apply</button>
+</form>
+</div>
+<div class="ledger-table">
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Particulars</th>
+        <th>Vch Type</th>
+        <th>Debit</th>
+        <th>Credit</th>
+    </tr>
+    {% for entry in ledger_entries %}
+    <tr>
+        <td>{{ entry.date }}</td>
+        <td>{{ entry.particulars }}</td>
+        <td>{{ entry.vch_type }}</td>
+        <td>{{ entry.debit }}</td>
+        <td>{{ entry.credit }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="totals-row">
+        <td>Total:</td>
+        <td></td>
+        <td></td>
+        <td>{{ total_debit }}</td>
+        <td>{{ total_credit }}</td>
+    </tr>
+    <tr class="totals-row">
+        <td>Balance:</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>{{ balance }}</td>
+    </tr>
+    <tr class="totals-row">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>{{ total_credit }}</td>
+        <td>{{ total_credit }}</td>
+    </tr>
+</table>
+</div>
+ <!-- Pagination controls -->
+ <div class="pagination justify-content-start">
+    <span class="step-links">
+        {% if ledger_entries.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ ledger_entries.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ ledger_entries.number }} of {{ ledger_entries.paginator.num_pages }}.
+        </span>
+
+        {% if ledger_entries.has_next %}
+            <a href="?page={{ ledger_entries.next_page_number }}">next</a>
+            <a href="?page={{ ledger_entries.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+    <button onclick="window.print()" class="btn btn-primary" style="border-radius: 4px; margin-left: -20px;">Print Report</button>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "admin_dashboard.html" %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    {% block content %}
+    <title>Confirm Delete</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 20px;
+            text-align: center;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        .form-actions {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #337ab7;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #ccc;
+        }
+
+        .btn:hover {
+            background-color: #23527c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container shadow-lg">
+        <h1>Confirm Delete</h1>
+
+        <p>Are you sure you want to delete the purchase with ID: {{ purchase.id }}?</p>
+
+        <form method="post" action="{% url 'delete_bill' purchase.id %}">
+            {% csrf_token %}
+            <div class="form-actions">
+                <input type="submit" value="Delete" class="btn">
+                <a href="{% url 'purchase_list' %}" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+{% endblock %}
+</html>

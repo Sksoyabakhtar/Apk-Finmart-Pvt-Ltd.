@@ -1,0 +1,150 @@
+{% extends "admin_dashboard.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block content %}
+    <title>Purchase List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+       
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        
+
+        .actions button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 8px;
+        }
+
+        .actions button:hover {
+            background-color: #45a049;
+        }
+
+        .no-purchases {
+            text-align: center;
+            font-style: italic;
+            color: #999;
+        }
+     
+    </style>
+</head>
+<body>
+    <h1 class="text-center">Purchase List</h1>
+
+    <table id="myTable" class="table bg-light table-bordered mt-2">
+        <tr>
+            <th>Bill No</th>
+            <th>Purchase Date</th>
+            <th>Supplier Details</th>
+            <th>Stock Purchased</th>
+            <th>Quantity Purchased</th>
+            <th>Total Purchased</th>
+            <th class="text-center">Actions</th>
+        </tr>
+        {% for purchase in purchases %}
+        <tr>
+            <td>{{ purchase.id }}</td>
+            <td>{{ purchase.purchase_date }}</td>
+            <td>{{ purchase.supplier.company_name }}<br>{{ purchase.supplier.phone_number }}<br>{{ purchase.supplier.gstin_number }}</td>
+            <td>
+                {% for purchase_item in purchase.purchase_items.all %}
+                    {{ purchase_item.stock.product_name }}<br>
+                {% empty %}
+                    No items purchased
+                {% endfor %}
+            </td>
+            <td>
+                {% for purchase_item in purchase.purchase_items.all %}
+                    {{ purchase_item.quantity }}<br>
+                {% empty %}
+                    -
+                {% endfor %}
+            </td>
+            <td>{{ purchase.total_price }}</td>
+            <td class="actions">
+                <a href="{% url 'view_bill' purchase.id %}"><button style="margin-top: 18px;">View Bill</button></a>
+                <a href="{% url 'delete_bill' purchase.id %}"><button style="background-color: red; margin-top: 18px;">Delete Bill</button></a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="no-purchases">No purchases found.</td>
+        </tr>
+        {% endfor %}
+        
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if purchases.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)" onclick="goToPage(1)">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)" onclick="goToPage({{ purchases.previous_page_number }})">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo; First</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+    
+            {% for num in purchases.paginator.page_range %}
+                {% if purchases.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="goToPage({{ num }})">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+    
+            {% if purchases.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)" onclick="goToPage({{ purchases.next_page_number }})">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)" onclick="goToPage({{ purchases.paginator.num_pages }})">Last &raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Last &raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <script>
+        function goToPage(pageNumber) {
+            var urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('page', pageNumber);
+            window.location.search = urlParams.toString();
+        }
+    </script>
+    {% endblock %}
+</body>
+</html>

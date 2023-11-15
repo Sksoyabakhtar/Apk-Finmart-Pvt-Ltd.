@@ -1,0 +1,237 @@
+{% extends "user_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User CTC Structure Report</title>
+</head>
+
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">CTC Structure Report</h3>
+        <hr><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <!-- Id -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Id</label>
+                        <input type="text" class="form-control" id="" name="" value="APK_120" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Employee Name -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Name</label>
+                        <input type="text" class="form-control" id="" name="" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Month -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Month</label>
+                        <select class="form-select" id="monthFilter">
+                            <option selected value="">All</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="6">June</option>
+                            <option value="June">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data" id="salaryForm" style="display: none;">
+                <div id="myTable">
+                    <form>
+                        <div class="row mb-4">
+                            <div class="col-md-3 mb-3">
+                                <label for="">Month</label>
+                                <input type="text" style="display: none;" value="january">
+                                <label for="clientcode" class="form-label text-dark">Basic<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="basic" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Basic using only numbers." readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">HRA<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="hra" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid HRA using only numbers." readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Others<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="others" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Others using only numbers." readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Conv.<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="conv" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Conv using only numbers." readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">MAX EPF Wages<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="m_EPF" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid MAX EPF wages using only numbers." readonly
+                                    value="15000">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">MAX ESI Wages<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="m_ESI" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid MAX ESI wages using only numbers." readonly
+                                    value="21000">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">LTA<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="lta" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid LTA using only numbers." readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Medical<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="medical" aria-describedby=""
+                                    pattern="[0-9]*" title="Please enter a valid Medical using only numbers." readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Rest. Allow<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="r_allow" aria-describedby=""
+                                    pattern="[0-9]*" title="Please enter a valid Rest. Allow using only numbers."
+                                    readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Gross salary<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="g_salary" aria-describedby="" readonly
+                                    readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Net pay<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="n_pay" aria-describedby="" readonly
+                                    readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">CTC<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="ctc" aria-describedby="" readonly readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employee EPF<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="e_EPF" aria-describedby="" readonly
+                                    readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employee ESI<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="e_ESI" aria-describedby="" readonly
+                                    readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employer EPF<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="er_EPF" aria-describedby="" readonly
+                                    readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employer ESI<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="er_ESI" aria-describedby="" readonly
+                                    readonly>
+                            </div>
+                        </div>
+                    </form>
+                    <button type="button" class="btn btn-primary" id="printButton" style="border-radius: 4px;">Print
+                        Report</button>
+                </div>
+            </form>
+            <div id="noRecordsFound" style="display: none;">
+                <p>No records found for the selected month.</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // Your existing JavaScript code
+
+    // Add an event listener to the "Print Report" button
+    const printButton1 = document.getElementById('printButton');
+    printButton.addEventListener('click', function () {
+        window.print(); // Trigger the browser's print dialog
+    });
+</script>
+<style type="text/css">
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #myTable,
+        #myTable * {
+            visibility: visible;
+        }
+
+        #myTable {
+            position: absolute;
+            left: 0;
+            top: -100px;
+        }
+
+        #printButton {
+            display: none;
+        }
+    }
+</style>
+<script>
+    // Your existing JavaScript code
+
+    // Add an event listener to the "Print Report" button
+    const printButton = document.getElementById('printButton');
+    printButton.addEventListener('click', function () {
+        window.print(); // Trigger the browser's print dialog
+    });
+
+    // Get references to the form and the "No records found" message
+    const salaryForm = document.getElementById('salaryForm');
+    const noRecordsFound = document.getElementById('noRecordsFound');
+
+    // Add an event listener to the month dropdown
+    const monthFilter = document.getElementById('monthFilter');
+    monthFilter.addEventListener('change', function () {
+        const selectedMonth = monthFilter.value;
+
+        // Check if the data is available for the selected month
+        if (selectedMonth === 'January') {
+            salaryForm.style.display = 'block'; // Show the form
+            noRecordsFound.style.display = 'none'; // Hide the "No records found" message
+        } else {
+            // If data is not available, show the message and hide the form
+            salaryForm.style.display = 'none';
+            noRecordsFound.style.display = 'block';
+        }
+    });
+</script>
+
+</html>
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+
+
+<div class="container mt-5 shadow-lg p-3 w-50">
+    <h2 class="delete-leave-type-title">Delete Leave Type</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p class="delete-leave-type-message">Are you sure you want to delete the leave type "{{ leave_type.leave_type_name }}"?</p>
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+{% endblock %}

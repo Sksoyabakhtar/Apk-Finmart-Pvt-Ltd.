@@ -1,0 +1,56 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+
+<div class="card p-3 shadow-md bg-light">
+    <h3 class="text-dark mt-1 text-center">Leave Types</h3>
+    <hr><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search..." aria-label="Search"
+                        aria-describedby="search-button">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <a href="{% url 'add_leave_type' %}" class="btn btn-primary">Add Leave Type</a>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="mt-auto">
+        <div class="table-responsive">
+            <table id="myTable" class="table bg-light table-bordered">
+                <thead class="text-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Leave Type Name</th>
+                        <th>Year</th>
+                        <th>Quantity</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for leave_type in leave_types %}
+                    <tr>
+                        <td>{{ leave_type.id }}</td>
+                        <td>{{ leave_type.leave_type_name }}</td>
+                        <td>{{ leave_type.year }}</td>
+                        <td>{{ leave_type.quantity }}</td>
+                        <td>
+                            <a href="{% url 'update_leave_type' leave_type.id %}" class="btn btn-primary btn-sm mt-1">Update</a>
+                            <a href="{% url 'delete_leave_type' leave_type.id %}" class="btn btn-danger btn-sm mt-1">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No leave types available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

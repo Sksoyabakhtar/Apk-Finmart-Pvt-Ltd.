@@ -1,0 +1,80 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Health Insurance</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+    </head>
+    <body>
+        <div class="card p-3">
+            <h3 class="text-dark mt-3 text-center">Health Insurance</h3>
+            <hr><br>
+            <form method="post" action="{% url 'add_health_insurance' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Policy Holder Name -->
+                    <div class="col-md-3">
+                        <label for="policy_holder_name" class="form-label">Policy Holder Name</label>
+                        <input type="text" id="policy_holder_name" name="policy_holder_name" class="form-control" required>
+                    </div>
+                    <!-- Proposer D.O.B -->
+                    <div class="col-md-3">
+                        <label for="proposer_dob" class="form-label">Proposer D.O.B</label>
+                        <input type="date" id="proposer_dob" name="proposer_dob" class="form-control" required>
+                    </div>
+                    <!-- Proposer PAN No. -->
+                    <div class="col-md-3">
+                        <label for="proposer_pan" class="form-label">Proposer PAN No.</label>
+                        <input type="text" id="proposer_pan" name="proposer_pan" class="form-control" required>
+                    </div>
+                    <!-- Email -->
+                    <div class="col-md-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- Mobile -->
+                    <div class="col-md-3">
+                        <label for="mobile" class="form-label">Mobile</label>
+                        <input type="text" id="mobile" name="mobile" class="form-control" required>
+                    </div>
+                    <!-- Company Name -->
+                    <div class="col-md-3">
+                        <label for="company_name" class="form-label">Company Name</label>
+                        <input type="text" id="company_name" name="company_name" class="form-control" required>
+                    </div>
+                    <!-- Plan -->
+                    <div class="col-md-3">
+                        <label for="plan" class="form-label">Plan</label>
+                        <input type="text" id="plan" name="plan" class="form-control" required>
+                    </div>
+                    <!-- Frequency -->
+                    <div class="col-md-3">
+                        <label for="frequency" class="form-label">Frequency</label>
+                        <input type="text" id="frequency" name="frequency" class="form-control" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- Nominee Name -->
+                    <div class="col-md-3">
+                        <label for="nominee_name" class="form-label">Nominee Name</label>
+                        <input type="text" id="nominee_name" name="nominee_name" class="form-control" required>
+                    </div>
+                    <!-- Amount -->
+                    <div class="col-md-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="text" id="amount" name="amount" class="form-control" required>
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                <a href="{% url 'query_management' %}" class="btn btn-secondary" style="border-radius: 4px;">Back</a>
+            </form>
+        </div>
+    </body>
+{% endblock %}

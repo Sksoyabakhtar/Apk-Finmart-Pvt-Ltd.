@@ -1,0 +1,473 @@
+{% extends "admin_dashboard.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block content %}
+    <title>New Purchase</title>
+    <style>
+        /* Your CSS styles here */
+        .error-message {
+    color: red;
+    /* Add any additional styles as needed */
+}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            
+        }
+        .content {
+            background-image: url("{% static 'image/background.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            height: auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add box shadow */
+            height: 40px;
+        }
+
+        .supplier-details{
+            width: 100%;
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        
+        }
+        .product-details {
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-right: 10px;
+            margin-left: -10px;
+        }
+
+        .product-row {
+    
+    align-items: center;
+    margin-bottom: 10px;
+    
+}
+
+.product-row label {
+    flex: 0 0 120px;
+    margin-right: -20px;
+}
+
+.product-row input,
+.product-row select {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-right: 10px;
+    height: 40px;
+}
+
+.product-row .delete-product-button {
+    
+    border-radius: 8px;
+    height: 40px;
+}
+
+        .add-product-button {
+            display: inline-block;
+            background-color: RGB(0 123 255);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 3px;
+            cursor: pointer;
+            border-radius: 8px;
+            height: 40px;
+        }
+
+        .delete-product-button {
+            display: inline-block;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .delete-product-button:hover {
+            background-color: #d32f2f;
+        }
+
+        .submit-button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            border-radius: 8px;
+            height: 40px;
+        }
+
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-center">New Purchase</h1>
+
+    <form method="post" onsubmit="return validateFields()">
+        {% csrf_token %}
+
+        <!-- Supplier details section -->
+        <div class="row supplier-details">
+            <h2>Supplier Details</h2>
+        <div class="col-md-6">
+        
+            <label for="supplier">Supplier:</label>
+            <select id="supplier" name="supplier" onchange="fillSupplierDetails()">
+                <option value="">---Choose---</option>
+                
+                {% for supplier in suppliers %}
+                    <option value="{{ supplier.id }}" data-name="{{ supplier.company_name }}" data-phone="{{ supplier.phone_number }}" data-gstin="{{ supplier.gstin_number }}">{{ supplier.company_name }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="supplier_name" class="mt-3">Supplier Name:</label>
+            <input type="text" id="supplier_name" name="supplier_name" readonly>
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="purchase_date[]" required>
+        </div>
+        
+        <div class="col-md-6">
+        
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" readonly>
+            
+            <label for="gstin" class="mt-2">GSTIN:</label>
+            <input type="text" id="gstin" name="gstin" readonly>
+
+        
+            
+        </div>
+        </div>
+        
+
+<!-- Product details section -->
+<div class="product-details">
+    <h2>Product Details</h2>
+    <div id="product_details">
+        <div class="row product-row">
+        <div class="col-md-2">
+            <label for="stock">Stock</label>
+            <select class="stock" name="stock[]" onchange="calculateTotalPrice(this)">
+                <!-- Populate the options dynamically -->
+                <option value="">---Choose---</option>
+                {% for item in items %}
+                    <option value="{{ item.id }}">{{ item.product_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-1">
+            <label for="price">Price</label>
+            <input type="number" class="price" name="price[]" step="0.01" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+
+        <div class="col-md-1">
+            <label for="quantity">Quantity</label>
+            <input type="number" class="quantity" name="quantity[]" min="1" oninput="calculateTotalPrice(this)">
+
+        </div>
+        <div class="col-md-1">
+            <label for="amount_${currentRowCount}">Amount</label>
+            <input type="number" class="amount" name="amount[]" step="0.01" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+        <div class="col-md-1">
+            <label for="gst">GST</label>
+            <input type="number" class="gst" name="gst[]" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+        <div class="col-md-1">
+            <label for="gst">GST Price</label>
+        <input type="number" class="gstprice" name="gstprice[]" step="0.01" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+
+        <div class="col-md-1">
+            <label for="igst">IGST</label>
+            <input type="number" class="igst" name="igst[]" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+        <div class="col-md-1">
+            <label for="igst">IGST Price</label>
+            <input type="number" class="igstprice" name="igstprice[]" step="0.01" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+
+        <div class="col-md-2">
+            <label for="total_price">Total Price</label>
+            <input type="number" class="total_price" name="total_price[]" readonly>
+        </div>
+
+            <div class="col-md-1">
+                <button type="button" class="delete-product-button mt-4" onclick="deleteProductRow(this)">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="add-product-button" onclick="addProductRow()">Add More</button>
+    <br>
+</div>
+
+
+        <input type="submit" class="submit-button" value="Save Purchase">
+    </form>
+
+    <script>
+        
+        // Function to calculate the total price based on input values
+    function calculateTotalPrice(input) {
+        var row = input.closest('.product-row');
+        var price = parseFloat(row.querySelector('.price').value);
+        var quantity = parseInt(row.querySelector('.quantity').value);
+        var gst = parseFloat(row.querySelector('.gst').value) / 100;
+        var igst = parseFloat(row.querySelector('.igst').value) / 100;
+
+        var amount = price * quantity;
+        row.querySelector('.amount').value = amount.toFixed(2);
+
+        // Check for valid GST and IGST input values
+        var gstPrice = !isNaN(gst) ? price * quantity * gst : 0;
+        var igstPrice = !isNaN(igst) ? price * quantity * igst : 0;
+
+        row.querySelector('.gstprice').value = !isNaN(gstPrice) ? gstPrice.toFixed(2) : '';
+        row.querySelector('.igstprice').value = !isNaN(igstPrice) ? igstPrice.toFixed(2) : '';
+
+        var totalPrice = price * quantity * (1 + gst) * (1 + igst);
+        row.querySelector('.total_price').value = totalPrice.toFixed(2);
+    }
+
+
+        // Function to fill supplier details based on the selected option
+        function fillSupplierDetails() {
+            var supplierSelect = document.getElementById('supplier');
+            var selectedOption = supplierSelect.options[supplierSelect.selectedIndex];
+
+            var supplierNameInput = document.getElementById('supplier_name');
+            var phoneNumberInput = document.getElementById('phone_number');
+            var gstinInput = document.getElementById('gstin');
+
+            supplierNameInput.value = selectedOption.dataset.name || '';
+            phoneNumberInput.value = selectedOption.dataset.phone || '';
+            gstinInput.value = selectedOption.dataset.gstin || '';
+        }
+
+        // Function to add a new product row
+    function addProductRow() {
+        var productDetails = document.getElementById('product_details');
+        var newRow = document.createElement('div');
+        newRow.className = 'product-row';
+
+        var currentRowCount = productDetails.getElementsByClassName('product-row').length;
+
+        newRow.innerHTML = `
+        <div class="row product-row">
+        <div class="col-md-2">
+            <label for="stock_${currentRowCount}">Stock</label>
+            <select class="stock" name="stock[]" onchange="calculateTotalPrice(this)">
+                <!-- Populate the options dynamically -->
+                <option value="">---Choose---</option>
+                {% for item in items %}
+                    <option value="{{ item.id }}">{{ item.product_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-1">
+            <label for="price_${currentRowCount}">Price</label>
+            <input type="number" class="price" name="price[]" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+
+        <div class="col-md-1">
+            <label for="quantity_${currentRowCount}">Quantity</label>
+            <input type="number" class="quantity" name="quantity[]" min="1" oninput="calculateTotalPrice(this)">
+
+        </div>
+        <div class="col-md-1">
+            <label for="amount_${currentRowCount}">Amount</label>
+            <input type="number" class="amount" name="amount[]" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+        <div class="col-md-1">
+            <label for="gst_${currentRowCount}">GST</label>
+            <input type="number" class="gst" name="gst[]" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+        <div class="col-md-1">
+            <label for="gst">GSTprice</label>
+        <input type="number" class="gstprice" name="gstprice[]" step="0.01" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+
+        <div class="col-md-1">
+            <label for="igst_${currentRowCount}">IGST</label>
+            <input type="number" class="igst" name="igst[]" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+        <div class="col-md-1">
+            <label for="igst">IGSTprice</label>
+            <input type="number" class="igstprice" name="igstprice[]" step="0.01" min="0" oninput="calculateTotalPrice(this)">
+        </div>
+
+        <div class="col-md-2">
+            <label for="total_price_${currentRowCount}">Total Price</label>
+            <input type="number" class="total_price" name="total_price[]" readonly>
+        </div>
+
+            <div class="col-md-1">
+                <button type="button" class="delete-product-button mt-4" onclick="deleteProductRow(this)">Delete</button>
+            </div>
+        </div>
+    </div>
+        `;
+        
+
+            productDetails.appendChild(newRow);
+        }
+
+        // Function to delete a product row
+        function deleteProductRow(button) {
+            var row = button.closest('.product-row');
+            row.remove();
+        }
+
+        //validation
+    // Function to validate all fields
+function validateFields() {
+    var supplierNameInput = document.getElementById('supplier_name');
+    var phoneNumberInput = document.getElementById('phone_number');
+    var gstinInput = document.getElementById('gstin');
+    var priceInputs = document.querySelectorAll('.price');
+    var quantityInputs = document.querySelectorAll('.quantity');
+    var gstInputs = document.querySelectorAll('.gst');
+    var igstInputs = document.querySelectorAll('.igst');
+
+    // Validate supplier name field (allow only characters)
+    var supplierName = supplierNameInput.value.trim();
+    if (!/^[a-zA-Z ' ']+$/.test(supplierName)) {
+        setError(supplierNameInput, "Supplier name must contain only letters.");
+        return false;
+    }
+
+    // Validate phone number field (allow only 10 digits)
+    var phoneNumber = phoneNumberInput.value.trim();
+    if (!/^\d{10}$/.test(phoneNumber)) {
+        setError(phoneNumberInput, "Phone number must contain exactly 10 digits.");
+        return false;
+    }
+
+    // Validate GSTIN field (allow only 15 digits and capital letters)
+    var gstin = gstinInput.value.trim();
+    if (!/^[A-Z\d]{15}$/.test(gstin)) {
+        setError(gstinInput, "GSTIN must contain exactly 15 characters (capital letters and digits only).");
+        return false;
+    }
+
+    // Validate price fields (allow only numbers)
+    for (var i = 0; i < priceInputs.length; i++) {
+        var price = parseFloat(priceInputs[i].value);
+        if (isNaN(price)) {
+            setError(priceInputs[i], "Price must be a valid number.");
+            return false;
+        }
+    }
+
+    // Validate quantity fields (allow only numbers)
+    for (var j = 0; j < quantityInputs.length; j++) {
+        var quantity = parseInt(quantityInputs[j].value);
+        if (isNaN(quantity)) {
+            setError(quantityInputs[j], "Quantity must be a valid number.");
+            return false;
+        }
+    }
+
+    // Validate GST fields (allow only numbers)
+    for (var k = 0; k < gstInputs.length; k++) {
+        var gst = parseFloat(gstInputs[k].value);
+        if (isNaN(gst)) {
+            setError(gstInputs[k], "GST must be a valid number.");
+            return false;
+        }
+    }
+
+    // Validate IGST fields (allow only numbers)
+    for (var l = 0; l < igstInputs.length; l++) {
+        var igst = parseFloat(igstInputs[l].value);
+        if (isNaN(igst)) {
+            setError(igstInputs[l], "IGST must be a valid number.");
+            return false;
+        }
+    }
+
+    // All validations passed
+    return true;
+}
+
+// Function to set an error message next to the specified field
+function setError(field, message) {
+    var errorSpan = document.createElement('span');
+    errorSpan.className = 'error-message';
+    errorSpan.innerText = message;
+
+    // Remove existing error message, if any
+    var existingError = field.parentNode.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+
+    // Add the new error message
+    field.parentNode.appendChild(errorSpan);
+}
+
+function setError(field, message) {
+    var errorSpan = document.createElement('span');
+    errorSpan.className = 'error-message';
+    errorSpan.style.color = 'red'; // Set the color to red
+    errorSpan.innerText = message;
+
+    // Remove existing error message, if any
+    var existingError = field.parentNode.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+
+    // Add the new error message
+    field.parentNode.appendChild(errorSpan);
+}
+    </script>
+    {% endblock %}
+</body>
+</html>

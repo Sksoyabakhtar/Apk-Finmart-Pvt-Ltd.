@@ -1,0 +1,602 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Report</title>
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Employee Report</h3>
+        <hr><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black; font-weight: bold;">#</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Emp Id</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Employee Name</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Company</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Phone</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Designation</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Date Of Joining</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Salary</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            {% for employee in employees %}
+                            <tr class="text-dark text-center">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ employee.id }}</td>
+                                <td>{{ employee.full_name }}</td>
+                                <td>{{ employee.company.company_name }}</td>
+                                <td>{{ employee.phone }}</td>
+                                <td>{{ employee.designation.designation_name }}</td>
+                                <td>{{ employee.joining_date }}</td>
+                                <td>
+                                    {% for salary_data in employee_salaries %}
+                                        {% if salary_data.employee_ref == employee.id %}
+                                            {{ salary_data.n_pay }}  <!-- Display the net salary here -->
+                                        {% endif %}
+                                    {% empty %}
+                                    No salary available
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a href="#" class="text-capitalize btn btn-sm bg-dark" data-bs-toggle="modal"
+                                        data-bs-target="#viewemployeeModal"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="18" height="18" fill="white" class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.830 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                            <path
+                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                        </svg></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-primary" id="printButton" style="border-radius: 4px;">Print
+                    Report</button>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for View Staff -->
+    <div class="modal fade" id="viewemployeeModal" tabindex="-1" aria-labelledby="viewemployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewemployeeModalLabel">View Staff</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="">
+                    <form id="password-form">
+                        <div id="myForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Full Name -->
+                                    <div class="mb-3">
+                                        <label for="fullName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="fullName" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!-- Email -->
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Phone -->
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Phone</label>
+                                        <input type="tel" class="form-control" id="phone" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!-- Date of Birth -->
+                                    <div class="mb-3">
+                                        <label for="dob" class="form-label">Date of Birth</label>
+                                        <input type="date" class="form-control" id="dob" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Gender Dropdown -->
+                                    <div class="mb-3">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select class="form-select" id="gender" disabled>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Company Dropdown -->
+                                    <div class="mb-3">
+                                        <label for="company" class="form-label">Company</label>
+                                        <select class="form-select" id="company" disabled>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Department Dropdown -->
+                                    <div class="mb-3">
+                                        <label for="department" class="form-label">Department</label>
+                                        <select class="form-select" id="department" disabled>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!-- Designation Dropdown -->
+                                    <div class="mb-3">
+                                        <label for="designation" class="form-label">Designation</label>
+                                        <select class="form-select" id="designation" disabled>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Office Shift Dropdown -->
+                                    <div class="mb-3">
+                                        <label for="officeShift" class="form-label">Office Shift</label>
+                                        <select class="form-select" id="officeShift" disabled>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- User Name -->
+                                    <div class="mb-3">
+                                        <label for="userName" class="form-label">User Name</label>
+                                        <input type="text" class="form-control" id="userName" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Role Dropdown -->
+                                    <div class="mb-3">
+                                        <label for="role" class="form-label">Role</label>
+                                        <select class="form-select" id="role" disabled>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Attendance Type Dropdown -->
+                                    <div class="mb-3">
+                                        <label for="attendanceType" class="form-label">Attendance Type</label>
+                                        <select class="form-select" id="attendanceType" disabled>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Password -->
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!-- Confirm Password -->
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <input type="password" class="form-control" id="confirmPassword" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Date of Joining -->
+                                    <div class="mb-3">
+                                        <label for="joiningDate" class="form-label">Date of Joining</label>
+                                        <input type="date" class="form-control" id="joiningDate" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!-- Image Upload -->
+                                    <div class="mb-3">
+                                        <label for="userImage" class="form-label">User Image</label>
+                                        <input type="file" class="form-control" id="userImage" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Basic<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="basic" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid Basic using only numbers."
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">HRA<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="hra" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid HRA using only numbers." disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Others<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="others" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid Others using only numbers."
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Conv.<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="conv" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid Conv using only numbers." disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">MAX EPF Wages<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="m_EPF" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid MAX EPF wages using only numbers."
+                                        disabled value="15000">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">MAX ESI Wages<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="m_ESI" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid MAX ESI wages using only numbers."
+                                        disabled value="21000">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">LTA<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="lta" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid LTA using only numbers." disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Medical<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="medical" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid Medical using only numbers."
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Rest. Allow<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="r_allow" aria-describedby=""
+                                        pattern="[0-9]*" title="Please enter a valid Rest. Allow using only numbers."
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Gross salary<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="g_salary" aria-describedby="" disabled
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Net pay<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="n_pay" aria-describedby="" disabled
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">CTC<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="ctc" aria-describedby="" disabled
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Employee EPF<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="e_EPF" aria-describedby="" disabled
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Employee ESI<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="e_ESI" aria-describedby="" disabled
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Employer EPF<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="er_EPF" aria-describedby="" disabled
+                                        disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Employer ESI<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="er_ESI" aria-describedby="" disabled
+                                        disabled>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Status<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault1" id=""
+                                            value="Active" checked>
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Active
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault1" id=""
+                                            value="Inactive">
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Inactive
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Wages Type<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault2" id=""
+                                            value="Daily">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Daily
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault2" id=""
+                                            value="Monthly" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Monthly
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Billable Type<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault3" id=""
+                                            checked value="Billable">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Billable
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault3" id=""
+                                            value="Non Billable">
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Non Billable
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Bonus<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault4" id=""
+                                            value="Yes">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault4" id=""
+                                            value="No" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">Leave encash<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault5" id=""
+                                            value="Yes">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault5" id=""
+                                            value="No" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">EPF<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault6" id=""
+                                            checked value="Yes">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault6" id=""
+                                            value="No">
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">ESI<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault7"
+                                            id="esi_yes" checked value="Yes">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault7"
+                                            id="esi_no" value="No">
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="" class="form-label text-dark">EPF Pension<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault8"
+                                            id="epf_yes" value="Yes">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault8"
+                                            id="epf_no" value="No" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="" class="form-label text-dark">TDS<span
+                                            class="text-danger">*</span></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault9"
+                                            id="tds_yes" value="Yes">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault9"
+                                            id="tds_no" value="No" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="clientcode" class="form-label text-dark">HR Deduction Per Day<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="" aria-describedby="" pattern="[0-9]*"
+                                        title="Please enter a valid Medical using only numbers." disabled>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="printButton1"
+                                style="border-radius: 4px;">Print
+                                Report</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // Your existing JavaScript code
+
+    // Add an event listener to the "Print Report" button
+    const printButton = document.getElementById('printButton');
+    printButton.addEventListener('click', function () {
+        window.print(); // Trigger the browser's print dialog
+    });
+</script>
+<style type="text/css">
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #myTable,
+        #myTable * {
+            visibility: visible;
+        }
+
+        #myTable {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #action {
+            display: none;
+        }
+    }
+</style>
+
+
+</html>
+{% endblock %}

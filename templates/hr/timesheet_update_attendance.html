@@ -1,0 +1,58 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+
+<div class="card p-3 mt-5">
+  <h3 class="text-dark ms-3 mt-3 text-center">Update Attendance</h3>
+  <hr>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <form method="GET" class="mb-3">
+          <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search...">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary ms-2">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <hr>
+    <div class="table-responsive">
+      <table id="myTable" class="table bg-light table-bordered mt-2 table-responsive">
+        <thead>
+          <tr>
+            <th>Sl No</th>
+            <th>Employee</th>
+            <th>Company</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for attendance in attendances %}
+          <tr>
+            <td>{{ attendance.id }}</td>
+            <td>{{ attendance.employee.full_name }}</td>
+            <td>{{ attendance.company.company_name }}</td>
+            <td>{{ attendance.date }}</td>
+            <td>{{ attendance.status }}</td>
+            <td>{{ attendance.clock_in }}</td>
+            <td>{{ attendance.clock_out|default:"N/A" }}</td>
+            <td>
+              <a href="{% url 'update_attendance' attendance.id %}">
+                <button class="btn btn-primary btn-sm">Update</button>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% endblock %}

@@ -1,0 +1,165 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Office Shift</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    /* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.container {
+    background-color: #fff;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input[type="text"],
+select,
+input[type="time"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.day-time-inputs {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.day {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.error-message {
+    color: red;
+}
+
+.btn-primary {
+    background-color:#0056b3;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+</style>
+<body>
+    <div class="container">
+        <h1 class="page-title">Update Office Shift</h1>
+        <form method="post" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="shift_name">Shift Name:</label>
+                <input type="text" id="shift_name" name="shift_name" value="{{ office_shift.shift_name }}" required>
+                <span class="error-message" id="shift_name_error"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="company">Company:</label>
+                <select name="company">
+                    {% for company in companies %}
+                        <option value="{{ company.id }}" {% if company.id == office_shift.company.id %}selected{% endif %}>{{ company.company_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="day-time-inputs">
+                <!-- Monday -->
+                <div class="day">
+                    <label for="monday_in">Monday:</label>
+                    <input type="time" name="monday_in" value="{{ office_shift.monday_in }}" required>
+                    <input type="time" name="monday_out" value="{{ office_shift.monday_out }}" required>
+                </div>
+
+                <!-- Tuesday -->
+                <div class="day">
+                    <label for="tuesday_in">Tuesday:</label>
+                    <input type="time" name="tuesday_in" value="{{ office_shift.tuesday_in }}" required>
+                    <input type="time" name="tuesday_out" value="{{ office_shift.tuesday_out }}" required>
+                </div>
+
+                <!-- Wednesday -->
+                <div class="day">
+                    <label for="wednesday_in">Wednesday:</label>
+                    <input type="time" name="wednesday_in" value="{{ office_shift.wednesday_in }}" required>
+                    <input type="time" name="wednesday_out" value="{{ office_shift.wednesday_out }}" required>
+                </div>
+
+                <!-- Thursday -->
+                <div class="day">
+                    <label for="thursday_in">Thursday:</label>
+                    <input type="time" name="thursday_in" value="{{ office_shift.thursday_in }}" required>
+                    <input type="time" name="thursday_out" value="{{ office_shift.thursday_out }}" required>
+                </div>
+
+                <!-- Friday -->
+                <div class="day">
+                    <label for="friday_in">Friday:</label>
+                    <input type="time" name="friday_in" value="{{ office_shift.friday_in }}" required>
+                    <input type="time" name="friday_out" value="{{ office_shift.friday_out }}" required>
+                </div>
+
+                <!-- Saturday -->
+                <div class="day">
+                    <label for="saturday_in">Saturday:</label>
+                    <input type="time" name="saturday_in" value="{{ office_shift.saturday_in }}" required>
+                    <input type="time" name="saturday_out" value="{{ office_shift.saturday_out }}" required>
+                </div>
+
+                <!-- Sunday -->
+                <div class="day">
+                    <label for="sunday_in">Sunday:</label>
+                    <input type="time" name="sunday_in" value="{{ office_shift.sunday_in }}" required>
+                    <input type="time" name="sunday_out" value="{{ office_shift.sunday_out }}" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Update</button>
+            <a href="{% url 'office_shift_list' %}" class="btn btn-primary" style="margin-top: -1px;">Go To List</a>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+{% endblock %}

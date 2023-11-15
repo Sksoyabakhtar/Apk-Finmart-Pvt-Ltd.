@@ -1,0 +1,567 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Creation</title>
+    <!-- Link to Bootstrap CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- Add your custom CSS links here -->
+    <style>
+        .company-logo {
+            max-width: 200px; /* Adjust the width as needed */
+            max-height: 150px; /* Adjust the height as needed */
+        }
+    </style>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+</head>
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Company Creation</h3>
+            <hr><br>
+            <!-- <div class="row">
+                <div class="col-md-4">
+                    <div class="container">
+                        <div class="input-group mb-3" style="width: 300px; margin-left: -13px;">
+                            <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search" aria-describedby="search-button" id="searchInput">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mt-">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-plus" viewBox="0 0 16 16">
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                            </svg>Add Company
+                        </button>
+                    </div>
+                </div>
+            </div> -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                                aria-label="Search" aria-describedby="search-button">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                            data-bs-target="#addUserModal">Add Company</button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="mt-auto">
+                <form action="brand.php" method="post" enctype="multipart/form-data">
+                    <div class="table-responsive">
+                         <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black; font-weight: bold;">Sl No</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Company</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Email</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Phone</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Location</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            {% for company in companies %}
+                            <tr class="text-dark text-center">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ company.company_name }}</td>
+                                <td>{{ company.email }}</td>
+                                <td>{{ company.phone }}</td>
+                                <td>{{ company.location }}</td>
+                                <td>
+                                    <a href="#" class="text-capitalize btn btn-sm bg-dark mt-1" data-bs-toggle="modal" data-bs-target="#editUserModal" data-company-id="{{ company.id }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                        </svg>
+                                    </a>
+                                    <span id="companyNotFoundError" class="text-danger d-none">Company not found</span>
+                                    <a href="#" class="text-capitalize btn btn-sm btn-danger mt-1" data-company-id="{{ company.id }}" data-action="delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                        </svg>
+                                    </a>
+                                    
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if companies.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">First</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ companies.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                    
+                            <li class="page-item disabled">
+                                <span class="page-link">Page {{ companies.number }} of {{ companies.paginator.num_pages }}</span>
+                            </li>
+                    
+                            {% if companies.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ companies.next_page_number }}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ companies.paginator.num_pages }}">Last</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </form>
+
+                <!-- JavaScript for Search Bar -->
+                <script>
+                    var input = document.getElementById("searchInput");
+                    var table = document.getElementById("myTable");
+                    var rows = table.getElementsByTagName("tr");
+
+                    input.addEventListener("input", function () {
+                        var filter = input.value.toLowerCase();
+
+                        for (var i = 1; i < rows.length; i++) {
+                            var rowData = rows[i].getElementsByTagName("td");
+                            var found = false;
+
+                            for (var j = 0; j < rowData.length; j++) {
+                                var cell = rowData[j];
+                                if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (found) {
+                                rows[i].style.display = "";
+                            } else {
+                                rows[i].style.display = "none";
+                            }
+                        }
+                    });
+
+                </script>
+                <script>
+                    $(document).ready(function () {
+                        // When the "Edit" button is clicked, fetch and populate the edit modal
+                        $('#editUserModal').on('show.bs.modal', function (event) {
+                            var button = $(event.relatedTarget); // Button that triggered the modal
+                            var companyId = button.data('company-id'); 
+                            var modal = $(this);
+                            
+                            modal.find('form').attr('action', "{% url 'edit_company' 0 %}".replace('0', companyId));
+                            // Make an AJAX request to get the company data
+                            $.ajax({
+                                url: "{% url 'get_company_data' %}", // Update this URL to match your Django URL configuration
+                                method: 'GET',
+                                data: { company_id: companyId },
+                                dataType: 'json',
+                                success: function (data) {
+                                    // Populate the form fields with the fetched data
+                                    modal.find('#editCompanyName').val(data.company_name);
+                                    modal.find('#editCompanyType').val(data.company_type);
+                                    modal.find('#editTradingName').val(data.trading_name);
+                                    modal.find('#editRegistrationNumber').val(data.registration_number);
+                                    modal.find('#editGSTNumber').val(data.gst_number);
+                                    modal.find('#editDateAdded').val(data.date_added);
+                                    modal.find('#editPhone').val(data.phone);
+                                    modal.find('#editEmail').val(data.email);
+                                    modal.find('#editWebsite').val(data.website);
+                                    modal.find('#editLocation').val(data.location);
+                                    modal.find('#editCompanyImage').attr('src', data.image_url);
+
+                                    modal.find('#editCompanyLogo').on('change', function () {
+                                        var file = $(this)[0].files[0];
+                                    });
+                                },
+                                error: function (xhr) {
+                                    // Handle the error here
+                                    if (xhr.response.status === 404) {
+                                        // Company not found error
+                                        $('#companyNotFoundError').removeClass('d-none');
+                                        $('#editError').addClass('d-none');
+                                    } else {
+                                        // Other error
+                                        $('#editError').removeClass('d-none').text('Error fetching company data.');
+                                        $('#companyNotFoundError').addClass('d-none');
+                                    }
+                                }
+                            });
+                        });
+                    });
+                </script>
+                <script>
+                    var deleteCompanyUrl = "{% url 'delete_company' 0 %}";
+                </script>
+                <script>
+                    $(document).ready(function () {
+                        function getCSRFToken() {
+                            const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+                            if (csrfTokenElement) {
+                                return csrfTokenElement.value;
+                            }
+                            return null;
+                        }
+                
+                        // When a delete button is clicked
+                        $('table').on('click', '[data-action="delete"]', function () {
+                            var companyId = $(this).data('company-id');
+                            var button = this; // Store the reference to the button element
+                
+                            Swal.fire({
+                                title: 'Delete Company',
+                                text: 'Are you sure you want to delete this company?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes, delete it',
+                                cancelButtonText: 'Cancel',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    var csrfToken = getCSRFToken();
+                                    if (csrfToken) {
+                                        $.ajax({
+                                            url: deleteCompanyUrl.replace('0', companyId),
+                                            method: 'POST',
+                                            data: { company_id: companyId, csrfmiddlewaretoken: csrfToken }, // Include the CSRF token in the data
+                                            success: function (data) {
+                                                // Handle success, e.g., remove the row from the table
+                                                $(button).closest('tr').remove();
+                                                Swal.fire('Success!', 'Company deleted successfully.', 'success');
+                
+                                            },
+                                            error: function (xhr) {
+                                                // Handle errors
+                                                console.log("Error deleting company:", xhr);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    });
+                </script>                
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Add users -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Add New Company</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="editError" class="alert alert-danger d-none"></div>
+                    <form method="post" action="{% url 'add_company' %}" enctype="multipart/form-data" onsubmit="showSuccessAlert(event)">
+                        {% csrf_token %} 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company Name -->
+                                <div class="mb-3">
+                                    <label for="company_name" class="form-label">Company Name</label>
+                                    <input type="text" class="form-control" id="company_name" name="company_name" pattern="[A-Za-z\s]+" title="Please enter a valid company name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Comapny Type  -->
+                                <div class="mb-3">
+                                    <label for="company_type" class="form-label">Company Type</label>
+                                    <input type="text" class="form-control" id="company_type" name="company_type" pattern="[A-Za-z\s]+" title="Please enter a valid company type. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Trading Name -->
+                                <div class="mb-3">
+                                    <label for="trading_name" class="form-label">Trading Name</label>
+                                    <input type="text" class="form-control" id="trading_name" name="trading_name" pattern="[A-Za-z\s]+" title="Please enter a valid trading name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Registration Number -->
+                                <div class="mb-3">
+                                    <label for="registration_number" class="form-label">Registration Number</label>
+                                    <input type="text" class="form-control" id="registration_number" name="registration_number" pattern="^\d{15}$" title="Please enter a 15-digit registration number using only numbers" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- GST Number -->
+                                <div class="mb-3">
+                                    <label for="gst_number" class="form-label">GST Number</label>
+                                    <input type="text" class="form-control" id="gst_number" name="gst_number" pattern="^\d{12}$" title="Please enter a 12-digit registration number using only numbers" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Date -->
+                                <div class="mb-3">
+                                    <label for="date_added" class="form-label">Date :</label>
+                                    <input type="date" class="form-control" id="date_added" name="date_added" required>
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Phone-->
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number." required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Website -->
+                                <div class="mb-3">
+                                    <label for="website" class="form-label">Website</label>
+                                    <input type="text" class="form-control" id="website" name="website" pattern="^www\.[a-zA-Z0-9-]+\.[a-z]{2,}$" title="Please enter a website URL as 'www.domain.com'" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Location -->
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <textarea class="form-control" id="location" name="location" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- Image Upload -->
+                                <div class="mb-3">
+                                    <label for="company_logo" class="form-label">Company Logo</label>
+                                    <input type="file" class="form-control" id="company_logo" name="company_logo" accept="image/*" required>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+                        </div> -->
+                        <button id="saveButton" type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>                       
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showSuccessAlert(e) {
+            e.preventDefault(); // Prevent the default form submission behavior
+    
+            Swal.fire({
+                title: 'Success',
+                text: 'Company added successfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Manually submit the form
+                    e.target.submit();
+    
+                    // You can add a redirection or any other action here if needed.
+                }
+            });
+        }
+    </script>    
+
+    <!-- Modal for Edit users -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Edit New Company</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'edit_company' 0 %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="company_id" id="editCompanyId" value="">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company Name -->
+                                <div class="mb-3">
+                                    <label for="editCompanyName" class="form-label">Company Name</label>
+                                    <input type="text" class="form-control" id="editCompanyName" name="company_name" pattern="[A-Za-z\s]+" title="Please enter a valid company name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Comapny Type  -->
+                                <div class="mb-3">
+                                    <label for="editCompanyType" class="form-label">Company Type</label>
+                                    <input type="text" class="form-control" id="editCompanyType" name="company_type" pattern="[A-Za-z\s]+" title="Please enter a valid company type. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Trading Name -->
+                                <div class="mb-3">
+                                    <label for="editTradingName" class="form-label">Trading Name</label>
+                                    <input type="text" class="form-control" id="editTradingName" name="trading_name" pattern="[A-Za-z\s]+" title="Please enter a valid traiding name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Registration Number -->
+                                <div class="mb-3">
+                                    <label for="editRegistrationNumber" class="form-label">Registration Number</label>
+                                    <input type="text" class="form-control" id="editRegistrationNumber" name="registration_number" pattern="^\d{15}$" title="Please enter a 15-digit registration number using only numbers" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- GST Number -->
+                                <div class="mb-3">
+                                    <label for="editGSTNumber" class="form-label">GST Number</label>
+                                    <input type="text" class="form-control" id="editGSTNumber" name="gst_number" pattern="^\d{12}$" title="Please enter a 12-digit registration number using only numbers" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Date -->
+                                <div class="mb-3">
+                                    <label for="editDateAdded" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="editDateAdded" name="date_added" required>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Phone-->
+                                <div class="mb-3">
+                                    <label for="editPhone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="editPhone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number." required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="editEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" name="email" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Website -->
+                                <div class="mb-3">
+                                    <label for="editWebsite" class="form-label">Website</label>
+                                    <input type="text" class="form-control" id="editWebsite" name="website" pattern="^www\.[a-zA-Z0-9-]+\.[a-z]{2,}$" title="Please enter a website URL as 'www.domain.com'" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Location -->
+                                <div class="mb-3">
+                                    <label for="editLocation" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="editLocation" name="location" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <img id="editCompanyImage" class="company-logo" src="" alt="Company Image" style="max-width: 100px; max-height: 100px;">
+                                </div>
+                                <!-- Image Upload -->
+                                <div class="mb-3">
+                                    <label for="editCompanyLogo" class="form-label">Change Company Logo</label>
+                                    <input type="file" class="form-control" id="editCompanyLogo" name="company_logo" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div> -->
+                        <button id="" type="submit" class="btn btn-success" style="border-radius: 4px;">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Assuming jQuery is already included
+        $(document).ready(function() {
+          $('#editUserModal form').submit(function(e) {
+            e.preventDefault(); // Prevents the form from submitting normally
+      
+            // Perform the form submission using AJAX
+            $.ajax({
+              url: $(this).attr('action'),
+              type: $(this).attr('method'),
+              data: new FormData(this),
+              processData: false,
+              contentType: false,
+              success: function() {
+                // Show success message directly after successful submission
+                Swal.fire({
+                  title: 'Success',
+                  text: 'Company updated successfully',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then(() => {
+                  // Reload the page after the user clicks "OK"
+                  location.reload();
+                });
+              },
+              error: function() {
+                // Show an error message if the submission fails
+                Swal.fire({
+                  title: 'Error',
+                  text: 'An error occurred. Please try again.',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+                });
+              }
+            });
+      
+            return false; // Prevent default form submission
+          });
+        });
+    </script>
+      
+</body>
+</html>
+{% endblock content %}

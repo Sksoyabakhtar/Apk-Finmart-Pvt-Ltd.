@@ -1,0 +1,334 @@
+{% extends "user_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Travel Allowance</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">Travel Allowance</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addt_allowanceModal">Add Travel Allowance</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Sl no.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Id</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Employee Name</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Branch Name</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Travel Type</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Start Place</th>
+                                <th scope="col" style="color: black;font-weight: bold;">End Place</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Date</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Distance</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Bill Amount</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Bill Description</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Remark</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Item Name</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Price</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Customer Name</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    1
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-dark btn-sm mb-2" id="download-button">Download</button>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination mt-2">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Query -->
+    <div class="modal fade" id="addt_allowanceModal" tabindex="-1" aria-labelledby="addt_allowanceModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addt_allowanceModalLabel">Add Travel Allowance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Id -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Id</label>
+                                    <input type="text" class="form-control" id="" name="" value="APK_120" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Employee Name -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Employee Name</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Branch Name -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Branch Name</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Travel Type -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Travel Type</label>
+                                    <select class="form-select" aria-label="Default select example" required>
+                                        <option disabled selected>Select Travel Type</option>
+                                        <option value="Two Wheeler">Two Wheeler</option>
+                                        <option value="Four Wheeler">Four Wheeler</option>
+                                        <option value="Bus">Bus</option>
+                                        <option value="Train">Train</option>
+                                        <option value="Flight">Flight</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Start Place -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Start Place</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- End Place -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">End Place</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <!-- Date -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <!-- Distance -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Distance</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <!-- Bill Amount -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Bill Amount</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Bill Description -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Bill Description</label>
+                                    <textarea class="form-control" readonly></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Remark -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Remark</label>
+                                    <textarea class="form-control" readonly></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h5 style="font-weight: bold;">Office Stationary</h5>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <!-- Item Name -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Item Name</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <!-- Price -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Price</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <!-- Customer Name -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Customer Name</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function generatePDF() {
+        // Choose the element that your content will be rendered to.
+        const element = document.getElementById('myTable');
+        // Create a configuration object for html2pdf to include custom CSS for printing.
+        const pdfOptions = {
+            margin: 10,
+            filename: 'table.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: 'avoid-all' }, // Prevent page breaks in the table
+        };
+        // Choose the element and save the PDF for your user with the custom CSS.
+        html2pdf().from(element).set(pdfOptions).outputPdf().then((pdf) => {
+            pdf.save();
+        });
+    }
+</script>
+<script>
+    const button = document.getElementById('download-button');
+
+    function generatePDF() {
+        // Choose the element that your content will be rendered to.
+        const element = document.getElementById('myTable');
+        // Choose the element and save the PDF for your user.
+        html2pdf().from(element).save();
+    }
+
+    button.addEventListener('click', generatePDF);
+</script>
+<style>
+    @media print {
+        body {
+            width: 100%;
+            margin: 0;
+        }
+
+        table {
+            page-break-before: auto;
+            /* Avoid page breaks before the table */
+            page-break-inside: auto;
+            /* Avoid page breaks inside the table */
+            page-break-after: always;
+            /* Force page breaks after the table */
+        }
+    }
+</style>
+
+</html>
+{% endblock content %}

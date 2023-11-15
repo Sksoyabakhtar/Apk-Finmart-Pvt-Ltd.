@@ -1,0 +1,533 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+</head>
+
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">Training</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addtrainingModal"
+                        style="font-weight: bold;margin-left: -40px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-plus"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>Add Training
+                    </a>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addtrainingModal">Add Training</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Sl No.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Company</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Employee</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Training Type</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Traineer</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Training Duration</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Cost</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody class="bg-light">
+                            {% for training in trainings %}
+                            <tr class="text-dark text-center">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ training.company.company_name }}</td>
+                                <td>{{ training.employee.full_name }}</td>
+                                <td>{{ training.training_type }}</td>
+                                <td>{{ training.trainer }}</td>
+                                <td>{{ training.duration }}</td>
+                                <td>{{ training.cost }}</td>
+                                <td>
+                                    <a href="#" class="text-capitalize btn btn-sm bg-dark edit-training mt-1"
+                                        data-bs-toggle="modal" data-bs-target="#edit_trainingModal"
+                                        data-training-id="{{ training.id }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            width="18" height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path
+                                                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                        </svg></a>
+                                        <a href="#" class="text-capitalize btn btn-sm bg-danger delete-training mt-1"
+                                            data-training-id="{{ training.id }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                                <path
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                            </svg>
+                                        </a>
+                                        
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if trainings.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">Previous</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ trainings.previous_page_number }}">Previous</a>
+                            </li>
+                        {% endif %}
+                
+                        <li class="page-item disabled">
+                            <span class="page-link">Page {{ trainings.number }} of {{ trainings.paginator.num_pages }}</span>
+                        </li>
+                
+                        {% if trainings.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ trainings.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ trainings.paginator.num_pages }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+            <script>
+                $(document).ready(function () {
+                    $('.edit-training').on('click', function () {
+                        var trainingId = $(this).data('training-id');
+                        var modal = $('#edit_trainingModal');
+
+                        if (modal.length > 0) {
+                            modal.find('form').attr('action', '{% url "edit_training" 0 %}'.replace('0', trainingId));
+                            // Make an AJAX request to get the training data
+                            $.ajax({
+                                url: '{% url "get_training_data" 0 %}'.replace('0', trainingId),
+                                method: 'GET',
+                                dataType: 'json',
+                                success: function (data) {
+                                    // Populate the form fields with the fetched data
+                                    modal.find('#edit_company').val(data.company_id);
+                                    modal.find('#edit_employee').val(data.employee_id);  // Set the company ID
+                                    modal.find('#edit_training_type').val(data.training_type);
+                                    modal.find('#edit_trainer').val(data.trainer);
+                                    modal.find('#edit_duration').val(data.duration);
+                                    modal.find('#edit_cost').val(data.cost);
+
+                                    // Trigger the modal to open
+                                    modal.modal('show');
+                                },
+                                error: function (xhr) {
+                                    // Handle errors here
+                                    if (xhr.status === 404) {
+                                        // Training not found error
+                                        // You can show an error message here if needed
+                                    } else {
+                                        // Other error
+                                        // You can show an error message here if needed
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            </script>            
+            <script>
+                $(document).ready(function () {
+                    function getCSRFToken() {
+                        const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+                        if (csrfTokenElement) {
+                            return csrfTokenElement.value;
+                        }
+                        return null;
+                    }
+
+                    // When a delete button for training is clicked
+                    $('table').on('click', '.delete-training', function () {
+                        var trainingId = $(this).data('training-id');
+                        console.log('Training ID:', trainingId); // Log the training ID to the console
+
+                        // Show a SweetAlert confirmation dialog
+                        Swal.fire({
+                            title: 'Delete Training',
+                            text: 'Are you sure you want to delete this training?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, delete it',
+                            cancelButtonText: 'Cancel',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                var csrfToken = getCSRFToken();
+                                if (csrfToken) {
+                                    // Store the reference to 'this' in a separate variable
+                                    var $this = $(this);
+
+                                    $.ajax({
+                                        url: "{% url 'delete_training' 0 %}".replace('0', trainingId),
+                                        method: 'POST',
+                                        data: { training_id: trainingId, csrfmiddlewaretoken: csrfToken }, // Include the CSRF token in the data
+                                        success: function (data) {
+                                            // Display a SweetAlert success message
+                                            Swal.fire({
+                                                title: 'Success',
+                                                text: 'Training deleted successfully',
+                                                icon: 'success'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    // Use the stored reference to 'this' to remove the row from the table
+                                                    $this.closest('tr').remove();
+                                                }
+                                            });
+                                            // Reload the page after a successful delete
+                                        },
+                                        error: function (xhr) {
+                                            // Handle errors
+                                            console.log("Error deleting training:", xhr);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    });
+                });
+            </script>            
+        </div>
+    </div>
+
+    <!-- Modal for Add Training -->
+    <div class="modal fade" id="addtrainingModal" tabindex="-1" aria-labelledby="addtrainingModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addtrainingModalLabel">Add Training Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'add_training' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company -->
+                                <div class="mb-3">
+                                    <label for="company" class="form-label">Company</label>
+                                    <select name="company" class="form-select" aria-label="Select Company" required>
+                                        <option selected disabled>Select Company</option>
+                                        {% for company in companies %}
+                                        <option value="{{ company.id }}">{{ company.company_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Employee -->
+                                <div class="mb-3">
+                                    <label for="employee" class="form-label">Employee</label>
+                                    <select name="employee" class="form-select" aria-label="Select Employee" required>
+                                        <option value="0" selected disabled>Select Employee</option>
+                                        {% for employee in employees %}
+                                            <option value="{{ employee.id }}">{{ employee.full_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>                                
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Training Type -->
+                                <div class="mb-3">
+                                    <label for="training_type" class="form-label">Training Type</label>
+                                    <input type="text" class="form-control" id="training_type" name="training_type" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Traineer -->
+                                <div class="mb-3">
+                                    <label for="trainer" class="form-label">Trainer</label>
+                                    <input type="text" class="form-control" id="trainer" name="trainer" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="duration" class="form-label">Training Duration</label>
+                                    <input type="text" id="duration" name="duration" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="cost" class="form-label">Cost</label>
+                                    <input type="text" id="cost" name="cost" class="form-control" required>
+                                </div>
+                            </div>                            
+                            <script>
+                                document.getElementById("cost").addEventListener("input", function () {
+                                    var costInput = this.value;
+                                    var numbers = /^[0-9]+$/;
+                                    
+                                    if (costInput.length > 0 && !costInput.match(numbers)) {
+                                        this.setCustomValidity("Cost must be a valid decimal.");
+                                    } else {
+                                        this.setCustomValidity("");
+                                    }
+                                });
+                            </script>                            
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            function getCSRFToken() {
+                const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (csrfTokenElement) {
+                    return csrfTokenElement.value;
+                }
+                return null;
+            }
+
+            // Handle form submission
+            $('form').on('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var form = $(this);
+
+                // Perform the form submission via AJAX
+                $.ajax({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    success: function () {
+                        // Display a SweetAlert success message
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Training added successfully',
+                            icon: 'success',
+                            confirmButtonText: 'OK' // Add a custom "OK" button text
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirect to the training_list page
+                                window.location.href = '{% url "training_list" %}';
+                            }
+                        });
+
+                        // Reset the form or perform any other actions as needed
+                        form[0].reset();
+                    },
+                    error: function (xhr) {
+                        // Handle errors, if any
+                        console.log("Error adding training:", xhr);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Modal for Edit training -->
+    <div class="modal fade" id="edit_trainingModal" tabindex="-1" aria-labelledby="edit_trainingModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="edit_trainingModalLabel">Edit Traning Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'edit_training' 1 %}" id="editTrainingForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company -->
+                                <div class="mb-3">
+                                    <label for="edit_company" class="form-label">Company</label>
+                                    <select class="form-select" id="edit_company" name="company" aria-label="Default select example" required>
+                                        {% for company in companies %}
+                                            <option value="{{ company.id }}" {% if company.id == company_id %}selected{% endif %}>
+                                                {{ company.company_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Employee -->
+                                <div class="mb-3">
+                                    <label for="edit_employee" class="form-label">Employee</label>
+                                    <select class="form-select" id="edit_employee" name="employee" aria-label="Default select example" required>
+                                        <option value="" selected disabled>Select Employee</option>
+                                        {% for employee in employees %}
+                                            <option value="{{ employee.id }}"
+                                                {% if employee.id == training.employee.id %}selected{% endif %}>
+                                                {{ employee.full_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>                                                           
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Training Type -->
+                                <div class="mb-3">
+                                    <label for="edit_training_type" class="form-label">Training Type</label>
+                                    <input type="text" class="form-control" id="edit_training_type" name="training_type" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Traineer -->
+                                <div class="mb-3">
+                                    <label for="edit_trainer" class="form-label">Trainer</label>
+                                    <input type="text" class="form-control" id="edit_trainer" name="trainer" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Training Duration-->
+                                <div class="mb-3">
+                                    <label for="edit_duration" class="form-label">Training Duration</label>
+                                    <input type="text" class="form-control" id="edit_duration" name="duration" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Cost -->
+                                <div class="mb-3">
+                                    <label for="edit_cost" class="form-label">Cost</label>
+                                    <input type="text" class="form-control" id="edit_cost" name="cost" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success" style="border-radius: 4px;">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            function getCSRFToken() {
+                const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (csrfTokenElement) {
+                    return csrfTokenElement.value;
+                }
+                return null;
+            }
+    
+            // When the "Update" button is clicked
+            $('#editTrainingForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+    
+                var form = $(this);
+    
+                // Perform the form submission via AJAX
+                $.ajax({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    success: function () {
+                        // Display a SweetAlert success message
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Training updated successfully',
+                            icon: 'success'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Optionally, you can close the modal or perform other actions as needed
+                                $('#edit_trainingModal').modal('hide');
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        // Handle errors, if any
+                        console.log("Error updating training:", xhr);
+                    }
+                });
+            });
+        });
+    </script>    
+</body>
+
+</html>
+{% endblock content %}

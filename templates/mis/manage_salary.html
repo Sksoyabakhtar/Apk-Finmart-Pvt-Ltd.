@@ -1,0 +1,743 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Salary</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <div class="card p-3 bg-light">
+        <h3 class="text-dark ms-3 mt-3 text-center">Manage Salary</h3>
+        <hr><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <!-- <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addsalaryModal">Add Salary</button>
+                </div> -->
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addsalaryModal"
+                        style="font-weight: bold;margin-left: -40px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-plus"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>Add Salary
+                    </a>
+                </div>
+            </div>
+        </div> -->
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Emp Id</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Emp Name</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Basic Salary</th>
+                                <th scope="col" style="color: black;font-weight: bold;">HRA</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Medical</th>
+                                <th scope="col" style="color: black;font-weight: bold;">CTC</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            {% for salary in salaries %}
+                                <!-- Sample data -->
+                                <tr class="text-dark text-center">
+                                    <td>APK.E.ID {{ salary.employee_id }}</td>
+                                    <td>{{ salary.employee_ref.full_name }}</td>
+                                    <td>{{ salary.basic }}</td>
+                                    <td>{{ salary.hra }}</td>
+                                    <td>{{ salary.medical }}</td>
+                                    <td>{{ salary.ctc }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_manage_salary' salary_id=salary.id %}" class="text-capitalize btn btn-sm bg-dark">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                            </svg>
+                                        </a>
+                                        
+                                        <a href="#" class="text-capitalize btn btn-sm bg-danger" onclick="confirmDelete({{ salary.id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+            <script>
+                function confirmDelete(salaryId) {
+                    event.preventDefault(); // Prevent the default click event
+            
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'Are you sure you want to delete this salary data?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it',
+                        cancelButtonText: 'No, cancel',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // If "Yes" is clicked, redirect to the delete URL with the salaryId
+                            window.location.href = "{% url 'delete_manage_salary' 0 %}".replace('0', salaryId);
+                        }
+                    });
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Salary -->
+    <div class="modal fade" id="addsalaryModal" tabindex="-1" aria-labelledby="addsalaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addsalaryModalLabel">Add Salary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-4">
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Basic<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="basic" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Basic using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">HRA<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="hra" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid HRA using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Others<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="others" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Others using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Conv.<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="conv" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Conv using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">MAX EPF Wages<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="m_EPF" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid MAX EPF wages using only numbers." required
+                                    value="15000">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">MAX ESI Wages<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="m_ESI" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid MAX ESI wages using only numbers." required
+                                    value="21000">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">LTA<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="lta" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid LTA using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Medical<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="medical" aria-describedby=""
+                                    pattern="[0-9]*" title="Please enter a valid Medical using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Rest. Allow<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="r_allow" aria-describedby=""
+                                    pattern="[0-9]*" title="Please enter a valid Rest. Allow using only numbers."
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Gross salary<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="g_salary" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Net pay<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="n_pay" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">CTC<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="ctc" aria-describedby="" disabled required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employee EPF<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="e_EPF" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employee ESI<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="e_ESI" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employer EPF<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="er_EPF" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employer ESI<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="er_ESI" aria-describedby="" disabled
+                                    required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Status<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault1" id=""
+                                        value="Active" checked>
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Active
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault1" id=""
+                                        value="Inactive">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Inactive
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Wages Type<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault2" id=""
+                                        value="Daily">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Daily
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault2" id=""
+                                        value="Monthly" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Monthly
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Billable Type<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault3" id="" checked
+                                        value="Billable">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Billable
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault3" id=""
+                                        value="Non Billable">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Non Billable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Bonus<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault4" id=""
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault4" id=""
+                                        value="No" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Leave encash<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault5" id=""
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault5" id=""
+                                        value="No" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">EPF<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault6" id="" checked
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault6" id=""
+                                        value="No">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">ESI<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault7" id="esi_yes"
+                                        checked value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault7" id="esi_no"
+                                        value="No">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="" class="form-label text-dark">EPF Pension<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault8" id="epf_yes"
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault8" id="epf_no"
+                                        value="No" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="" class="form-label text-dark">TDS<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault9" id="tds_yes"
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault9" id="tds_no"
+                                        value="No" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">HR Deduction Per Day<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Medical using only numbers." required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Edit salary -->
+    <div class="modal fade" id="editsalaryModal" tabindex="-1" aria-labelledby="editsalaryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editsalaryModalLabel">Edit Salary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-4">
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Basic<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="basic" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Basic using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">HRA<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="hra" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid HRA using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Others<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="others" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Others using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Conv.<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="conv" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Conv using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">MAX EPF Wages<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="m_EPF" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid MAX EPF wages using only numbers." required
+                                    value="15000">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">MAX ESI Wages<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="m_ESI" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid MAX ESI wages using only numbers." required
+                                    value="21000">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">LTA<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="lta" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid LTA using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Medical<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="medical" aria-describedby=""
+                                    pattern="[0-9]*" title="Please enter a valid Medical using only numbers." required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Rest. Allow<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="r_allow" aria-describedby=""
+                                    pattern="[0-9]*" title="Please enter a valid Rest. Allow using only numbers."
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Gross salary<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="g_salary" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Net pay<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="n_pay" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">CTC<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="ctc" aria-describedby="" disabled required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employee EPF<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="e_EPF" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employee ESI<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="e_ESI" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employer EPF<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="er_EPF" aria-describedby="" disabled
+                                    required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Employer ESI<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="er_ESI" aria-describedby="" disabled
+                                    required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Status<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault1" id=""
+                                        value="Active" checked>
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Active
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault1" id=""
+                                        value="Inactive">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Inactive
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Wages Type<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault2" id=""
+                                        value="Daily">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Daily
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault2" id=""
+                                        value="Monthly" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Monthly
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Billable Type<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault3" id="" checked
+                                        value="Billable">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Billable
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault3" id=""
+                                        value="Non Billable">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Non Billable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Bonus<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault4" id=""
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault4" id=""
+                                        value="No" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">Leave encash<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault5" id=""
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault5" id=""
+                                        value="No" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">EPF<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault6" id="" checked
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault6" id=""
+                                        value="No">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">ESI<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault7" id="esi_yes"
+                                        checked value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault7" id="esi_no"
+                                        value="No">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="" class="form-label text-dark">EPF Pension<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault8" id="epf_yes"
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault8" id="epf_no"
+                                        value="No" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="" class="form-label text-dark">TDS<span
+                                        class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault9" id="tds_yes"
+                                        value="Yes">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault9" id="tds_no"
+                                        value="No" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="clientcode" class="form-label text-dark">HR Deduction Per Day<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="" aria-describedby="" pattern="[0-9]*"
+                                    title="Please enter a valid Medical using only numbers." required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success" style="border-radius: 4px;">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock content %}

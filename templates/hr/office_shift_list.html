@@ -1,0 +1,100 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Office Shift List</title>
+    
+    
+</head>
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">Office Shift List</h3>
+        <hr><br>
+        <!-- <a href="{% url 'create_office_shift' %}" class="btn btn-primary">Add Office Shift</a> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'create_office_shift' %}" class="btn btn-primary">Add Office Shift</a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="table-responsive">
+            <table id="myTable" class="table bg-light table-bordered mt-2 table-responsive">
+                <tr>
+                    <th>Shift Name</th>
+                    <th>Company</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
+                    <th class="actions">Actions</th>
+                </tr>
+                {% for office_shift in office_shifts %}
+                <tr>
+                    <td>{{ office_shift.shift_name }}</td>
+                    <td>{{ office_shift.company }}</td>
+                    <td>{{ office_shift.monday_in }} - {{ office_shift.monday_out }}</td>
+                    <td>{{ office_shift.tuesday_in }} - {{ office_shift.tuesday_out }}</td>
+                    <td>{{ office_shift.wednesday_in }} - {{ office_shift.wednesday_out }}</td>
+                    <td>{{ office_shift.thursday_in }} - {{ office_shift.thursday_out }}</td>
+                    <td>{{ office_shift.friday_in }} - {{ office_shift.friday_out }}</td>
+                    <td>{{ office_shift.saturday_in }} - {{ office_shift.saturday_out }}</td>
+                    <td>{{ office_shift.sunday_in }} - {{ office_shift.sunday_out }}</td>
+                    <td class="actions">
+                        <a href="{% url 'update_office_shift' office_shift.id %}" class="btn btn-sm btn-primary mb-1">Update</a>
+                        <a href="{% url 'delete_office_shift' office_shift.id %}" class="btn btn-sm btn-danger">Delete.</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11">No office shifts available.</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+ <!-- JavaScript for Search Bar -->
+ <script>
+    var input = document.getElementById("searchInput");
+    var table = document.getElementById("myTable");
+    var rows = table.getElementsByTagName("tr");
+
+    input.addEventListener("input", function () {
+        var filter = input.value.toLowerCase();
+
+        for (var i = 1; i < rows.length; i++) {
+            var rowData = rows[i].getElementsByTagName("td");
+            var found = false;
+
+            for (var j = 0; j < rowData.length; j++) {
+                var cell = rowData[j];
+                if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    });
+
+</script>
+</html>
+{% endblock %}

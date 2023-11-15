@@ -1,0 +1,377 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Shift</title>
+
+
+    <!-- SweetAlert CSS and JavaScript -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+    <style>
+        #dateInput {
+            border: 2px solid #ccc;
+            padding: 10px;
+            transition: border 0.3s;
+        }
+
+        #dateInput:focus {
+            border: 2px solid #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark ms-3 mt-3 text-center">Office Shift</h3>
+        <hr><br>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addshiftModal"
+                        style="font-weight: bold;margin-left: -40px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-plus"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>Add Shift
+                    </a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <table id="myTable" class="table bg-light table-bordered mt-2">
+                    <thead class="bg-primary text-center">
+                        <tr>
+                            <th scope="col" style="color: black;font-weight: bold;">#</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Company</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Shift</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Monday</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Tuesday</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Wednesday</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Thruday</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Friday</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Saturday</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-light">
+                        <tr class="text-dark text-center">
+                            <!-- <th scope="row">1</th> -->
+                            <td>
+                                1
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <a href="#" class="text-capitalize btn btn-sm bg-dark" data-bs-toggle="modal"
+                                    data-bs-target="#editshiftModal"><svg xmlns="http://www.w3.org/2000/svg" width="18"
+                                        height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                        <path
+                                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                    </svg></a>
+                                <a href="#" class="text-capitalize btn btn-sm bg-danger"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white"
+                                        class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path
+                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                        <path
+                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                    </svg></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Shift -->
+    <div class="modal fade" id="addshiftModal" tabindex="-1" aria-labelledby="addshiftModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addshiftModalLabel">Add Shift</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Company</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Select Company</option>
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Shift  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Shift</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Select Shift</option>
+                                        <option value="Morning">Morning</option>
+                                        <option value="Day">Day</option>
+                                        <option value="Night">Night</option>
+                                        <option value="General">General</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Monday -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Monday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Tuesday  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Tuesday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Wednesday -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Wednesday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Thrusday  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Thrusday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Friday -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Friday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Saturday  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Saturday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Edit Shift -->
+    <div class="modal fade" id="editshiftModal" tabindex="-1" aria-labelledby="editshiftModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editshiftModalLabel">Edit Shift</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Company</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Select Company</option>
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Shift  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Shift</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Select Shift</option>
+                                        <option value="Morning">Morning</option>
+                                        <option value="Day">Day</option>
+                                        <option value="Night">Night</option>
+                                        <option value="General">General</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Monday -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Monday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Tuesday  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Tuesday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Wednesday -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Wednesday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Thrusday  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Thrusday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Friday -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Friday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Saturday  -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Saturday</label>
+                                    <input type="time" id="" class="form-control" placeholder="In Time" required>
+                                    to
+                                    <input type="time" id="" class="form-control mt-1" placeholder="Out Time" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success" style="border-radius: 4px;">Update</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+{% endblock content %}

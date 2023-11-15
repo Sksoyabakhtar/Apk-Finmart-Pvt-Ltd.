@@ -1,0 +1,95 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<div class="card p-3 shadow-md bg-light">
+  <h3 class="text-dark mt-1 text-center">Attendance List</h3>
+  <hr><br>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" id="searchInput" placeholder="Search..." aria-label="Search"
+            aria-describedby="search-button">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <a href="{% url 'add_attendance' %}" class="add-attendance-link">
+          <button class="btn btn-primary">Add Attendance</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="mt-auto">
+    <div class="table-responsive">
+      <table id="myTable" class="table bg-light table-bordered mt-2 table-responsive">
+        <thead>
+          <tr>
+            <th>Sl No</th>
+            <th>Employee</th>
+            <th>Company</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Actions</th> <!-- New column for the "Update" and "Delete" buttons -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for attendance in attendances %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ attendance.employee.full_name }}</td>
+            <td>{{ attendance.company.company_name }}</td>
+            <td>{{ attendance.date }}</td>
+            <td>{{ attendance.status }}</td>
+            <td>{{ attendance.clock_in }}</td>
+            <td>{{ attendance.clock_out|default:"N/A" }}</td>
+            <td>
+              <a href="{% url 'update_attendance' attendance.id %}">
+                <button class="btn btn-primary btn-sm mt-1">Update</button>
+              </a>
+              <form action="{% url 'delete_attendance' attendance.id %}" method="post"
+                class="d-inline delete-attendance-form">
+                {% csrf_token %}
+                <input type="hidden" name="attendance_id" value="{{ attendance.id }}">
+                <button type="submit" class="btn btn-danger btn-sm mt-1">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <script>
+        // Search Bar js
+        var input = document.getElementById("searchInput");
+        var table = document.getElementById("myTable");
+        var rows = table.getElementsByTagName("tr");
+
+        input.addEventListener("input", function () {
+            var filter = input.value.toLowerCase();
+
+            for (var i = 1; i < rows.length; i++) {
+                var rowData = rows[i].getElementsByTagName("td");
+                var found = false;
+
+                for (var j = 0; j < rowData.length; j++) {
+                    var cell = rowData[j];
+                    if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        });
+    </script>
+    </div>
+  </div>
+</div>
+{% endblock %}

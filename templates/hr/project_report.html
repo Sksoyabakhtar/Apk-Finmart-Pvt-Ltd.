@@ -1,0 +1,233 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Report</title>
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    
+
+    <!-- <style>
+        #dateInput {
+            border: 2px solid #ccc;
+            padding: 10px;
+            transition: border 0.3s;
+        }
+
+        #dateInput:focus {
+            border: 2px solid #007bff;
+        }
+    </style> -->
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark ms-3 mt-3 text-center">Project Report</h3>
+        <hr><br>
+        <div class="card p-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Project  -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Project</label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected disabled>Select Project</option>
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Status  -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Status</label>
+                        <select class="form-select" aria-label="Default select example" id="statusFilter">
+                            <option selected disabled>Select Status</option>
+                            <option value="All">All</option>
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Incomplete">Incomplete</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div><br>
+        <!-- <div class="row">
+            <div class="col-md-9"></div> 
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="container bg-danger p-2" style="width: 35px;margin-left: 197px;border-radius: 8px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
+                                class="bi bi-filetype-pdf" style="cursor: pointer;" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38.574.574 0 0 1-.238.241.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084 0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.248 0 .45.05.609.152a.89.89 0 0 1 .354.454c.079.201.118.452.118.753a2.3 2.3 0 0 1-.068.592 1.14 1.14 0 0 1-.196.422.8.8 0 0 1-.334.252 1.298 1.298 0 0 1-.483.082h-.563v-2.707Zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638H7.896Z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="container bg-primary p-2" style="width: 35px;    margin-left: 123px;border-radius: 8px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
+                                class="bi bi-file-earmark-excel-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM5.884 6.68 8 9.219l2.116-2.54a.5.5 0 1 1 .768.641L8.651 10l2.233 2.68a.5.5 0 0 1-.768.64L8 10.781l-2.116 2.54a.5.5 0 0 1-.768-.641L7.349 10 5.116 7.32a.5.5 0 1 1 .768-.64z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="container bg-success p-2" style="width: 35px;border-radius: 8px;margin-left: 50px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
+                                class="bi bi-printer" viewBox="0 0 16 16">
+                                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+                                <path
+                                    d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z" />
+                            </svg>
+                        </div>
+                    </div><br>
+                </div>
+            </div>
+        </div> -->
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <table id="d_table" class="table bg-light table-bordered mt-2">
+                    <thead class="bg-primary">
+                        <tr>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">#</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Project</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Priority</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Asigned Employee
+                            </th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Status</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Start Date</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">End Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-light" id="myTable">
+                        <tr class="text-dark text-center">
+                            <td>1</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Incomplete</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-dark text-center">
+                            <td>2</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Not Started</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-dark text-center">
+                            <td>3</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>In Progress</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav> -->
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // DataTable initialization and buttons setup
+            var table = $('#d_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        text: 'Export as CSV',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Export as Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'Export as PDF',
+                        className: 'btn btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'btn btn-secondary'
+                    }
+                ]
+            });
+
+            // Add click event listener to search button
+            $('#searchButton').on('click', function () {
+                var statusFilter = $('#statusFilter').val();
+
+                // Clear previous search
+                table.search('').draw();
+
+                if (statusFilter !== 'all') {
+                    table.search(statusMap[statusFilter]).draw();
+                }
+            });
+
+            // Add change event listener to status dropdown
+            $('#statusFilter').on('change', function () {
+                var selectedOption = $(this).val();
+
+                if (selectedOption === 'all') {
+                    // Clear the search
+                    table.search('').draw();
+                } else {
+                    // Apply search filter based on the selected option
+                    table.search(statusMap[selectedOption]).draw();
+                }
+            });
+
+            // Define a mapping of dropdown values to search values
+            var statusMap = {
+                'All': '',
+                'Not Started': 'Not Started',
+                'In Progress': 'In Progress',
+                'Incomplete': 'Incomplete'
+            };
+        });
+    </script>
+
+
+</body>
+
+</html>
+{% endblock content %}

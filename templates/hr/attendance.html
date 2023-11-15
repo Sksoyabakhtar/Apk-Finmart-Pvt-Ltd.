@@ -1,0 +1,302 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance</title>
+
+
+    <!-- SweetAlert CSS and JavaScript -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+    <style>
+        #dateInput {
+            border: 2px solid #ccc;
+            padding: 10px;
+            transition: border 0.3s;
+        }
+
+        #dateInput:focus {
+            border: 2px solid #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark ms-3 mt-3 text-center">Daily Attendance Info</h3>
+        <hr><br>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addattendanceModal"
+                        style="font-weight: bold;margin-left: -40px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-plus"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>Add Attendance
+                    </a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <table id="myTable" class="table bg-light table-bordered mt-2">
+                    <thead class="bg-primary text-center">
+                        <tr>
+                            <th scope="col" style="color: black;font-weight: bold;">#</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Employee</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Company</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Date</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Status</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Clock In</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Clock Out</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-light">
+                        <tr class="text-dark text-center">
+                            <!-- <th scope="row">1</th> -->
+                            <td>
+                                1
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                14-10-23
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-dark text-center">
+                            <!-- <th scope="row">1</th> -->
+                            <td>
+                                2
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                10-10-23
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Attendance -->
+    <div class="modal fade" id="addattendanceModal" tabindex="-1" aria-labelledby="addattendanceModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addattendanceModalLabel">Add Attendance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="attendanceForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Company</label>
+                                    <select class="form-select" aria-label="Default select example" name="company">
+                                        <option selected disabled>Select Company</option>
+                                        {% for company in companies %}
+                                        <option value="{{ company.id }}">{{ company.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <!-- Employee -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Employee</label>
+                                    <select class="form-select" aria-label="Default select example" name="employee">
+                                        <option selected disabled>Select Employee</option>
+                                        {% for employee in employees %}
+                                        <option value="{{ employee.id }}">{{ employee.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Date -->
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Date</label>
+                                    <input type="date" id="date" class="form-control" name="date" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Status -->
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select id="status" class="form-select" name="status"
+                                        aria-label="Default select example">
+                                        <option selected disabled>Select Status</option>
+                                        <option value="Working Day">Working Day</option>
+                                        <option value="Off Day">Off Day</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Clock In-->
+                                <div class="mb-3">
+                                    <label for="clockIn" class="form-label">Clock In</label>
+                                    <input type="time" id="clockIn" class="form-control" name="clock_in" required
+                                        disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Clock Out-->
+                                <div class="mb-3">
+                                    <label for="clockOut" class="form-label">Clock Out</label>
+                                    <input type="time" id="clockOut" class="form-control" name="clock_out" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" style="border-radius: 4px;"
+                            onclick="validateForm()">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Function to validate the form using SweetAlert
+        function validateForm() {
+            var status = document.getElementById("status").value;
+            var clockIn = document.getElementById("clockIn").value;
+
+            if (status === "Working Day" && clockIn === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please enter Clock In for a Working Day.'
+                });
+            } else {
+                // Continue with form submission
+                document.querySelector("form").submit();
+            }
+        }
+
+        // Function to handle Status dropdown change
+        function handleStatusChange() {
+            var status = document.getElementById("status").value;
+            var clockInInput = document.getElementById("clockIn");
+            var clockOutInput = document.getElementById("clockOut");
+
+            if (status === "Working Day") {
+                // Enable Clock In for "Working Day"
+                clockInInput.disabled = false;
+
+                // Check if a value is entered in Clock In
+                if (clockInInput.value !== "") {
+                    clockOutInput.disabled = false;
+                } else {
+                    clockOutInput.disabled = true;
+                }
+            } else {
+                // Disable and clear Clock In and Clock Out for "Off Day"
+                clockInInput.disabled = true;
+                clockOutInput.disabled = true;
+                clockInInput.value = "";
+                clockOutInput.value = "";
+            }
+        }
+
+        // Add an event listener to the Status dropdown
+        document.getElementById("status").addEventListener("change", handleStatusChange);
+
+        // Add an event listener to the Clock In input
+        document.getElementById("clockIn").addEventListener("input", handleStatusChange);
+
+
+        // Function to set the current date in the Date field
+        function setCurrentDate() {
+            var currentDateInput = document.querySelector("#c_date");
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            var currentDate = dd + '-' + mm + '-' + yyyy;
+            currentDateInput.value = currentDate;
+        }
+
+        // Call the function to set the current date when the page loads
+        setCurrentDate();
+    </script>
+
+
+</html>
+{% endblock content %}

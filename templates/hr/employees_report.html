@@ -1,0 +1,79 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees Report</title>
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark ms-3 mt-3 text-center">Employees Report</h3>
+        <hr><br>
+
+        <div class="mt-auto">
+            <!-- Add a search input and button -->
+            <div class="d-flex mb-3">
+                <input type="text" id="searchInput" class="form-control w-25" placeholder="Search by name or email">
+                <button id="searchButton" class="btn btn-primary">Search</button>
+            </div>
+
+            <table id="d_table" class="table bg-light table-bordered mt-2">
+                <thead class="bg-primary">
+                    <tr>
+                        <th scope="col" style="color: black; font-weight: bold; text-align: center;">#</th>
+                        <th scope="col" style="color: black; font-weight: bold; text-align: center;">User Name</th>
+                        <th scope="col" style="color: black; font-weight: bold; text-align: center;">Name</th>
+                        <th scope="col" style="color: black; font-weight: bold; text-align: center;">Company</th>
+                        <th scope="col" style="color: black; font-weight: bold; text-align: center;">Email</th>
+                        <th scope="col" style="color: black; font-weight: bold; text-align: center;">Department</th>
+                        <th scope="col" style="color: black; font-weight: bold; text-align: center;">Designation</th>
+                    </tr>
+                </thead>
+
+                <tbody class="bg-light">
+                    {% for employee in employees %}
+                    <tr class="text-dark text-center">
+                        <td>APK.E.ID{{ employee.id }}</td>
+                        <td>{{ employee.user_name }}</td>
+                        <td>{{ employee.full_name }}</td>
+                        <td>{{ employee.company }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td>{{ employee.department }}</td>
+                        <td>{{ employee.designation.designation_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- JavaScript for search functionality -->
+    <script>
+        document.getElementById("searchButton").addEventListener("click", function () {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("d_table");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2]; // Change to the appropriate column index for Name
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
+{% endblock content %}

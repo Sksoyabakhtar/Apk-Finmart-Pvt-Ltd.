@@ -1,0 +1,1083 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Management</title>
+
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Query Management</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addqueryModal"
+                        style="font-weight: bold;margin-left: -40px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-plus"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>Add Query
+                    </a>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addqueryModal">Add Query</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <!-- <th scope="col" style="color: black;font-weight: bold;">#</th> -->
+                                <th scope="col" style="color: black;font-weight: bold;">Query Id</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Invester Name</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Invester PAN No.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Invester Mobile</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Invester Email</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            {% for data in all_data %}
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>{{ data.query_id }}</td>
+                                <td>{{ data.investor_name }}</td>
+                                <td>{{ data.pan_number }}</td>
+                                <td>{{ data.mobile }}</td>
+                                <td>{{ data.email }}</td>
+                                <td>
+                                    <a href="{% url 'view_query_management' %}" class="text-capitalize btn btn-sm bg-warning mt-1"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black"
+                                            class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                            <path
+                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                        </svg></a>
+                                    <a href="{% url 'edit_query_management' %}" class="text-capitalize btn btn-sm bg-dark mt-1" >
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            width="16" height="16" fill="white" class="bi bi-pencil"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                        </svg></a>
+                                    <a href="#" class="text-capitalize btn btn-sm bg-danger mt-1"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"
+                                            class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path
+                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                            <path
+                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                        </svg></a>
+                                    <button type="button" class="btn btn-info btn-sm mt-1">Resolve</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Query Management -->
+    <div class="modal fade" id="addqueryModal" tabindex="-1" aria-labelledby="addqueryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addqueryModalLabel">Add Query</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                
+                                <div class="mb-3">
+                                    <label for="query_id" class="form-label">Query ID</label>
+                                    <input type="text" id="query_id" name="query_id" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Product Type -->
+                                <div class="mb-3">
+                                    <label for="productTypeSelect" class="form-label">Product Type</label>
+                                    <select class="form-select" aria-label="Default select example"
+                                        id="productTypeSelect" name="product_type" required
+                                        onchange="redirectToSelectedPage(this)">
+                                        <option selected disabled>Select Product Type</option>
+                                        <option value="NPS">NPS</option>
+                                        <option value="Mutual Funds">Mutual Funds</option>
+                                        <option value="Fixed Deposit">Fixed Deposit</option>
+                                        <option value="Life Insurance">Life Insurance</option>
+                                        <option value="Health Insurance">Health Insurance</option>
+                                        <option value="General Insurance">General Insurance</option>
+                                        <option value="PMS">PMS</option>
+                                        <option value="Bonds">Bonds</option>
+                                        <option value="SCSS">SCSS</option>
+                                        <option value="Post Office Deposit">Post Office Deposit</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <script>
+                            function redirectToSelectedPage(selectElement) {
+                                var selectedValue = selectElement.value;
+                        
+                                var pageMapping = {
+                                    
+                                    "NPS": "{% url 'add_nps' %}",
+                                    "Mutual Funds": "{% url 'mutual_funds_page' %}",
+                                    "Fixed Deposit": "{% url 'add_fixed_deposit' %}",
+                                    "Life Insurance": "{% url 'add_life_insurance' %}",
+                                    "Health Insurance": "{% url 'add_health_insurance' %}",
+                                    "General Insurance": "{% url 'add_general_insurance' %}",
+                                    "Bonds": "{% url 'add_bonds' %}",
+                                   
+                                };
+                        
+                                var url = pageMapping[selectedValue];
+                                if (url) {
+                                    // Append the selected product_type to the URL
+                                    var productTypeSelect = document.getElementById('productTypeSelect');
+                                    var productTypeValue = productTypeSelect.options[productTypeSelect.selectedIndex].value;
+                                    url += '?product_type=' + encodeURIComponent(productTypeValue);
+
+                                    window.location.href = url;
+                                }
+                            }
+                        </script>
+                    </form>
+                    
+
+                        <!-- <div id="npsForm" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">NPS Form</h3>
+                                <hr>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Invester Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Date Of Birth</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Mobile</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">ASP Name</label><br>
+                                        
+                                        <select class="form-control" id="aspTypeSelect">
+                                            <option disabled selected value="none">_Select_</option>
+                                            <option value="Select ASP Name">Select ASP Name</option>
+                                        </select>
+                                    </div>
+                                   
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Nominee Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                   
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="additionalForm" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox1">
+                                            <label class="form-check-label" for="checkbox1">
+                                                Aditya Birla Sun Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox2">
+                                            <label class="form-check-label" for="checkbox2">
+                                                Canara HSBC Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox3">
+                                            <label class="form-check-label" for="checkbox2">
+                                                Canara HSBC Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox3">
+                                            <label class="form-check-label" for="checkbox2">
+                                                IndiaFirst Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox1">
+                                            <label class="form-check-label" for="checkbox1">
+                                                Life Insurance Corporation Of India
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox2">
+                                            <label class="form-check-label" for="checkbox2">
+                                                Pnb Metlife India Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox3">
+                                            <label class="form-check-label" for="checkbox2">
+                                                Star Union Dai-ichi Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox3">
+                                            <label class="form-check-label" for="checkbox2">
+                                                Bajaj Allianz Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox1">
+                                            <label class="form-check-label" for="checkbox1">
+                                                Edelweiss Tokio Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox2">
+                                            <label class="form-check-label" for="checkbox2">
+                                                ICIC Prudential Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox3">
+                                            <label class="form-check-label" for="checkbox2">
+                                                Kotak Mahindra Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox3">
+                                            <label class="form-check-label" for="checkbox2">
+                                                Max Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox1">
+                                            <label class="form-check-label" for="checkbox1">
+                                                SBI Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkbox2">
+                                            <label class="form-check-label" for="checkbox2">
+                                                TATA AIA Life Insurance Co. Ltd
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2"
+                                style="border-radius: 4px;">Submit</button>
+                        </div> -->
+
+                        <!-- <div id="mutualFundsForm" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">Mutual Funds Form</h3>
+                                <hr>
+                                <form method="post" action="{% url 'add_query' %}">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        
+                                        <div class="col-md-3">
+                                            <label for="investor_name" class="form-label">Investor Name</label>
+                                            <input type="text" id="investor_name" name="investor_name" class="form-control" required>
+                                        </div>
+                                        
+                                        <div class="col-md-3">
+                                            <label for="pan_no" class="form-label">PAN No.</label>
+                                            <input type="text" id="pan_no" name="pan_no" class="form-control" required>
+
+                                        </div>
+                                        
+                                        <div class="col-md-3">
+                                            <label for="date_of_birth" class="form-label">Date Of Birth</label>
+                                            <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" required>
+
+                                        </div>
+                                       
+                                        <div class="col-md-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" id="email" name="email" class="form-control" required>
+
+                                        </div>
+                                    </div><br>
+                                    <div class="row">
+                                       
+                                        <div class="col-md-3">
+                                            <label for="mobile" class="form-label">Mobile</label>
+                                            <input type="text" id="mobile" name="mobile" class="form-control" required>
+
+                                        </div>
+                                        
+                                        <div class="col-md-3">
+                                            <label for="categorySelect" class="form-label">Select Category</label><br>
+                                            
+                                            <select class="form-control" id="categorySelect" name="category" required>
+                                                <option disabled selected>Select Category</option>
+                                                <option value="Equity">Equity</option>
+                                                <option value="Debt">Debt</option>
+                                                <option value="Hybrid">Hybrid</option>
+                                            </select>
+                                        </div>
+                                       
+                                        <div class="col-md-3">
+                                            <label for="schemeName" class="form-label">Enter Scheme Name</label>
+                                            <input type="text" id="schemeName" name="scheme_name" class="form-control" required>
+
+                                        </div>
+                                       
+                                        <div class="col-md-3">
+                                            <label for="nominee_name" class="form-label">Nominee Name</label>
+                                            <input type="text" id="nominee_name" name="nominee_name" class="form-control" required>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                      
+                                        <div class="col-md-3">
+                                            <label for="amount" class="form-label">Amount</label>
+                                            <input type="text" id="amount" name="amount" class="form-control" required>
+
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                                </form>
+                            </div>
+                            
+                        </div> -->
+
+                        <!-- <div id="fixed_deposit" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">Fixed Deposit</h3>
+                                <hr>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Invester Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Date Of Birth</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Mobile</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Select Tenure</label><br>
+                                        <select class="form-control" id="">
+                                            <option disabled selected>Select Tenure</option>
+                                            <option value="monthly">monthly</option>
+                                            <option value="Quarterly">Quarterly</option>
+                                            <option value="Half-yearly">Half-yearly</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Enter Company Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Enter ROI</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Select Tenure</label><br>
+                                        
+                                        <select class="form-control" id="">
+                                            <option disabled selected>Select Tenure</option>
+                                            <option value="Anually">Anually</option>
+                                            <option value="Cummucative">Cummucative</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Nominee Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                        </div> -->
+
+                        <!-- <div id="life_insurance" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">Life Insurance</h3>
+                                <hr>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Proposer Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Proposer D.O.B</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Proposer PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Life Assured Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Life Assured D.O.B</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Life Assured PAN</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Life Assured an No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Mobile No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Company name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Plan name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PPT</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PT</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Nominee Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Premium Frequency</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                        </div> -->
+
+                        <!-- <div id="health_insurance" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">Health Insurance</h3>
+                                <hr>
+                                <div class="row">
+                                   
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Policy Holder Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Proposer D.O.B</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Proposer PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">mobile</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                   
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Company Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Plan</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Frequency</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                   
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Nominee Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                        </div> -->
+
+                        <!-- <div id="general_insurance" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">General Insurance</h3>
+                                <hr>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Invester Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Date Of Birth</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Mobile</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Category</label><br>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Company Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Frequency</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Nominee</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label><br>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                        </div> -->
+
+                        <div id="pms" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">PMS Form</h3>
+                                <hr>
+                                <div class="row">
+                                    <!-- Invester Name -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Invester Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- PAN No. -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Date Of Birth -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Date Of Birth</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Email -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <!-- Mobile -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Mobile</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Amount -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2"
+                                style="border-radius: 4px;">Submit</button>
+                        </div>
+
+                        <!-- <div id="bonds" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">Bonds Form</h3>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Invester Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Date Of Birth</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Mobile</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Company Name</label><br>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Enter Scheme Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Nominee Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">ROI</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                   
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Frequency</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                        </div> -->
+
+                        <div id="sccs" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">SCCS Form</h3>
+                                <hr>
+                                <div class="row">
+                                    <!-- Invester Name -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Invester Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- PAN No. -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Date Of Birth -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Date Of Birth</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Email -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <!-- Mobile -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Mobile</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Amount -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2"
+                                style="border-radius: 4px;">Submit</button>
+                        </div>
+
+                        <div id="post_office_deposit" class="mt-2" style="display: none;">
+                            <div class="card p-3 bg-light">
+                                <h3 class="text-center">SCCS Form</h3>
+                                <hr>
+                                <div class="row">
+                                    <!-- Invester Name -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Invester Name</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- PAN No. -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">PAN No.</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Date Of Birth -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Date Of Birth</label>
+                                        <input type="date" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Email -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Email</label>
+                                        <input type="email" id="" class="form-control" required>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <!-- Mobile -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Mobile</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                    <!-- Amount -->
+                                    <div class="col-md-3">
+                                        <label for="" class="form-label">Amount</label>
+                                        <input type="text" id="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2"
+                                style="border-radius: 4px;">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Handle the select change event
+        document.getElementById("productTypeSelect").addEventListener("change", function () {
+            var selectedOption = this.value;
+
+            var npsForm = document.getElementById("npsForm");
+            var mutualFundsForm = document.getElementById("mutualFundsForm");
+
+            if (selectedOption === "NPS") {
+                npsForm.style.display = "block";
+                mutualFundsForm.style.display = "none";
+            } else if (selectedOption === "Mutual Funds") {
+                mutualFundsForm.style.display = "block";
+                npsForm.style.display = "none";
+            } else {
+                npsForm.style.display = "none";
+                mutualFundsForm.style.display = "none";
+            }
+
+            var fixed_deposit = document.getElementById("fixed_deposit");
+            var life_insurance = document.getElementById("life_insurance");
+
+            if (selectedOption === "Fixed Deposit") {
+                fixed_deposit.style.display = "block";
+                life_insurance.style.display = "none";
+            } else if (selectedOption === "Lie Insurance") {
+                life_insurance.style.display = "block";
+                fixed_deposit.style.display = "none";
+            } else {
+                fixed_deposit.style.display = "none";
+                life_insurance.style.display = "none";
+            }
+
+            var health_insurance = document.getElementById("health_insurance");
+            var general_insurance = document.getElementById("general_insurance");
+
+            if (selectedOption === "Health Insurance") {
+                health_insurance.style.display = "block";
+                general_insurance.style.display = "none";
+            } else if (selectedOption === "General Insurance") {
+                general_insurance.style.display = "block";
+                health_insurance.style.display = "none";
+            } else {
+                health_insurance.style.display = "none";
+                general_insurance.style.display = "none";
+            }
+
+            var pms = document.getElementById("pms");
+            var bonds = document.getElementById("bonds");
+
+            if (selectedOption === "PMS") {
+                pms.style.display = "block";
+                bonds.style.display = "none";
+            } else if (selectedOption === "Bonds") {
+                bonds.style.display = "block";
+                pms.style.display = "none";
+            } else {
+                pms.style.display = "none";
+                bonds.style.display = "none";
+            }
+
+            var sccs = document.getElementById("sccs");
+            var post_office_deposit = document.getElementById("post_office_deposit");
+
+            if (selectedOption === "SCSS") {
+                sccs.style.display = "block";
+                post_office_deposit.style.display = "none";
+            } else if (selectedOption === "Post Office Deposit") {
+                post_office_deposit.style.display = "block";
+                sccs.style.display = "none";
+            } else {
+                sccs.style.display = "none";
+                post_office_deposit.style.display = "none";
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#aspTypeSelect').change(function () {
+                var selectedValue = $(this).val();
+                if (selectedValue === "none") {
+                    $('#additionalForm').hide();
+                } else {
+                    $('#additionalForm').show();
+                }
+            });
+        });
+    </script>
+   
+
+    
+</body>
+
+</html>
+{% endblock content %}

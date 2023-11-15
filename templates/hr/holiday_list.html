@@ -1,0 +1,57 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+ 
+
+  <div class="card p-3 mt-5">
+    <!-- <h2 class="page-title text-center">Holidays List</h2> -->
+    <h3 class="text-dark ms-3 mt-3 text-center">Holidays List</h3>
+   <hr>
+    <!-- <a href="{% url 'holiday_create' %}" class="btn btn-primary">Create Holiday</a> -->
+    <div class="container">
+      <div class="row">
+          <div class="col-md-6">
+              <div class="input-group mb-3">
+                  <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                      aria-label="Search" aria-describedby="search-button">
+              </div>
+          </div>
+          <div class="col-md-6">
+              <a href="{% url 'holiday_create' %}" class="btn btn-primary">Create Holiday</a>
+          </div>
+      </div>
+  </div>
+  <hr>
+   <div class="table-responsive">
+    <table id="myTable" class="table bg-light table-bordered mt-2">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Title</th>
+          <th>Start Date</th>
+          <th>Finish Date</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for holiday in holidays %}
+          <tr>
+            <td>{{ holiday.company }}</td>
+            <td>{{ holiday.title }}</td>
+            <td>{{ holiday.start_date }}</td>
+            <td>{{ holiday.finish_date }}</td>
+            <td>
+                <a href="{% url 'holiday_update' holiday.id %}" class="btn btn-primary btn-sm mt-1">Update</a>
+                <a href="{% url 'holiday_delete' holiday.id %}" class="btn btn-danger btn-sm mt-1">Delete.</a>             
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5">No holidays available.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+   </div>
+  </div>
+{% endblock %}

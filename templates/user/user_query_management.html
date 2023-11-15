@@ -1,0 +1,241 @@
+{% extends "user_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Query Management</title>
+
+</head>
+
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">Query Management</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addqueryModal">Add Query</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Sl no.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Id</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Client Name</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Mobile No.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Address</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Email</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Product Type</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Product Name</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Amount</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Query Description</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    1
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Query -->
+    <div class="modal fade" id="addqueryModal" tabindex="-1" aria-labelledby="addqueryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addqueryModalLabel">Add Query</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Id -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Id</label>
+                                    <input type="text" class="form-control" id="" name="" value="APK_120" readonly
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Client Name -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Client Name</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Select Client Name</option>
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Mobile No -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Mobile No</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Address -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Address</label>
+                                    <textarea class="form-control" readonly></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Product Type -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Product Type</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Select Product Type</option>
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Product Name -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Product Name</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Select Product Name</option>
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Amount -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Amount</label>
+                                    <input type="text" class="form-control" id="" name="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Status -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Status</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>Select Status</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Query Description -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Query Description</label>
+                                    <textarea class="form-control" readonly></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Send Query</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock content %}

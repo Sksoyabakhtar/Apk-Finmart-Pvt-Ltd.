@@ -1,0 +1,110 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+</head>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+</style>
+<body>
+    <h1>Sign Up</h1>
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" name="username" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" required><br>
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" name="confirm_password" required><br>
+
+        <input type="submit" value="Sign Up">
+    </form>
+</body>
+</html> -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--  Title -->
+  <title>Sign Up</title>
+  <!--  Required Meta Tag -->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="handheldfriendly" content="true" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="description" content="Mordenize" />
+  <meta name="author" content="" />
+  <meta name="keywords" content="Mordenize" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!--  Favicon -->
+  <link rel="shortcut icon" type="image/png" href="{% static 'images/logo.png' %}" />
+  <link id="themeColors" rel="stylesheet" href="{% static 'css/style.min.css' %}" />
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+      <div class="col-md-8 col-lg-4 col-xxl-3">
+        <div class="card mb-0 mx-auto">
+          <div class="card-body">
+            <a href="#" class="text-nowrap logo-img text-center d-block mb-5 w-100">
+              <img src="{% static 'images/logo.png' %}" width="250px">
+            </a>
+            <form method="POST">
+              {% csrf_token %}
+              {% if messages %}
+              <div class="alert alert-danger">
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="mb-3">
+                <label for="exampleInputUsername" class="form-label">Username</label>
+                <input type="text" class="form-control" id="exampleInputUsername" name="username" required>
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail" name="email" required>
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword" name="password" required>
+              </div>
+              <div class="mb-4">
+                <label for="exampleInputConfirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="exampleInputConfirmPassword" name="confirm_password"
+                  required>
+              </div>
+              <input type="submit" class="btn btn-primary w-100 py-2 mb-4 rounded-2" value="Sign Up">
+              <!-- <div class="d-flex align-items-center">
+                <p class="fs-4 mb-0 text-dark">Already have an Account?</p>
+                <a class="text-primary fw-medium" href="{% url 'login' %}">Sign In</a>
+              </div> -->
+              <div class="text-center">
+                <p class="fs-4 mb-0">Already have an Account?</p>
+                <a class="text-primary" href="{% url 'login' %}">Sign In</a>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

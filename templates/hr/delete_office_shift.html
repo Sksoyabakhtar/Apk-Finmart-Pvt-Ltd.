@@ -1,0 +1,65 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Office Shift</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 10px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555555;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #ff6347;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d43f26;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Delete Office Shift</h1>
+        <p>Are you sure you want to delete the office shift "{{ office_shift.shift_name }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+</body>
+{% endblock %}
+</html>
+

@@ -1,0 +1,23 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Product</title>
+</head>
+<body>
+    <div class="container shadow-lg p-3 mt-3 w-50">
+        <h1 class="mt-4 mb-4">Delete Product</h1>
+        <p>Are you sure you want to delete "{{ investment.name }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-left">
+                <button type="submit" class="btn btn-danger mr-2 me-1">Delete</button>
+                <a href="{% url 'investment_list' %}" class="btn btn-dark">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock content %}
+

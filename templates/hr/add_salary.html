@@ -1,0 +1,444 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Salary</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark mt-3 text-center">Employee Salary</h3>
+        <hr>
+        <a href="{% url 'view_salary' %}"><button class="btn btn-primary">View Salary</button></a>
+        <form action="{% url 'add_salary' %}" method="post" onsubmit="showSweetAlert(event)">
+            {% csrf_token %}
+            <div class="container-fluid p-3 custom-border w-100">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="employeeIdSelect" class="form-label text-dark" id="employeeId">Employee Id</label>
+                        <select class="form-select" aria-label="Default select example" id="employeeIdSelect" name="employeeIdSelect" required onchange="updateEmployeeName()">
+                            <option value="" selected disabled>Select an Employee ID</option>
+                            {% for employee in employees %}
+                                <option value="{{ employee.id }}">APK.E.ID{{ employee.id }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="employeeNameSelect" class="form-label text-dark">Employee Name</label>
+                        <select class="form-select" aria-label="Default select example" id="employeeNameSelect" name="employeeNameSelect" required>
+                            <option value="" selected disabled>Employee Name</option>
+                            {% for employee in employees %}
+                                <option value="{{ employee.id }}">{{ employee.full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="month" class="form-label text-dark">Month</label>
+                        <select class="form-select" id="month" name="month" required>
+                            <option value="">-- Select Month --</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!-- <script>
+                function updateEmployeeName() {
+                    const employeeIdSelect = document.getElementById('employeeIdSelect');
+                    const selectedId = employeeIdSelect.value;
+                    const employeeNameSelect = document.getElementById('employeeNameSelect');
+                
+                    // Set the corresponding name in the Employee Name dropdown based on selected ID
+                    for (let option of employeeNameSelect.options) {
+                        if (option.value === selectedId) {
+                            employeeNameSelect.value = selectedId;
+                            break;
+                        }
+                    }
+                }
+                </script> -->
+            <div class="container-fluid p-3 custom-border w-100">
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <label for="basic" class="form-label text-dark">Basic<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="basic" name="basic" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid Basic using only numbers." required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="hra" class="form-label text-dark">HRA<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="hra" name="hra" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid HRA using only numbers." required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="others" class="form-label text-dark">Others<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="others" name="others" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid Others using only numbers." required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="conv" class="form-label text-dark">Conv.<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="conv" name="conv" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid Conv using only numbers." required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="m_epf" class="form-label text-dark">MAX EPF Wages<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="m_epf" name="m_epf" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid MAX EPF wages using only numbers." required value="15000">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="m_esi" class="form-label text-dark">MAX ESI Wages<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="m_esi" name="m_esi" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid MAX ESI wages using only numbers." required value="21000">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="lta" class="form-label text-dark">LTA<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="lta" name="lta" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid LTA using only numbers." required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="medical" class="form-label text-dark">Medical<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="medical" name="medical" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid Medical using only numbers." required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="r_allow" class="form-label text-dark">Rest. Allow<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="r_allow" name="r_allow" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid Rest. Allow using only numbers." required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="g_salary" class="form-label text-dark">Gross salary<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="g_salary" name="g_salary" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="n_pay" class="form-label text-dark">Net pay<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="n_pay" name="n_pay" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="ctc" class="form-label text-dark">CTC<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="ctc" name="ctc" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="e_EPF" class="form-label text-dark">Employee EPF<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="e_EPF" name="e_EPF" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="e_ESI" class="form-label text-dark">Employee ESI<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="e_ESI" name="e_ESI" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="er_EPF" class="form-label text-dark">Employer EPF<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="er_EPF" name="er_EPF" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="er_ESI" class="form-label text-dark">Employer ESI<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="er_ESI" name="er_ESI" aria-describedby="" disabled required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 mb-3">
+                        <label for="status" class="form-label text-dark">Status<span
+                                class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="activeStatus" value="Active"
+                                checked>
+                            <label class="form-check-label" for="activeStatus">
+                                Active
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="inactiveStatus"
+                                value="Inactive">
+                            <label class="form-check-label" for="inactiveStatus">
+                                Inactive
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="wagesType" class="form-label text-dark">Wages Type<span
+                                class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="wagesType" id="dailyWages" value="Daily">
+                            <label class="form-check-label" for="dailyWages">
+                                Daily
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="wagesType" id="monthlyWages" value="Monthly"
+                                checked>
+                            <label class="form-check-label" for="monthlyWages">
+                                Monthly
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="billableType" class="form-label text-dark">Billable Type<span
+                                class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="billableType" id="billable" 
+                                value="Billable" checked>
+                            <label class="form-check-label" for="billable">
+                                Billable
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="billableType" id="nonBillable"
+                                value="Non Billable">
+                            <label class="form-check-label" for="nonBillable">
+                                Non Billable
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="bonus" class="form-label text-dark">Bonus<span
+                                class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="bonus" id="bonusYes" value="Yes">
+                            <label class="form-check-label" for="bonusYes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="bonus" id="bonusNo" value="No"
+                                checked>
+                            <label class="form-check-label" for="bonusNo">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="leaveEncash" class="form-label text-dark">Leave encash<span
+                                class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="leaveEncash" id="leaveEncashYes" value="Yes">
+                            <label class="form-check-label" for="leaveEncashYes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="leaveEncash" id="leaveEncashNo" value="No"
+                                checked>
+                            <label class="form-check-label" for="leaveEncashNo">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="epf" class="form-label text-dark">EPF<span
+                                class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="epf" id="epfYes" checked
+                                value="Yes">
+                            <label class="form-check-label" for="epfYes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="epf" id="epfNo" value="No">
+                            <label class="form-check-label" for="epfNo">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 mb-3">
+                        <label for="esi" class="form-label text-dark">ESI<span
+                                class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="esi" id="esi_yes" checked
+                                value="Yes">
+                            <label class="form-check-label" for="esiYes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="esi" id="esiNo"
+                                value="No">
+                            <label class="form-check-label" for="esiNo">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="epfPension" class="form-label text-dark">EPF Pension<span
+                                class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="epfPension" id="epfPensionYes"
+                                value="Yes">
+                            <label class="form-check-label" for="epfPensionYes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="epfPension" id="epfPensionNo" value="No"
+                                checked>
+                            <label class="form-check-label" for="epfPensionNo">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="tds" class="form-label text-dark">TDS<span class="text-danger">*</span></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tds" id="tdsYes"
+                                value="Yes">
+                            <label class="form-check-label" for="tdsYes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tds" id="tdsNo" value="No"
+                                checked>
+                            <label class="form-check-label" for="tdsNo">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="hr_deduction" class="form-label text-dark">HR Deduction Per Day<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="hr_deduction" name="hr_deduction" aria-describedby="" pattern="[0-9]*"
+                            title="Please enter a valid HR Deduction Per Day using only numbers." required>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm float-end" id="submitButton"
+                style="width: 100px;">Submit</button>
+        </form>
+    </div>
+</body>
+<script>
+    function updateEmployeeName() {
+        const employeeIdSelect = document.getElementById('employeeIdSelect');
+        const selectedId = employeeIdSelect.value;
+        const employeeNameSelect = document.getElementById('employeeNameSelect');
+
+        // Loop through the options in the Employee Name dropdown and find the matching ID
+        for (let option of employeeNameSelect.options) {
+            if (option.value === selectedId) {
+                option.selected = true; // Set the found option as selected
+                break;
+            }
+        }
+    }
+
+</script>
+<script>
+    function calculateSalary() {
+        // Get input values
+        const basic = parseFloat(document.getElementById('basic').value) || 0;
+        const hra = parseFloat(document.getElementById('hra').value) || 0;
+        const others = parseFloat(document.getElementById('others').value) || 0;
+        const conv = parseFloat(document.getElementById('conv').value) || 0;
+        const lta = parseFloat(document.getElementById('lta').value) || 0;
+        const medical = parseFloat(document.getElementById('medical').value) || 0;
+        const r_allow = parseFloat(document.getElementById('r_allow').value) || 0;
+
+        // Calculate gross salary
+        const grossSalary = basic + hra + others + conv + lta + medical + r_allow;
+
+        // Calculate employee EPF (Basic * 12%)
+        const employeeEPF = basic * 0.12;
+
+        // Calculate employee ESI (0.75% of gross salary)
+        const employeeESI = grossSalary * 0.0075;
+
+        // Calculate employer EPF (Basic * 13%)
+        const employerEPF = basic * 0.13;
+
+        // Calculate employer ESI (3.25% of gross salary)
+        const employerESI = grossSalary * 0.0325;
+
+        // Calculate net pay (gross salary - (employee EPF + employee ESI))
+        const netPay = grossSalary - (employeeEPF + employeeESI);
+
+        // Calculate CTC (gross salary + employee EPF + employee ESI + employer EPF + employer ESI)
+        const ctc = grossSalary + employeeEPF + employeeESI + employerEPF + employerESI;
+
+        // Update the input fields with the calculated values
+        document.getElementById('g_salary').value = grossSalary.toFixed(0);
+        document.getElementById('e_EPF').value = employeeEPF.toFixed(0);
+        document.getElementById('e_ESI').value = employeeESI.toFixed(1);
+        document.getElementById('er_EPF').value = employerEPF.toFixed(0);
+        document.getElementById('er_ESI').value = employerESI.toFixed(1);
+        document.getElementById('n_pay').value = netPay.toFixed(1);
+        document.getElementById('ctc').value = ctc.toFixed(0);
+    }
+
+    // Attach the calculateSalary function to input change events
+    document.getElementById('basic').addEventListener('input', calculateSalary);
+    document.getElementById('hra').addEventListener('input', calculateSalary);
+    document.getElementById('others').addEventListener('input', calculateSalary);
+    document.getElementById('conv').addEventListener('input', calculateSalary);
+    document.getElementById('lta').addEventListener('input', calculateSalary);
+    document.getElementById('medical').addEventListener('input', calculateSalary);
+    document.getElementById('r_allow').addEventListener('input', calculateSalary);
+
+    // Initial calculation
+    calculateSalary();
+
+</script>
+
+
+<script>
+    document.getElementById('submitButton').addEventListener('click', function () {
+        var selectedValue = document.getElementById('employeeIdSelect').value;
+        if (selectedValue === "") {
+            alert("Please select an Employee Id before submitting.");
+        }
+    });
+</script>
+<script>
+    function showSweetAlert(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        Swal.fire({
+            title: 'Success',
+            text: 'Salary added successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                event.target.submit(); // Submit the form
+
+                // You can add a redirection or any other action here if needed.
+            }
+        });
+    }
+</script>
+
+</html>
+{% endblock content %}

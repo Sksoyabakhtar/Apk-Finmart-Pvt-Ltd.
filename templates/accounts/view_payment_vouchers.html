@@ -1,0 +1,58 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<style>
+  /* Custom styles for the table */
+ 
+
+  .create-button {
+    background-color: rgb(23,162,184);
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+</style>
+
+<h1 class="text-center">View Payment</h1>
+<a href="{% url 'create_payment_voucher' %}"><button class="btn btn-primary mb-1">Create Payment</button></a>
+<div class="responsive">
+    <table id="myTable" class="table bg-light table-bordered mt-2">
+        <tr>
+          <th>Bill No.</th>
+          <th>Date</th>
+          <th>Supplier Name</th>
+          <!-- <th>Voucher Number</th> -->
+          <th>Bank</th>
+          <!-- <th>Narration</th> -->
+          <th>Particular</th>
+          <th>Account No.</th>
+          <th>Check No.</th>
+          <th>Amount</th>
+          <th>Action</th>
+        </tr>
+        {% for voucher in vouchers %}
+        <tr>
+          <td>{{ voucher.bill_no }}</td>
+          <td>{{ voucher.date }}</td>
+          <td>{{ voucher.customer_name }}</td>
+          <!-- <td>{{ voucher.voucher_number }}</td> -->
+          <td>{{ voucher.cash_or_bank }}</td>
+          <!-- <td>{{ voucher.narration }}</td> -->
+          <td>{{ voucher.particular }}</td>
+          <td>{{ voucher.account_no }}</td>
+          <td>{{ voucher.check_no }}</td>
+          <td>{{ voucher.amount }}</td>
+          <td>
+              <form method="POST" action="{% url 'view_payment_vouchers' %}">
+                {% csrf_token %}
+                <input type="hidden" name="voucher_id" value="{{ voucher.id }}">
+                <button class="btn btn-danger btn-sm " type="submit" name="delete_voucher">Delete</button>
+              </form>
+            </td>
+        </tr>
+        {% endfor %}
+      </table>
+</div>
+{% endblock %}

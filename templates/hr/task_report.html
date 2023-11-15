@@ -1,0 +1,190 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Report</title>
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark ms-3 mt-3 text-center">Task Report</h3>
+        <hr><br>
+        <div class="card p-4">
+            <form id="filterForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Task  -->
+                        <div class="mb-3">
+                            <label for="taskFilter" class="form-label">Task</label>
+                            <select class="form-select" id="taskFilter" aria-label="Default select example">
+                                <option selected disabled>Select Task</option>
+                                <option value="All">All</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Status  -->
+                        <div class="mb-3">
+                            <label for="statusFilter" class="form-label">Status</label>
+                            <select class="form-select" id="statusFilter" aria-label="Default select example">
+                                <option selected disabled>Select Status</option>
+                                <option value="All">All</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Incomplete">Incomplete</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" onclick="applyFilter()">Apply Filter</button>
+                </div>
+            </form>
+        </div><br>
+        <script>
+            function applyFilter() {
+                var taskFilter = document.getElementById("taskFilter").value;
+                var statusFilter = document.getElementById("statusFilter").value;
+
+                // Perform actions based on selected filters (e.g., fetch and display data)
+                console.log("Task Filter:", taskFilter);
+                console.log("Status Filter:", statusFilter);
+                
+                // Add your logic to fetch and display filtered data
+            }
+        </script>
+    
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="d_table" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;text-align: center;">Sl No.</th>
+                                <th scope="col" style="color: black;font-weight: bold;text-align: center;">Title</th>
+                                <th scope="col" style="color: black;font-weight: bold;text-align: center;">Start Date</th>
+                                <th scope="col" style="color: black;font-weight: bold;text-align: center;">End Date</th>
+                                <th scope="col" style="color: black;font-weight: bold;text-align: center;">Status</th>
+                                <th scope="col" style="color: black;font-weight: bold;text-align: center;">Asigned Employees
+                                </th>
+                                <th scope="col" style="color: black;font-weight: bold;text-align: center;">Added By
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light" id="myTable">
+                            {% for task in tasks %}
+                                <tr class="text-dark text-center">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ task.title }}</td>
+                                    <td>{{ task.start_date }}</td>
+                                    <td>{{ task.end_date }}</td>
+                                    <td>{{ task.status }}</td>
+                                    <td>{{ task.assigned_employees }}</td>
+                                    <td>{{ task.added_by }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav> -->
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // DataTable initialization and buttons setup
+            var table = $('#d_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        text: 'Export as CSV',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Export as Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'Export as PDF',
+                        className: 'btn btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'btn btn-secondary'
+                    }
+                ]
+            });
+
+            // Add click event listener to search button
+            $('#searchButton').on('click', function () {
+                var statusFilter = $('#statusFilter').val();
+
+                // Clear previous search
+                table.search('').draw();
+
+                if (statusFilter !== 'all') {
+                    table.search(statusMap[statusFilter]).draw();
+                }
+            });
+
+            // Add change event listener to status dropdown
+            $('#statusFilter').on('change', function () {
+                var selectedOption = $(this).val();
+
+                if (selectedOption === 'all') {
+                    // Clear the search
+                    table.search('').draw();
+                } else {
+                    // Apply search filter based on the selected option
+                    table.search(statusMap[selectedOption]).draw();
+                }
+            });
+
+            // Define a mapping of dropdown values to search values
+            var statusMap = {
+                'All': '',
+                'Not Started': 'Not Started',
+                'In Progress': 'In Progress',
+                'Incomplete': 'Incomplete'
+            };
+        });
+    </script>
+
+
+</body>
+
+</html>
+{% endblock content %}

@@ -1,0 +1,114 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Life Insurance</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+    </head>
+    <body>
+        <div class="card p-3">
+            <h3 class="text-dark mt-3 text-center">Life Insurance Page</h3>
+            <hr><br>
+            <form method="post" action="{% url 'add_life_insurance' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Proposer Name -->
+                    <div class="col-md-3">
+                        <label for="proposer_name" class="form-label">Proposer Name</label>
+                        <input type="text" id="proposer_name" name="proposer_name" class="form-control" required>
+                    </div>
+                    <!-- Proposer D.O.B -->
+                    <div class="col-md-3">
+                        <label for="proposer_dob" class="form-label">Proposer D.O.B</label>
+                        <input type="date" id="proposer_dob" name="proposer_dob" class="form-control" required>
+                    </div>
+                    <!-- Proposer PAN No. -->
+                    <div class="col-md-3">
+                        <label for="proposer_pan" class="form-label">Proposer PAN No.</label>
+                        <input type="text" id="proposer_pan" name="proposer_pan" class="form-control" required>
+                    </div>
+                    <!-- Life Assured Name -->
+                    <div class="col-md-3">
+                        <label for="life_assured_name" class="form-label">Life Assured Name</label>
+                        <input type="text" id="life_assured_name" name="life_assured_name" class="form-control" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- Life Assured D.O.B -->
+                    <div class="col-md-3">
+                        <label for="life_assured_dob" class="form-label">Life Assured D.O.B</label>
+                        <input type="date" id="life_assured_dob" name="life_assured_dob" class="form-control" required>
+                    </div>
+                    <!-- Life Assured PAN -->
+                    <div class="col-md-3">
+                        <label for="life_assured_pan" class="form-label">Life Assured PAN</label>
+                        <input type="text" id="life_assured_pan" name="life_assured_pan" class="form-control" required>
+                    </div>
+                    <!-- Life Assured aadhar No. -->
+                    <div class="col-md-3">
+                        <label for="life_assured_aadhar_no" class="form-label">Life Assured Aadhar No.</label>
+                        <input type="text" id="life_assured_aadhar_no" name="life_assured_aadhar_no" class="form-control" required>
+                    </div>
+                    <!-- Email -->
+                    <div class="col-md-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                </div>
+                <br>
+                
+                <div class="row">
+                    <!-- Mobile No. -->
+                    <div class="col-md-3">
+                        <label for="mobile_no" class="form-label">Mobile No.</label>
+                        <input type="text" id="mobile_no" name="mobile_no" class="form-control" required>
+                    </div>
+                    <!-- Company name -->
+                    <div class="col-md-3">
+                        <label for="company_name" class="form-label">Company name</label>
+                        <input type="text" id="company_name" name="company_name" class="form-control" required>
+                    </div>
+                    <!-- Plan name -->
+                    <div class="col-md-3">
+                        <label for="plan_name" class="form-label">Plan name</label>
+                        <input type="text" id="plan_name" name="plan_name" class="form-control" required>
+                    </div>
+                    <!-- PPT -->
+                    <div class="col-md-3">
+                        <label for="ppt" class="form-label">PPT</label>
+                        <input type="text" id="ppt" name="ppt" class="form-control" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- PT -->
+                    <div class="col-md-3">
+                        <label for="pt" class="form-label">PT</label>
+                        <input type="text" id="pt" name="pt" class="form-control" required>
+                    </div>
+                    <!-- Nominee Name -->
+                    <div class="col-md-3">
+                        <label for="nominee_name" class="form-label">Nominee Name</label>
+                        <input type="text" id="nominee_name" name="nominee_name" class="form-control" required>
+                    </div>
+                    <!-- Amount -->
+                    <div class="col-md-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="text" id="amount" name="amount" class="form-control" required>
+                    </div>
+                    <!-- Premium Frequency -->
+                    <div class="col-md-3">
+                        <label for="premium_frequency" class="form-label">Premium Frequency</label>
+                        <input type="text" id="premium_frequency" name="premium_frequency" class="form-control" required>
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                <a href="{% url 'query_management' %}" class="btn btn-secondary" style="border-radius: 4px;">Back</a>
+            </form>
+        </div>    
+    </body>
+{% endblock %}

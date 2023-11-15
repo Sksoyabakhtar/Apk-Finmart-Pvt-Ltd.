@@ -1,0 +1,194 @@
+{% extends "user_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Leave Balance Report</title>
+</head>
+
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">Leave Balance Report</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <!-- <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#adda_leaveModal">Apply Leave</button>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-md-4">
+                    <!-- Id -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Id</label>
+                        <input type="text" class="form-control" id="" name="" value="APK_120" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Employee Name -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Name</label>
+                        <input type="text" class="form-control" id="" name="" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Month -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Month</label>
+                        <select class="form-select" id="monthFilter">
+                            <option selected value="">All</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="6">June</option>
+                            <option value="June">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Sl no.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Leave Code</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Leave Type</th>
+                                <th scope="col" style="color: black;font-weight: bold;display: none;">Month</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Leave Balance</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    1
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td style="display: none;">January</td>
+                                <td></td>
+                            </tr>
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    2
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td style="display: none;">February</td>
+                                <td></td>
+                            </tr>
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    3
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td style="display: none;">March</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary" id="printButton" style="border-radius: 4px;">Print
+                        Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const monthFilter = document.getElementById("monthFilter");
+        const dataTable = document.getElementById("myTable");
+
+        monthFilter.addEventListener("change", filterTable);
+
+        function filterTable() {
+            const selectedMonth = monthFilter.value;
+            const rows = dataTable.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+                const monthCell = rows[i].getElementsByTagName("td")[3];
+
+                if (monthCell) {
+                    const month = monthCell.textContent || monthCell.innerText;
+
+                    if (selectedMonth === "" || month === selectedMonth) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+<script>
+    // Your existing JavaScript code
+
+    // Add an event listener to the "Print Report" button
+    const printButton = document.getElementById('printButton');
+    printButton.addEventListener('click', function () {
+        window.print(); // Trigger the browser's print dialog
+    });
+</script>
+<style type="text/css">
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #myTable,
+        #myTable * {
+            visibility: visible;
+        }
+
+        #myTable {
+            position: absolute;
+            left: 0;
+            top: -100px;
+        }
+
+        #action {
+            display: none;
+        }
+    }
+</style>
+</body>
+
+</html>
+{% endblock content %}

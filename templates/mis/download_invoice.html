@@ -1,0 +1,212 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice List</title>
+
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Invoice List</h3>
+        <hr><br>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black; font-weight: bold;">#</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Name</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Payslip Type</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Basic Salary</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Net Salary</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Status</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            <tr class="text-dark text-center">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#g_payslipModal">Generate Payslip</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    </div>
+    <!-- Modal for Generate Payslip -->
+    <div class="modal fade" id="g_payslipModal" tabindex="-1" aria-labelledby="g_payslipModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="g_payslipModalLabel">Payment Info</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Employee Id  -->
+                                <div class="mb-3">
+                                    <label for="">Employee Id</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Basic  -->
+                                <div class="mb-3">
+                                    <label for="">Basic</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- HRA  -->
+                                <div class="mb-3">
+                                    <label for="">HRA</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Others  -->
+                                <div class="mb-3">
+                                    <label for="">Others</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Conv.  -->
+                                <div class="mb-3">
+                                    <label for="">Conv.</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- MAX EPF Wages  -->
+                                <div class="mb-3">
+                                    <label for="">MAX EPF Wages</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- MAX ESI Wages  -->
+                                <div class="mb-3">
+                                    <label for="">MAX ESI Wages</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- LTA  -->
+                                <div class="mb-3">
+                                    <label for="">LTA</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Medical  -->
+                                <div class="mb-3">
+                                    <label for="">Medical</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Rest. Allow  -->
+                                <div class="mb-3">
+                                    <label for="">Rest. Allow</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Gross salary  -->
+                                <div class="mb-3">
+                                    <label for="">Gross salary</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Net pay  -->
+                                <div class="mb-3">
+                                    <label for="">Net pay</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- CTC  -->
+                                <div class="mb-3">
+                                    <label for="">CTC</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Employee EPF  -->
+                                <div class="mb-3">
+                                    <label for="">Employee EPF</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Employee ESI  -->
+                                <div class="mb-3">
+                                    <label for="">Employee ESI</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Employer EPF  -->
+                                <div class="mb-3">
+                                    <label for="">Employer EPF</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Employer ESI  -->
+                                <div class="mb-3">
+                                    <label for="">Employer ESI</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Pay</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>
+{% endblock content %}

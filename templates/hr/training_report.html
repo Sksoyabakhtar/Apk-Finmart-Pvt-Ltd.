@@ -1,0 +1,183 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Report</title>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+
+    <!-- <style>
+        #dateInput {
+            border: 2px solid #ccc;
+            padding: 10px;
+            transition: border 0.3s;
+        }
+
+        #dateInput:focus {
+            border: 2px solid #007bff;
+        }
+    </style> -->
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark ms-3 mt-3 text-center">Training Report</h3>
+        <hr><br>
+        <div class="card p-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Start date -->
+                    <div class="mb-3">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" class="form-control" id="startDate">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- End date -->
+                    <div class="mb-3">
+                        <label for="endDate">End Date</label>
+                        <input type="date" class="form-control" id="endDate">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Company -->
+                    <div class="mb-3">
+                        <label for="company" class="form-label">Company</label>
+                        <select class="form-select" id="company">
+                            <option value="">All Companies</option>
+                            {% for company in companies %}
+                            <option value="{{ company.company_name }}">{{ company.company_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="filterTable()">Apply Filters</button>
+
+                </div>
+            </div>
+            
+
+        </div><br>
+
+        <div class="mt-auto">
+            <table id="myTable" class="table bg-light table-bordered mt-2">
+                <thead class="bg-primary text-center">
+                    <tr>
+                        <th scope="col" style="color: black;font-weight: bold;">Sl No.</th>
+                        <th scope="col" style="color: black;font-weight: bold;">Company</th>
+                        <th scope="col" style="color: black;font-weight: bold;">Employee</th>
+                        <th scope="col" style="color: black;font-weight: bold;">Training Type</th>
+                        <th scope="col" style="color: black;font-weight: bold;">Traineer</th>
+                        <th scope="col" style="color: black;font-weight: bold;">Training Duration</th>
+                        <th scope="col" style="color: black;font-weight: bold;">Date</th>
+                        <th scope="col" style="color: black;font-weight: bold;">Cost</th>
+                    </tr>
+                </thead>
+
+                <tbody class="bg-light">
+                    {% for training in trainings %}
+                    <tr class="text-dark text-center" data-company="{{ training.company.company_name }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ training.company.company_name }}</td>
+                        <td>{{ training.employee.full_name }}</td>
+                        <td>{{ training.training_type }}</td>
+                        <td>{{ training.trainer }}</td>
+                        <td>{{ training.duration }}</td>
+                        <td>{{ training.date }}</td>
+                        <td>{{ training.cost }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#d_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        text: 'Export as CSV',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Export as Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'Export as PDF',
+                        className: 'btn btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'btn btn-secondary'
+                    }
+                ]
+            });
+        });
+    </script>
+    <script>
+        function filterTable() {
+            const startDate = new Date(document.getElementById("startDate").value);
+            const endDate = new Date(document.getElementById("endDate").value);
+            const selectedCompany = document.getElementById("company").value;
+
+            const rows = document.querySelectorAll("#myTable tbody tr");
+
+            rows.forEach((row) => {
+                const dateCell = row.cells[6]; // Assuming the date is in the 7th column
+                const companyDataAttribute = row.getAttribute("data-company");
+
+                const dateValue = new Date(dateCell.textContent);
+
+                if (
+                    (startDate && endDate && dateValue >= startDate && dateValue <= endDate) ||
+                    (!startDate && !endDate)
+                ) {
+                    if (selectedCompany === "" || selectedCompany === companyDataAttribute) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        // Attach the filterTable function to the input change event
+        document.getElementById("startDate").addEventListener("change", filterTable);
+        document.getElementById("endDate").addEventListener("change", filterTable);
+        document.getElementById("company").addEventListener("change", filterTable);
+    </script>
+
+</body>
+
+</html>
+{% endblock content %}

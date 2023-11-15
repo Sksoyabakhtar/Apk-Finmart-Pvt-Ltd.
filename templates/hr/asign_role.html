@@ -1,0 +1,194 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Role</title>
+   
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Assign Role</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <a href="{% url 'role' %}" class="btn btn-primary" style="font-weight: bold; margin-left: -40px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-puzzle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.459.459 0 0 0-.115.118.113.113 0 0 0-.012.025L6.5 4.5v.003l.003.01c.004.01.014.028.036.053a.86.86 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.86.86 0 0 0 .271-.194.213.213 0 0 0 .036-.054l.003-.01v-.008a.112.112 0 0 0-.012-.025.459.459 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.459.459 0 0 0 .115-.118.113.113 0 0 0 .012-.025L9.5 11.5v-.003l-.003-.01a.214.214 0 0 0-.036-.053.859.859 0 0 0-.27-.194C8.91 11.1 8.49 11 8 11c-.491 0-.912.1-1.19.24a.859.859 0 0 0-.271.194.214.214 0 0 0-.036.054l-.003.01v.002l.001.006a.113.113 0 0 0 .012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c.195 0 .42.147.675.48.21.274.528.52.943.52.568 0 .947.447 1.154.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238l-.244-2.855z" />
+                        </svg>&nbsp;Role
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Select Role....
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            {% for role_name in role_names %}
+                            <li><a class="dropdown-item" href="#">{{ role_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'role' %}"><button class="btn btn-primary">Role</button></a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="ms-3 mt-1">
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Select Role....
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            {% for role_name in role_names %}
+                            <li><a class="dropdown-item" href="#">{{ role_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2 table-responsive">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;"> <input class="form-check-input"
+                                        type="checkbox" value="" id=""></th>
+                                <th scope="col" style="color: black;font-weight: bold;">Image</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Username</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Permission Role</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Assign Role</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody class="bg-light">
+                            <tr class="text-dark text-center">
+                                <td><input class="form-check-input" type="checkbox" value="" id=""></td>
+                                <td><img src="https://gvit.in/gvithrms/public/uploads/profile_photos/admin_1676553971.png"
+                                        alt="" srcset="" height="35px" class="mb-4"></td>
+                                <td>admin</td>
+                                <td>admin</td>
+                                <td>
+                                    Admin role can not be changed
+                                </td>
+                            </tr>
+                            <tr class="text-dark text-center">
+                                <td><input class="form-check-input" type="checkbox" value="" id=""></td>
+                                <td><img src="https://gvit.in/gvithrms/public/uploads/profile_photos/admin_1676553971.png"
+                                        alt="" srcset="" height="35px" class="mb-4"></td>
+                                <td>priyanka123</td>
+                                <td>Editor</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            Assign Role
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            {% for role_name in role_names %}
+                                            <li><a class="dropdown-item" href="#"data-role="{{ role_name }}">{{ role_name }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if role_names.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">Previous</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ role_names.previous_page_number }}">Previous</a>
+                            </li>
+                        {% endif %}
+                
+                        <li class="page-item disabled">
+                            <span class="page-link">Page {{ role_names.number }} of {{ role_names.paginator.num_pages }}</span>
+                        </li>
+                
+                        {% if role_names.has_next %}
+                            <li class="page-item">
+                                <a class a="page-link" href="?page={{ role_names.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ role_names.paginator.num_pages }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock content %}

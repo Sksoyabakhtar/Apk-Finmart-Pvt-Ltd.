@@ -1,0 +1,187 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #564fbf;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<div class="card p-3 shadow-md bg-light">
+    <h3 class="text-dark mt-1 text-center">Edit Task</h3>
+    <hr>
+    <form id="editTaskForm" action="{% url 'update_task' task.id %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control shadow-lg" id="title" name="title" value="{{ task.title }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="company" class="form-label">Company</label>
+                    <select class="form-control shadow-lg" id="company" name="company" required>
+                        <option selected disabled>Select Company</option>
+                        {% for company in companies %}
+                            <option value="{{ company.id }}" {% if company.id == task.company.id %} selected {% endif %}>{{ company.company_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" class="form-control shadow-lg" id="start_date" name="start_date" value="{{ task.start_date|date:'Y-m-d' }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="date" class="form-control shadow-lg" id="end_date" name="end_date" value="{{ task.end_date|date:'Y-m-d' }}" required>
+                </div>
+            </div>
+        </div>
+        <script>
+            // start and end date validation in the format "YYYY-MM-DD"
+            function getCurrentDate() {
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, '0');
+                var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+                var yyyy = today.getFullYear();
+                return yyyy + '-' + mm + '-' + dd;
+            }
+
+            var startDate = document.getElementById("start_date");
+            var endDate = document.getElementById("end_date");
+
+            // Set the minimum allowed date for the start date to the current date
+            startDate.min = getCurrentDate();
+
+            // Add an input event listener to the start date
+            startDate.addEventListener("input", function () {
+                endDate.min = startDate.value; // Update the minimum allowed date for the end date
+            });
+
+        </script>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="project" class="form-label">Project</label>
+                    <select class="form-control shadow-lg" id="project" name="project" required>
+                        <option selected disabled>Select Project</option>
+                        {% for project in projects %}
+                            <option value="{{ project.id }}" {% if project.id == task.project.id %} selected {% endif %}>{{ project.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="estimated_hours" class="form-label">Estimated Hour</label>
+                    <input type="text" class="form-control shadow-lg" id="estimated_hours" name="estimated_hours" value="{{ task.estimated_hours }}" pattern="[0-9]" title="Please enter a valid estimated hour. Only numbers are allowed." required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    <label for="project_users" class="form-label">Project Users</label>
+                    <input type="text" class="form-control shadow-lg" id="project_users" name="project_users" value="{{ task.project_users }}" required>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success" style="border-radius: 4px;">Update</button>
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#editTaskForm').submit(function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            // Perform form submission using AJAX or other methods
+            // Update the following code to handle form submission and redirection
+            // For illustration, it shows a simple redirection
+            window.location.href = "{% url 'task' %}"; // Redirect to the task list page
+        });
+    });
+</script>
+<script>
+    document.getElementById('editTaskForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        fetch(this.action, {
+            method: this.method,
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': this.querySelector('input[name="csrfmiddlewaretoken"]').value,
+            },
+        }).then(function(response) {
+            if (response.ok) {
+                // If the response is okay, show the success message using SweetAlert
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Task updated successfully!',
+                    icon: 'success'
+                }).then(function () {
+                    // Redirect to the task list page after success
+                    window.location.href = "{% url 'task' %}";
+                });
+            } else {
+                // Show an error message using SweetAlert if the response is not okay
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while updating the task!',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

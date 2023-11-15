@@ -1,0 +1,162 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Purchase</title>
+  
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark mt-3 text-center">New Purchase</h3>
+        <hr>
+        <form action="">
+            <div class="card p-3 bg-light">
+                <h3 class="text-dark text-center">Supplier Details</h3>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Supplier  -->
+                        <div class="mb-3">
+                            <label for="">Supplier</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected disabled>Select Supplier</option>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Phone no.  -->
+                        <div class="mb-3">
+                            <label for="">Phone no.</label>
+                            <input type="text" class="form-control" id="" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <!-- Supplier Name  -->
+                        <div class="mb-3">
+                            <label for="">Supplier Name</label>
+                            <input type="text" class="form-control" id="" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- GSTIN  -->
+                        <div class="mb-3">
+                            <label for="">GSTIN</label>
+                            <input type="text" class="form-control" id="" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- Date -->
+                        <div class="mb-3">
+                            <label for="">Date</label>
+                            <input type="date" class="form-control" id="" required>
+                        </div>
+                    </div>
+                </div>
+            </div><br>
+            <div class="card p-3 bg-light">
+                <h3 class="text-dark text-center">Product Details</h3>
+                <hr>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="table-responsive p-1">
+                            <table class="table table-bordered table-striped table-bordered border-light">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Stock</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Amount</th>
+                                        <th>GST</th>
+                                        <th>GST Price</th>
+                                        <th>Total Price</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <tr class="text-center">
+                                        <td><select class="form-select" aria-label="Default select example" required>
+                                                <option value=""></option>
+                                            </select></td>
+                                        <td><input type="text" class="form-control" required></td>
+                                        <td><input type="text" class="form-control" required></td>
+                                        <td><input type="text" class="form-control" required></td>
+                                        <td><input type="text" class="form-control" required></td>
+                                        <td><input type="text" class="form-control" required></td>
+                                        <td><input type="text" class="form-control" required></td>
+                                        <td>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="blue"
+                                                class="bi bi-plus-circle-fill mt-1" viewBox="0 0 16 16"
+                                                onclick="addRow()" style="cursor: pointer;">
+                                                <path
+                                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                            </svg>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-danger btn-sm" id="" onclick="deleteRow()"
+                                style="width: 100px;">Delete</button>
+                            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red"
+                                class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="deleteRow()"
+                                style="cursor: pointer;">
+                                <path
+                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z" />
+                            </svg> -->
+                            <a href="#"><button type="submit" class="btn btn-info btn-sm ms-2 text-light" id=""
+                                    style="width: 100px;">Add Item</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3" id="" style="width: 100px;">Submit</button>
+        </form>
+    </div>
+</body>
+<script>
+    // Function to add a new row
+    function addRow() {
+        var tableBody = document.getElementById("tableBody");
+        var newRow = tableBody.insertRow();
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+        var cell4 = newRow.insertCell(3);
+        var cell5 = newRow.insertCell(4);
+        var cell6 = newRow.insertCell(5);
+        var cell7 = newRow.insertCell(6);
+        var cell8 = newRow.insertCell(7);
+
+        // cell1.innerHTML = tableBody.rows.length; // Sl No.
+        cell1.innerHTML = `
+    <select class="form-select" aria-label="Default select example" required>
+        <option value=""></option>
+    </select>`;
+        cell2.innerHTML = '<input type="text" class="form-control text-center">'; // Price
+        cell3.innerHTML = '<input type="text" class="form-control text-center">'; // Quantity
+        cell4.innerHTML = '<input type="text" class="form-control text-center">'; // Amount
+        cell5.innerHTML = '<input type="text" class="form-control text-center">'; // GST
+        cell6.innerHTML = '<input type="text" class="form-control text-center">'; // GST Price
+        cell7.innerHTML = '<input type="text" class="form-control text-center">'; // GST Price
+        cell8.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="blue" class="bi bi-plus-circle-fill" viewBox="0 0 16 16" onclick="addRow()" style="cursor: pointer;margin-left:14px;"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"></path></svg>';
+    }
+
+    // Function to delete the last row
+    function deleteRow() {
+        var tableBody = document.getElementById("tableBody");
+        if (tableBody.rows.length > 1) {
+            tableBody.deleteRow(tableBody.rows.length - 1); // Delete the last row
+        }
+    }
+</script>
+
+
+</html>
+{% endblock content %}

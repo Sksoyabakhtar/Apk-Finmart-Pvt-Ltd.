@@ -1,0 +1,126 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance List</title>
+    
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark mt-3 text-center">Attendance List</h3>
+        <hr><br>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black; font-weight: bold;">#</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Employee Id</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Employee</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Clock In</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Clock Out</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Date</th>
+                                <th scope="col" style="color: black; font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+                    
+                        <tbody class="bg-light">
+                            {% for attendance in attendances %}
+                            <tr class="text-dark text-center">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ attendance.employee.id }}</td>
+                                <td>{{ attendance.employee.full_name }}</td>
+                                <td>{{ attendance.clock_in }}</td>
+                                <td>{{ attendance.clock_out|default:"N/A" }}</td>
+                                <td>{{ attendance.date }}</td>
+                                <td>
+                                    <a href="{% url 'view_attendance' attendance.employee.id %}" class="text-capitalize btn btn-sm bg-dark">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            width="18" height="18" fill="white" class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.830 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                            <path
+                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                        </svg></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal for View Attendance -->
+    <div class="modal fade" id="viewattendanceModal" tabindex="-1" aria-labelledby="viewattendanceModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewattendanceModalLabel">View Attendance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="password-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Company</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Employee</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Clock In</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Clock Out</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Date</label>
+                                    <input type="text" class="form-control" id="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock content %}

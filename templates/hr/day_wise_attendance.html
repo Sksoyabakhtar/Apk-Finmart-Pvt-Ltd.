@@ -1,0 +1,91 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Wise Attendance</title>
+    
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    
+</head>
+
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">Date Wise Attendance</h3>
+        <hr>
+        <div class="mt-auto">
+            <form method="GET">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" class="form-control mt-1">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_date">End Date</label>
+                        <input type="date" id="end_date" name="end_date" class="form-control mt-1">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="company">Company</label>
+                        <select id="company" name="company" class="form-control mt-1">
+                            <option value="">All Companies</option>
+                            {% for company in companies %}
+                                <option value="{{ company.id }}">{{ company.company_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="employee">Employee</label>
+                        <select id="employee" name="employee" class="form-control mt-1">
+                            <option value="">All Employees</option>
+                            {% for employee in employees %}
+                                <option value="{{ employee.id }}">{{ employee.full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Apply Filters</button>
+            </form>
+       
+        <div class="mt-auto">
+           <div class="table-responsive">
+            <table id="myTable" class="table bg-light table-bordered mt-3">
+                <thead>
+                  <tr>
+                    <th>Sl No</th>
+                    <th>Employee</th>
+                    <th>Company</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for attendance in attendances %}
+                  <tr>
+                    <td>{{ attendance.id }}</td>
+                    <td>{{ attendance.employee.full_name }}</td>
+                    <td>{{ attendance.company.company_name }}</td>
+                    <td>{{ attendance.date }}</td>
+                    <td>{{ attendance.status }}</td>
+                    <td>{{ attendance.clock_in }}</td>
+                    <td>{{ attendance.clock_out|default:"N/A" }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+           </div>
+        </div>
+    </div>
+
+    
+
+</body>
+
+</html>
+{% endblock content %}

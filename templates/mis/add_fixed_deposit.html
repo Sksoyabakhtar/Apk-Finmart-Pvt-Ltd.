@@ -1,0 +1,94 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Fixed Deposit</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+    </head>
+    <body>
+        <div class="card p-3">
+            <h3 class="text-dark mt-3 text-center">Fixed Deposit</h3>
+            <hr><br>
+            <form method="post" action="{% url 'add_fixed_deposit' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Investor Name -->
+                    <div class="col-md-3">
+                        <label for="investor_name" class="form-label">Investor Name</label>
+                        <input type="text" id="investor_name" name="investor_name" class="form-control" required>
+                    </div>
+                    <!-- PAN No. -->
+                    <div class="col-md-3">
+                        <label for="investor_pan" class="form-label">PAN No.</label>
+                        <input type="text" id="investor_pan" name="investor_pan" class="form-control" required>
+                    </div>
+                    <!-- Date Of Birth -->
+                    <div class="col-md-3">
+                        <label for="investor_dob" class="form-label">Date Of Birth</label>
+                        <input type="date" id="investor_dob" name="investor_dob" class="form-control" required>
+                    </div>
+                    <!-- Email -->
+                    <div class="col-md-3">
+                        <label for="investor_email" class="form-label">Email</label>
+                        <input type="email" id="investor_email" name="investor_email" class="form-control" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- Mobile -->
+                    <div class="col-md-3">
+                        <label for="investor_mobile" class="form-label">Mobile</label>
+                        <input type="text" id="investor_mobile" name="investor_mobile" class="form-control" required>
+                    </div>
+                    <!-- Select Tenure -->
+                    <div class="col-md-3">
+                        <label for="tenure_type" class="form-label">Select Tenure</label><br>
+                        <select class="form-control" id="tenure_type" name="tenure_type" required>
+                            <option disabled selected>Select Tenure</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="half_yearly">Half-Yearly</option>
+                        </select>
+                    </div>
+                    <!-- Enter Company Name -->
+                    <div class="col-md-3">
+                        <label for="company_name" class="form-label">Enter Company Name</label>
+                        <input type="text" id="company_name" name="company_name" class="form-control" required>
+                    </div>
+                    <!-- Enter ROI -->
+                    <div class="col-md-3">
+                        <label for="roi" class="form-label">Enter ROI</label>
+                        <input type="text" id="roi" name="roi" class="form-control" required>
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- Select Tenure -->
+                    <div class="col-md-3">
+                        <label for="tenure_duration" class="form-label">Select Tenure</label><br>
+                        <select class="form-control" id="tenure_duration" name="tenure_duration" required>
+                            <option disabled selected>Select Tenure</option>
+                            <option value="annually">Annually</option>
+                            <option value="cumulative">Cumulative</option>
+                        </select>
+                    </div>
+                    <!-- Nominee Name -->
+                    <div class="col-md-3">
+                        <label for="nominee_name" class="form-label">Nominee Name</label>
+                        <input type="text" id="nominee_name" name="nominee_name" class="form-control" required>
+                    </div>
+                    <!-- Amount -->
+                    <div class="col-md-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="text" id="amount" name="amount" class="form-control" required>
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                <a href="{% url 'query_management' %}" class="btn btn-secondary" style="border-radius: 4px;">Back</a>
+            </form>
+        </div>
+    </body>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+    <div class="container mt-4 shadow-lg p-4 w-75">
+        <h2 class="mb-4 text-center">Update Expense</h2>
+        <form method="post" id="update-expense-form" action="{% url 'update-expense' expense.id %}">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="batch_number" class="form-label">Batch No:</label>
+                    <input type="text" class="form-control shadow-lg" id="batch_number" name="batch_number" value="{{ expense.batch_number }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="supplier_name" class="form-label">Supplier Name:</label>
+                    <select class="form-select shadow-lg" id="supplier_name" name="supplier_name" required>
+                        {% for supplier in suppliers %}
+                            <option value="{{ supplier.id }}" {% if supplier.id == expense.supplier.id %}selected{% endif %}>
+                                {{ supplier.company_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="item" class="form-label">Item:</label>
+                    <input type="text" class="form-control shadow-lg" id="item" name="item" value="{{ expense.item }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="amount" class="form-label">Amount:</label>
+                    <input type="text" class="form-control shadow-lg" id="amount" name="amount" value="{{ expense.amount }}" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="category" class="form-label">Category:</label>
+                    <select class="form-select shadow-lg" id="category" name="category" required>
+                        <option value="Stationary" {% if expense.category == 'Stationary' %}selected{% endif %}>Stationary</option>
+                        <option value="Fuel" {% if expense.category == 'Fuel' %}selected{% endif %}>Fuel</option>
+                        <!-- Add other options as needed -->
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="company" class="form-label">Company</label>
+                    <input type="text" class="form-control shadow-lg" id="company" name="company" value="{{ expense.company }}" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="created_date" class="form-label">Created Date:</label>
+                    <input type="date" class="form-control shadow-lg" id="created_date" name="created_date" value="{{ expense.created_date|date:'Y-m-d' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="expiry_date" class="form-label">Expiry Date:</label>
+                    <input type="date" class="form-control shadow-lg" id="expiry_date" name="expiry_date" value="{{ expense.expiry_date|date:'Y-m-d' }}" required>
+                </div>
+            </div>
+            
+            <button type="submit" id="update-btn" class="btn btn-primary">Update</button>
+            <a href="{% url 'add_expenses'%}"><button  class="btn btn-dark">Cancel</button></a>
+        </form>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script>
+            document.getElementById('update-btn').addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent the default form submission
+    
+                fetch("{% url 'update-expense' expense.id %}", {
+                    method: 'POST',
+                    body: new FormData(document.getElementById('update-expense-form')),
+                    headers: {
+                        'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                    },
+                }).then(function(response) {
+                    if (response.ok) {
+                        // If the response is okay, show the success message using SweetAlert
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Expenses updated successfully!',
+                            icon: 'success'
+                        }).then(function () {
+                            // Redirect to the task list page after success
+                            window.location.href = "{% url 'add_expenses' %}";
+                        });
+                    } else {
+                        // Show an error message using SweetAlert if the response is not okay
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while updating the expenses!',
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+        </script>
+    </div>
+{% endblock content %}

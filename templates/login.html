@@ -1,0 +1,147 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+   
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" name="username" required><br>
+            <label for="password">Password:</label>
+            <input type="password" name="password" required><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</body>
+</html> -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--  Title -->
+    <title>Login</title>
+    <!--  Required Meta Tag -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="handheldfriendly" content="true" />
+    <meta name="MobileOptimized" content="width" />
+    <meta name="description" content="Mordenize" />
+    <meta name="author" content="" />
+    <meta name="keywords" content="Mordenize" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--  Favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logo.png' %}" />
+    <!-- Core Css -->
+    <link id="themeColors" rel="stylesheet" href="{% static 'css/style.min.css' %}" />
+  </head>
+  <body>
+    <!--  Body Wrapper -->
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-md-8 col-lg-4 col-xxl-3">
+                <div class="card mb-0 mx-auto">
+                    <div class="card-body">
+                        <a href="#" class="text-center d-block mb-5">
+                            <img src="{% static 'images/logo.png' %}" width="250px" alt="Logo">
+                        </a>
+                        <form method="POST" id="LoginForm">
+                            {% csrf_token %}
+                            {% if messages %}
+                            <div class="alert alert-danger" role="alert">
+                                <ul>
+                                    {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="exampleInputPassword1" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+                            </div>
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Remember this Device
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-primary w-100 mb-4" value="Login">
+                            <div class="text-center">
+                                <p class="fs-4 mb-0">New to APK Finmart?</p>
+                                <a class="text-primary" href="{% url 'signup' %}">Create an account</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+      $(document).ready(function() {
+          // Function to handle form submission
+          $("#LoginForm").submit(function(event) {
+              event.preventDefault(); // Prevent default form submission
+  
+              // Serialize form data
+              var formData = $(this).serialize();
+              var endpointUrl = "{% url 'login' %}";
+  
+              // Send an AJAX POST request to your server
+              $.ajax({
+                  type: "POST",
+                  url: endpointUrl,
+                  data: formData,
+                  success: function(response) {
+                      if (response.success) {
+                          if (response.redirect_url) {
+                              // Redirect to the specified URL
+                              window.location.href = response.redirect_url;
+                          } else {
+                              // Show a success message with SweetAlert
+                              Swal.fire({
+                                  title: 'Success!',
+                                  text: response.message,
+                                  icon: 'success',
+                                  confirmButtonText: 'OK'
+                              }).then(function() {
+                                  // Redirect to the Applicant_dashboard URL after success
+                                  window.location.href = '{% url 'userdashboard' %}';
+                              });
+                          }
+                      } else {
+                          // Show an error message with SweetAlert
+                          Swal.fire({
+                              title: 'Error!',
+                              text: response.message,
+                              icon: 'error',
+                              confirmButtonText: 'OK'
+                          });
+                      }
+                  },
+                  error: function() {
+                      // Show an error message with SweetAlert
+                      Swal.fire({
+                          title: 'Error!',
+                          text: 'Login failed due to a server error. Please try again later.',
+                          icon: 'error',
+                          confirmButtonText: 'OK'
+                      });
+                  }
+              });
+          });
+      });
+  </script>
+  </body>
+</html>
+

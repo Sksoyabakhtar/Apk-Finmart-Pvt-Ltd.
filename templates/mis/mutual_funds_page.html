@@ -1,0 +1,89 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mutual Funds</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+    </head>
+    <body>
+        <div class="card p-3">
+            <h3 class="text-dark mt-3 text-center">Mutual Funds</h3>
+            <hr><br>
+            <form method="post" action="{% url 'add_query' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Invester Name -->
+                    <div class="col-md-3">
+                        <label for="investor_name" class="form-label">Investor Name</label>
+                        <input type="text" id="investor_name" name="investor_name" class="form-control" required>
+                    </div>
+                    <!-- PAN No. -->
+                    <div class="col-md-3">
+                        <label for="pan_no" class="form-label">PAN No.</label>
+                        <input type="text" id="pan_no" name="pan_no" class="form-control" required>
+
+                    </div>
+                    <!-- Date Of Birth -->
+                    <div class="col-md-3">
+                        <label for="date_of_birth" class="form-label">Date Of Birth</label>
+                        <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" required>
+
+                    </div>
+                    <!-- Email -->
+                    <div class="col-md-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+
+                    </div>
+                </div><br>
+                <div class="row">
+                    <!-- Mobile -->
+                    <div class="col-md-3">
+                        <label for="mobile" class="form-label">Mobile</label>
+                        <input type="text" id="mobile" name="mobile" class="form-control" required>
+
+                    </div>
+                    <!-- Select Category -->
+                    <div class="col-md-3">
+                        <label for="categorySelect" class="form-label">Select Category</label><br>
+                        <!-- <input class="form-check-input mt-2" type="checkbox"  id="showAdditionalForm" required> -->
+                        <select class="form-control" id="categorySelect" name="category" required>
+                            <option disabled selected>Select Category</option>
+                            <option value="Equity">Equity</option>
+                            <option value="Debt">Debt</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                    <!-- Enter Scheme Name -->
+                    <div class="col-md-3">
+                        <label for="schemeName" class="form-label">Enter Scheme Name</label>
+                        <input type="text" id="schemeName" name="scheme_name" class="form-control" required>
+
+                    </div>
+                    <!-- Nominee Name -->
+                    <div class="col-md-3">
+                        <label for="nominee_name" class="form-label">Nominee Name</label>
+                        <input type="text" id="nominee_name" name="nominee_name" class="form-control" required>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Amount -->
+                    <div class="col-md-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="text" id="amount" name="amount" class="form-control" required>
+
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                <a href="{% url 'query_management' %}" class="btn btn-secondary" style="border-radius: 4px;">Back</a>
+            </form>
+
+        </div>
+    </body>
+{% endblock %}

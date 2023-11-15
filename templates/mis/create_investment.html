@@ -1,0 +1,59 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Product</title>
+
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Create Product</h3>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control mt-1" id="name" name="name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="type">Type</label>
+                    <select class="form-control mt-1" id="type" name="type" required>
+                        <option disabled selected>Select Type</option>
+                        <option value="Retirement Planning">Retirement Planning</option>
+                        <option value="Portfolio Review Utility">Portfolio Review Utility</option>
+                        <option value="Tax Filling">Tax Filling</option>
+                        <option value="Annual Life Certificate">Annual Life Certificate</option>
+                        <option value="Portfolio Management(MF & Non-MF)">Portfolio Management(MF & Non-MF)</option>
+                        <option value="NPS">NPS</option>
+                        <option value="Mutual Fund">Mutual Fund</option>
+                        <option value="Fixed Deposits">Fixed Deposits</option>
+                        <option value="Postal Deposits">Postal Deposits</option>
+                        <option value="Portfolio Management">Portfolio Management</option>
+                        <option value="Life & General Insurances">Life & General Insurances</option>
+                    </select>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="duration_of_years">Duration of Years</label>
+                    <input type="number" class="form-control mt-1" id="duration_of_years" name="duration_of_years"
+                        required>
+                </div>
+                <div class="col-md-6">
+                    <label for="description">Description</label>
+                    <textarea class="form-control mt-1" id="description" name="description" required></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2">Create</button>
+            <a href="{% url 'investment_list' %}" class="btn btn-secondary mt-2">Back to Product</a>
+        </form>
+    </div>
+</body>
+
+</html>
+{% endblock content %}

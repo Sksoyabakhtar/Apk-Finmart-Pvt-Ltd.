@@ -1,0 +1,146 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <div class="card p-3">
+        <h3 class="text-dark ms-3 mt-3 text-center">Employee Salaries</h3>
+        <hr><br>
+        <div class="row">
+            <!-- Search bar -->
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search" aria-describedby="search-button" id="searchInput">
+                    </div>
+                    <a href="{% url 'add_salary' %}"><button class="btn btn-primary">Add Salary</button></a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="salaryTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Emp Id</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Emp Name</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Basic Salary</th>
+                                <th scope="col" style="color: black;font-weight: bold;">HRA</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Medical</th>
+                                <th scope="col" style="color: black;font-weight: bold;">CTC</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            {% for salary in salaries %}
+                            <!-- Sample data -->
+                            <tr class="text-dark text-center">
+                                <td>APK.E.ID {{ salary.employee_id }}</td>
+                                <td>{{ salary.employee_ref.full_name }}</td>
+                                <td>{{ salary.basic }}</td>
+                                <td>{{ salary.hra }}</td>
+                                <td>{{ salary.medical }}</td>
+                                <td>{{ salary.ctc }}</td>
+                                <td>
+                                    <a href="{% url 'edit_salary' salary_id=salary.id %}" class="text-capitalize btn btn-sm bg-dark">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                        </svg>
+                                    </a>
+                                    
+                                    <a href="#" class="text-capitalize btn btn-sm bg-danger" onclick="confirmDelete({{ salary.id }})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if salaries.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ salaries.previous_page_number }}">Previous</a>
+                            </li>
+                        {% endif %}
+                
+                        <li class="page-item disabled">
+                            <span class="page-link">Page {{ salaries.number }} of {{ salaries.paginator.num_pages }}</span>
+                        </li>
+                
+                        {% if salaries.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ salaries.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ salaries.paginator.num_pages }}">Last</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    </div>
+    <script>
+        function confirmDelete(salaryId) {
+            event.preventDefault(); // Prevent the default click event
+    
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Are you sure you want to delete this salary data?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'No, cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If "Yes" is clicked, redirect to the delete URL with the salaryId
+                    window.location.href = "{% url 'delete_salary' 0 %}".replace('0', salaryId);
+                }
+            });
+        }
+    </script>
+
+    <script>
+        // Search Bar JS (Similar to the Management Department page)
+        var input = document.getElementById("searchInput");
+        var table = document.getElementById("salaryTable");
+        var rows = table.getElementsByTagName("tr");
+
+        input.addEventListener("input", function () {
+            var filter = input.value.toLowerCase();
+
+            for (var i = 1; i < rows.length; i++) {
+                var rowData = rows[i].getElementsByTagName("td");
+                var found = false;
+
+                for (var j = 0; j < rowData.length; j++) {
+                    var cell = rowData[j];
+                    if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        });
+    </script>
+
+
+{% endblock %}

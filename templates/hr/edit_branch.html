@@ -1,0 +1,134 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #564fbf;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="container">
+    <h2>Edit Branch</h2>
+    <hr>
+    <form id="editBranchForm" action="{% url 'update_branch' branch.id %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Branch Id -->
+                <div class="mb-3">
+                    <label for="branch_id" class="form-label">Branch ID</label>
+                    <input type="text" class="form-control" id="branch_id" name="branch_id" value="{{ branch.branch_id }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Branch Name -->
+                <div class="mb-3">
+                    <label for="branch_name" class="form-label">Branch Name</label>
+                    <input type="text" class="form-control" id="branch_name" name="branch_name" value="{{ branch.branch_name }}" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <!-- District -->
+                <div class="mb-3">
+                    <label for="district" class="form-label">District</label>
+                    <input type="text" class="form-control" id="district" name="district" value="{{ branch.district }}" required>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- PIN Code -->
+                <div class="mb-3">
+                    <label for="pin_code" class="form-label">PIN Code</label>
+                    <input type="text" class="form-control" id="pin_code" name="pin_code" value="{{ branch.pin_code }}" required>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- Location -->
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <textarea class="form-control" id="location" name="location" required>{{ branch.location }}</textarea>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success" style="border-radius: 4px;">Update</button>
+    </form>
+</div>
+<script>
+    document.getElementById('editBranchForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        fetch(this.action, {
+            method: this.method,
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': this.querySelector('input[name="csrfmiddlewaretoken"]').value,
+            },
+        }).then(function(response) {
+            if (response.ok) {
+                // If the response is okay, show the success message using SweetAlert
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Branch updated successfully!',
+                    icon: 'success'
+                }).then(function () {
+                    // Redirect to the branch list or any other relevant page
+                    window.location.href = "{% url 'branch_creation' %}";
+                });
+            } else {
+                // Show an error message if the response is not okay
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while updating the branch.',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

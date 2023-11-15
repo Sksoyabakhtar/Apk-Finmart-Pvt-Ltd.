@@ -1,0 +1,422 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+
+
+    <style>
+        #dateInput {
+            border: 2px solid #ccc;
+            padding: 10px;
+            transition: border 0.3s;
+        }
+
+        #dateInput:focus {
+            border: 2px solid #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Invoice</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addclientModal"
+                        style="font-weight: bold;margin-left: -40px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-plus"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>Add Invoice
+                    </a>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addclientModal">Add Invoice</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <table id="myTable" class="table bg-light table-bordered mt-2">
+                    <thead class="bg-primary text-center">
+                        <tr>
+                            <th scope="col" style="color: black;font-weight: bold;">Invoice</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Project</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Total</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Invoice Date</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Due Date</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Status</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-light">
+                        <tr class="text-dark text-center">
+                            <!-- <th scope="row">1</th> -->
+                            <td>
+                                1
+                            </td>
+                            <td>
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <a href="#" class="text-capitalize btn btn-sm bg-dark" data-bs-toggle="modal"
+                                    data-bs-target="#editclientModal"><svg xmlns="http://www.w3.org/2000/svg" width="18"
+                                        height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                        <path
+                                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                    </svg></a>
+                                <a href="#" class="text-capitalize btn btn-sm bg-danger"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white"
+                                        class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path
+                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                        <path
+                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                    </svg></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Invoice -->
+    <div class="modal fade" id="addclientModal" tabindex="-1" aria-labelledby="addclientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addclientModalLabel">Create Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="addInvoiceForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Invoice Number -->
+                                <div class="mb-3">
+                                    <label for="invoice_number" class="form-label">Invoice Number</label>
+                                    <input type="text" class="form-control" id="invoice_number" name="invoice_number" value="{{ invoice_number }}" disabled required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Project -->
+                                <div class="mb-3">
+                                    <label for="project_id" class="form-label">Project</label>
+                                    <select class="form-select" aria-label="Default select example" id="project_id" name="project_id" required>
+                                        <option selected disabled>Select Project</option>
+                                        <!-- Add options dynamically fetched from the backend -->
+                                        {% for project in projects %}
+                                            <option value="{{ project.id }}">{{ project.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Invoice Date -->
+                                <div class="mb-3">
+                                    <label for="invoice_date" class="form-label">Invoice Date</label>
+                                    <input type="date" id="invoice_date" name="invoice_date" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Due date -->
+                                <div class="mb-3">
+                                    <label for="due_date" class="form-label">Due Date</label>
+                                    <input type="date" id="due_date" name="due_date" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card p-3">
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="table-responsive p-1">
+                                        <table class="table">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th>Item</th>
+                                                    <th>Qty</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Tax Type</th>
+                                                    <th>Tax Rate</th>
+                                                    <th>Sub Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tableBody">
+                                                <tr class="text-center">
+                                                    <td><input type="text" class="form-control" id="item" name="item" required></td>
+                                                    <td><input type="text" class="form-control" id="qty" name="qty" required></td>
+                                                    <td><input type="text" class="form-control" id="unitPrice" name="unitPrice" required></td>
+                                                    <td>
+                                                        <select class="form-select" id="tax_type" name="tax_type" required>
+                                                            <option value="" selected disabled>Select Tax Type</option>
+                                                            {% for tax_type in tax_types %}
+                                                                <option value="{{ tax_type.id }}">{{ tax_type.tax_name }} {{ tax_type.tax_rate }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" id="taxRate" name="taxRate" disabled></td>
+                                                    <td><input type="text" class="form-control" id="subTotal" name="subTotal" disabled></td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-dark btn-sm" onclick="addRow()">Add
+                                                            Item</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <button type="button" class="btn btn-danger btn-sm ms-3" onclick="deleteRow()">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row justify-content-end">
+                                    <div class="col-12 col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <label for="subtotal" class="form-label">Sub Total</label>
+                                                <input type="text" class="form-control" id="subtotal" name="subtotal" disabled>
+                                                <br>
+                                                <label for="taxRate" class="form-label">Tax Rate</label>
+                                                <input type="text" class="form-control" id="taxRate" name="taxRate" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><br>
+                            <div class="container">
+                                <div class="row justify-content-end">
+                                    <table class="table bg-light table-bordered w-50">
+                                        <thead class="bg-primary text-center">
+                                            <tr>
+                                                <th scope="col" style="color: black; font-weight: bold;">Discount Type</th>
+                                                <th scope="col" style="color: black; font-weight: bold;">Discount</th>
+                                                <th scope="col" style="color: black; font-weight: bold;">Discount Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-light">
+                                            <tr class="text-dark text-center">
+                                                <td>
+                                                    <select id="discountType" onchange="calculateDiscountAmount()">
+                                                        <option value="Flat">Flat</option>
+                                                        <option value="Percentage">Percentage</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" id="discount"
+                                                        oninput="calculateDiscountAmount()">
+                                                </td>
+                                                <td><input type="text" class="form-control" id="discountAmount" disabled></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div><br>
+                            <div class="container">
+                                <div class="row justify-content-end">
+                                    <table class="table bg-light table-bordered w-50">
+                                        <thead class="bg-primary text-center">
+                                            <tr>
+                                                <th scope="col" style="color: black; font-weight: bold;">Grand Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-light">
+                                            <tr class="text-dark text-center">
+                                                <td><input type="text" class="form-control" id="grandTotal" disabled></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            // Function to add a new row
+                            function addRow() {
+                                var tableBody = document.getElementById("tableBody");
+                                var newRow = tableBody.insertRow();
+                                var cell1 = newRow.insertCell(0);
+                                var cell2 = newRow.insertCell(1);
+                                var cell3 = newRow.insertCell(2);
+                                var cell4 = newRow.insertCell(3);
+                                var cell5 = newRow.insertCell(4);
+                                var cell6 = newRow.insertCell(5);
+                                var cell7 = newRow.insertCell(6);
+                    
+                                cell1.innerHTML = '<input type="text" class="form-control tex-center">';
+                                cell2.innerHTML = '<input type="text" class="form-control tex-center" oninput="calculateSubTotal()">';
+                                cell3.innerHTML = '<input type="text" class="form-control tex-center" oninput="calculateSubTotal()">';
+                                cell4.innerHTML = '<input type="text" class="form-control tex-center">';
+                                cell5.innerHTML = '<input type="text" class="form-control tex-center">';
+                                cell6.innerHTML = '<input type="text" class="form-control tex-center" disabled>';
+                                cell7.innerHTML = '<button type="button" class="btn btn-dark btn-sm" onclick="addRow()">Add Item</button>';
+                            }
+                    
+                            // Function to delete the last row
+                            function deleteRow() {
+                                var tableBody = document.getElementById("tableBody");
+                                if (tableBody.rows.length > 1) {
+                                    tableBody.deleteRow(-1);
+                                    calculateSubTotal();
+                                }
+                            }
+                    
+                            // Function to calculate the Sub Total and Grand Total
+                            function calculateSubTotal() {
+                                var subTotal = 0;
+                                var rows = document.getElementById("tableBody").getElementsByTagName("tr");
+                                for (var i = 0; i < rows.length; i++) {
+                                    var row = rows[i];
+                                    var qty = parseFloat(row.cells[1].getElementsByTagName("input")[0].value);
+                                    var unitPrice = parseFloat(row.cells[2].getElementsByTagName("input")[0].value);
+                                    var subtotalCell = row.cells[5].getElementsByTagName("input")[0];
+                                    var subTotalValue = qty * unitPrice;
+                                    subtotalCell.value = subTotalValue;
+                                    subTotal += subTotalValue;
+                                }
+                                document.getElementById("subtotal").value = subTotal;
+                                calculateGrandTotal();
+                            }
+                    
+                            // Function to calculate the Discount Amount and Grand Total
+                            function calculateDiscountAmount() {
+                                var discountType = document.getElementById("discountType").value;
+                                var discount = parseFloat(document.getElementById("discount").value);
+                                var subTotal = parseFloat(document.getElementById("subtotal").value);
+                                var discountAmount = 0;
+                    
+                                if (discountType === "Flat") {
+                                    discountAmount = discount;
+                                } else if (discountType === "Percentage") {
+                                    discountAmount = (discount / 100) * subTotal;
+                                }
+                    
+                                document.getElementById("discountAmount").value = discountAmount;
+                                calculateGrandTotal();
+                            }
+                    
+                            // Function to calculate the Grand Total
+                            function calculateGrandTotal() {
+                                var subTotal = parseFloat(document.getElementById("subtotal").value);
+                                var discountAmount = parseFloat(document.getElementById("discountAmount").value);
+                                var grandTotal = subTotal - discountAmount;
+                                document.getElementById("grandTotal").value = grandTotal;
+                            }
+                    
+                            // Add event listeners to input fields for automatic calculation
+                            var inputFields = document.querySelectorAll("input");
+                            inputFields.forEach(function (input) {
+                                input.addEventListener("input", function () {
+                                    calculateSubTotal();
+                                });
+                            });
+                    
+                            // Initial calculation
+                            calculateSubTotal();
+                            calculateDiscountAmount();
+                        </script>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    // starting date
+    $(function () {
+        $("#s_dateInput").datepicker();
+    });
+
+    // end date
+    $(function () {
+        $("#e_dateInput").datepicker();
+    });
+</script>
+
+</html>
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+    <div class="container shadow-lg w-50 p-3 mt-5">
+        <h3 class="text-center mt-3">Update Deduction</h3>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-12">
+                <form method="post" action="{% url 'update_deduction' deduction.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="deduction_name" class="form-label">Deduction Name</label>
+                        <input type="text" name="deduction_name" class="form-control shadow-lg" value="{{ deduction.deduction_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" class="form-control shadow-lg" required>{{ deduction.description }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

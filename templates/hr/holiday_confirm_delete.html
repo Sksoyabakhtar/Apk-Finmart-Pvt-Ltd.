@@ -1,0 +1,67 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+  <style>
+    /* Container style */
+    .holiday-delete-confirm-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      margin-top: 40px;
+    }
+
+    /* Page title style */
+    .page-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    /* Confirmation message style */
+    .confirmation-message {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    /* Delete button style */
+    .btn-danger {
+      padding: 8px 20px;
+      font-size: 16px;
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    /* Cancel button style */
+    .btn-primary {
+      padding: 8px 20px;
+      font-size: 16px;
+      background-color: #ccc;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-danger:hover,
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+  </style>
+
+  <div class="holiday-delete-confirm-container">
+    <h1 class="page-title">Delete Holiday</h1>
+    <p class="confirmation-message">Are you sure you want to delete the holiday "{{ holiday.title }}"?</p>
+    <form method="post" class="delete-form">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      <a href="{% url 'holiday_list' %}" class="btn btn-primary btn-sm">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,313 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Creation</title>
+    
+    <style>
+        /* Reduce the gap between table rows */
+        #myTable tbody tr {
+            margin: 5px;
+        }
+
+        /* Reduce the gap around the table cells */
+        #myTable td {
+            padding: 5px 0;
+        }
+
+        /* Adjust the spacing around the pagination component */
+        .pagination {
+            margin: 5px 0;
+        }
+
+        /* Adjust the spacing within the pagination component */
+        .page-link {
+            padding: 5px 10px;
+        }
+        .user-details {
+            display: flex;
+            align-items: center; /* Vertically center items */
+            justify-content: center; /* Horizontally center items */
+        }
+        .rounded-image {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%; /* Make it round */
+            overflow: hidden; /* Hide overflow */
+            margin-right: 10px; /* Add some spacing to separate the image from details */
+        }
+
+        .rounded-image img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">User Creation</h3>
+        <hr><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary dropdown-toggle" type="button" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">Add Employee</button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#addadminModal">Add Admin</a></li>
+                        <li><a class="dropdown-item" href="{% url 'employee_creation' %}">Add Employee</a></li>
+                        <!-- <li><a class="dropdown-item" href="#">Add Client</a></li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Admin ID.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">User</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Contact</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Login Info</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Status</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody class="bg-light">
+                            {% for admin_user in admin_users %}
+                            <tr class="text-dark text-center">
+                                <td>APK.A.ID{{ admin_user.id }}</td>
+                                <td>
+                                    <div class="user-details">
+                                        <div class="rounded-image">
+                                            <img src="{{ admin_user.image.url }}" alt="{{ admin_user.first_name }}'s Profile Picture">
+                                        </div>
+                                        <div class="details">
+                                            <strong class="text-info">{{ admin_user.first_name }} {{ admin_user.last_name }}</strong><br>
+                                            <span class="text-dark" style="font-weight: bold;">Username:</span> {{ admin_user.username }}<br>
+                                            <span class="text-dark" style="font-weight: bold;">Role:</span> {% if admin_user == request.user %}admin{% else %}{{ admin_user.role }}{% endif %}
+                                        </div>
+                                    </div>
+                                </td>                            
+                                <td>Email: {{ admin_user.email }}<br>Phone: {{ admin_user.phone }}</td>
+                                <td>
+                                    <span class="text-dark" style="font-weight: bold;">Last Login Date:</span> {{ admin_user.last_login_date|date:"d-m-Y--H:i" }}
+                                </td>                            
+                                <td>
+                                    {% if admin_user.active %}
+                                        Active
+                                    {% else %}
+                                        Deactive
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                        
+                    </table>
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if admin_users.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">Previous</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ admin_users.previous_page_number }}">Previous</a>
+                            </li>
+                        {% endif %}
+                
+                        <li class="page-item disabled">
+                            <span class="page-link">Page {{ admin_users.number }} of {{ admin_users.paginator.num_pages }}</span>
+                        </li>
+                
+                        {% if admin_users.has_next %}
+                            <li class="page-item">
+                                <a class a="page-link" href="?page={{ admin_users.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ admin_users.paginator.num_pages }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Admin -->
+    <div class="modal fade" id="addadminModal" tabindex="-1" aria-labelledby="addadminModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addadminModalLabel">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'add_admin_user' %}" method="post" enctype="multipart/form-data" onsubmit="showSuccessAlert(event)">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- First Name -->
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" pattern="[A-Za-z\s]+" title="Please enter a valid first name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-6">
+                                <!-- Last Name -->
+                                <div class="mb-3">
+                                    <label for="last_name" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" pattern="[A-Za-z\s]+" title="Please enter a valid last name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Username -->
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" required>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-6">
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Phone -->
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number." required>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-6">
+                                <!-- Password -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Confirm Password -->
+                                <div class="mb-3">
+                                    <label for="confirm_password" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required oninput="checkPasswordMatch()">
+                                </div>
+                                <p id="passwordError" style="color: red; display: none;">Password and Confirm Password do not match.</p>
+                            </div>
+                    
+                            <div class="col-md-6">
+                                <!-- Image -->
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Image</label>
+                                    <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" for="active">Active</label>
+                            <input class="form-check-input" type="checkbox" id="active" name="active" value="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                    </form>                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function checkPasswordMatch() {
+            var password = document.getElementById("password").value;
+            var confirm_password = document.getElementById("confirm_password").value;
+            var passwordError = document.getElementById("passwordError");
+    
+            if (password !== confirm_password) {
+                passwordError.style.display = "block";
+            } else {
+                passwordError.style.display = "none";
+            }
+        }
+    </script>    
+    <script>
+        function showSuccessAlert(e) {
+            e.preventDefault(); // Prevent the default form submission behavior
+    
+            Swal.fire({
+                title: 'Success',
+                text: 'User added successfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Manually submit the form
+                    e.target.submit();
+                }
+            });
+        }
+    </script>
+    
+
+</body>
+
+</html>
+{% endblock content %}

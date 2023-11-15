@@ -1,0 +1,207 @@
+{% extends "user_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Leave Balance</title>
+
+</head>
+
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">Leave Balance</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <!-- Id -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Id</label>
+                        <input type="text" class="form-control" id="" name="" value="APK_120" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- Employee Name -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Name</label>
+                        <input type="text" class="form-control" id="" name="" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- Month -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Month</label>
+                        <select class="form-select" id="monthFilter">
+                            <option selected value="">All</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- Year -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Year</label>
+                        <select class="form-select" id="yearFilter">
+                            <option selected value="">All</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Sl no.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Leave Code</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Leave Type</th>
+                                <th scope="col" style="color: black;font-weight: bold;display: none;">Month</th>
+                                <th scope="col" style="color: black;font-weight: bold;display: none;">Year</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Assign Leave</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Leave Balance</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    1
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td style="display: none;">January</td>
+                                <td style="display: none;">2023</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    2
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td style="display: none;">march</td>
+                                <td style="display: none;">2023</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    3
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td style="display: none;">March</td>
+                                <td style="display: none;">2025</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination mt-2">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const monthFilter = document.getElementById("monthFilter");
+        const yearFilter = document.getElementById("yearFilter");
+        const dataTable = document.getElementById("myTable");
+
+        monthFilter.addEventListener("change", filterTableByMonth);
+        yearFilter.addEventListener("change", filterTableByYear);
+
+        function filterTableByMonth() {
+            const selectedMonth = monthFilter.value;
+            const rows = dataTable.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+                const monthCell = rows[i].getElementsByTagName("td")[3];
+
+                if (monthCell) {
+                    const month = monthCell.textContent || monthCell.innerText;
+
+                    if (selectedMonth === "" || month === selectedMonth) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function filterTableByYear() {
+            const selectedYear = yearFilter.value;
+            const rows = dataTable.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+                const yearCell = rows[i].getElementsByTagName("td")[4];
+
+                if (yearCell) {
+                    const year = yearCell.textContent || yearCell.innerText;
+
+                    if (selectedYear === "" || year === selectedYear) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
+{% endblock content %}

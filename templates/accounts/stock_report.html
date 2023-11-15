@@ -1,0 +1,76 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<style>
+    /* Custom styles for the table */
+    
+    .profit {
+        color: #009933;
+    }
+
+    .loss {
+        color: #ff0000;
+    }
+      /* Print media style */
+      @media print {
+            body * {
+                visibility: hidden;
+            }
+            .ledger-table, .ledger-table * {
+                visibility: visible;
+            }
+            .ledger-table {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+ 
+
+
+</style>
+<h1 class="text-center mb-3">Stock Report</h1>
+
+<form method="GET" action="{% url 'stock_report' %}">
+    <div class="row">
+        <div class="col-md-6">
+            <label for="from_date">From Date:</label>
+    <input type="date" id="from_date" class="form-control" name="from_date" value="{{ from_date|default_if_none:'' }}" placeholder="YYYY-MM-DD" style="border-radius: 8px;">
+        </div>
+        <div class="col-md-6">
+            <label for="to_date">To Date:</label>
+            <input type="date" id="to_date" class="form-control" name="to_date" value="{{ to_date|default_if_none:'' }}" placeholder="YYYY-MM-DD" style="border-radius: 8px;">
+        </div>
+    </div>
+    
+   
+    <button type="submit" class="btn btn-primary mt-2">Filter</button>
+</form>
+<div class="ledger-table">
+    <table id="myTable" class="table bg-light table-bordered mt-2">
+        <thead>
+            <tr>
+                <th rowspan="2">Item</th>
+                <th>Purchase Quantity</th>
+                <th>Purchase Return Quantity</th> <!-- New column -->
+                <!-- <th>Sale Quantity</th>
+                <th>Sale Return Quantity</th>  -->
+                <th>Actual Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in inventory_items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.purchased_quantity }}</td>
+                    <td>{{ item.purchase_return_quantity }}</td> <!-- New column value -->
+                    <!-- <td>{{ item.sold_quantity }}</td>
+                    <td>{{ item.sale_return_quantity }}</td>  -->
+                    <td>{{ item.actual_stock }}</td> <!-- New column value -->
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<button onclick="window.print()" class="btn btn-primary">Print Report</button>
+{% endblock %}

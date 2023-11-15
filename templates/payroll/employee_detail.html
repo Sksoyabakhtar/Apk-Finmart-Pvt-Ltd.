@@ -1,0 +1,178 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #564fbf;
+    }
+</style>
+
+<div class="card p-3 shadow-md bg-light">
+    <h3 class="text-dark mt-1 text-center">Employee Details</h3>
+    <hr>
+    <form id="employee-form">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" name="full_name" disabled value="{{ employee.full_name }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" disabled value="{{ employee.email }}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Phone -->
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" disabled pattern="^\d{10,}$" title="Please enter at least 10 numeric characters" value="{{ employee.phone }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Date of Birth -->
+                <div class="mb-3">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="text" class="form-control" id="dob" name="dob" disabled value="{{ employee.dob }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Gender -->
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <input type="text" class="form-control" id="gender" name="gender" disabled value="{{ employee.gender }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Company -->
+                <div class="mb-3">
+                    <label for="company" class="form-label">Company</label>
+                    <input type="text" class="form-control" id="company" name="company" disabled value="{{ employee.company.company_name }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Department -->
+                <div class="mb-3">
+                    <label for="department" class="form-label">Department</label>
+                    <input type="text" class="form-control" id="department" name="department" disabled value="{{ employee.department }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Designation -->
+                <div class="mb-3">
+                    <label for="designation" class="form-label">Designation</label>
+                    <input type="text" class="form-control" id="designation" name="designation" disabled value="{{ employee.designation.designation_name }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Office Shift -->
+                <div class="mb-3">
+                    <label for="officeShift" class="form-label">Office Shift</label>
+                    <input type="text" class="form-control" id="officeShift" name="office_shift" disabled value="{{ employee.office_shift }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- User Name -->
+                <div class="mb-3">
+                    <label for="userName" class="form-label">User Name</label>
+                    <input type="text" class="form-control" id="userName" name="user_name" disabled value="{{ employee.user_name }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Role -->
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <input type="text" class="form-control" id="role" name="role" disabled value="{{ employee.role.name }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Attendance Type -->
+                <div class="mb-3">
+                    <label for="attendanceType" class="form-label">Attendance Type</label>
+                    <input type="text" class="form-control" id="attendanceType" name="attendance_type" disabled value="{{ employee.attendance_type }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Date of Joining -->
+                <div class="mb-3">
+                    <label for="joiningDate" class="form-label">Date of Joining</label>
+                    <input type="text" class="form-control" id="joiningDate" name="joining_date" disabled value="{{ employee.joining_date }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- User Image -->
+                <div class="mb-3">
+                    <label for="userImage" class="form-label">User Image</label><br>
+                    <img src="{{ employee.user_image.url }}" alt="Not found" srcset="" id="userImage" name="user_image" style="max-width: 100px; max-height: 100px;">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

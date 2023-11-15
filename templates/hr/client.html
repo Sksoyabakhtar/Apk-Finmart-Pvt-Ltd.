@@ -1,0 +1,394 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <style>
+        #dateInput {
+            border: 2px solid #ccc;
+            padding: 10px;
+            transition: border 0.3s;
+        }
+
+        #dateInput:focus {
+            border: 2px solid #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Client</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mt-">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addclientModal"
+                        style="font-weight: bold;margin-left: -40px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-plus"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>Add Client
+                    </a>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addclientModal">Add Client</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+               <div class="table-responsive">
+                <table id="myTable" class="table bg-light table-bordered mt-2">
+                    <thead class="bg-primary text-center">
+                        <tr>
+                            <th scope="col" style="color: black;font-weight: bold;">Sl No.</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Name</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Company</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Website</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Phone</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Email</th>
+                            <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-light">
+                        {% for client in clients %}
+                        <tr class="text-dark text-center">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ client.first_name }} {{ client.last_name }}</td>
+                            <td>{{ client.company }}</td>
+                            <td>{{ client.website }}</td>
+                            <td>{{ client.phone }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>
+                                <a href="{% url 'edit_client' client.id %}" class="text-capitalize btn btn-sm bg-dark mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                        width="18" height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                        <path
+                                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                    </svg></a>
+                                    <a href="#" class="text-capitalize btn btn-sm bg-danger delete-client mt-1" data-clientid="{{ client.id }}"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white"
+                                        class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path
+                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                        <path
+                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                    </svg></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+               </div>
+                <script>
+                    $(document).ready(function () {
+                        $('.delete-button').on('click', function (e) {
+                            e.preventDefault();
+                            if (confirm("Are you sure you want to delete this client?")) {
+                                // If the user confirms, proceed with deletion by navigating to the delete URL
+                                window.location = $(this).attr('href');
+                            }
+                        });
+                    });
+                </script>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                <script>
+                    // Function to handle the delete button click
+                    function handleDeleteButtonClick(clientId) {
+                        Swal.fire({
+                            title: 'Are you sure you want to delete this client?',
+                            text: "",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // If the user confirms, redirect to the delete URL
+                                window.location.href = "{% url 'delete_client' 0 %}".replace("0", clientId);
+                            }
+                        });
+                    }
+                
+                    // Attach a click event listener to all delete buttons
+                    document.querySelectorAll('.delete-client').forEach(deleteButton => {
+                        deleteButton.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            const clientId = this.getAttribute('data-clientid');
+                            handleDeleteButtonClick(clientId);
+                        });
+                    });
+                </script>
+                
+                
+            <!-- Bootstrap-styled Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if clients.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ clients.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Page {{ clients.number }} of {{ clients.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if clients.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ clients.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ clients.paginator.num_pages }}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Client -->
+    <div class="modal fade" id="addclientModal" tabindex="-1" aria-labelledby="addclientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addclientModalLabel">Add Client</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Your add_client.html template -->
+                    <form method="post" action="{% url 'add_client' %}" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- First Name -->
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" pattern="[A-Za-z\s]+" title="Please enter a valid first name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Last Name -->
+                                <div class="mb-3">
+                                    <label for="last_name" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" pattern="[A-Za-z\s]+" title="Please enter a valid last name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company -->
+                                <div class="mb-3">
+                                    <label for="company" class="form-label">Company</label>
+                                    <input type="text" class="form-control" id="company" name="company" pattern="[A-Za-z\s]+" title="Please enter a valid comapny name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- User Name -->
+                                <div class="mb-3">
+                                    <label for="user_name" class="form-label">User Name</label>
+                                    <input type="text" class="form-control" id="user_name" name="user_name" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Phone -->
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number." required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Website -->
+                                <div class="mb-3">
+                                    <label for="website" class="form-label">Website</label>
+                                    <input type="text" class="form-control" id="website" name="website" pattern="^www\.[a-zA-Z0-9-]+\.[a-z]{2,}$" title="Please enter a website URL as 'www.domain.com'" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Password -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Address -->
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" name="address" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- City -->
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="city" name="city" pattern="[A-Za-z\s]+" title="Please enter a valid city name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- State -->
+                                <div class="mb-3">
+                                    <label for="state" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="state" name="state" pattern="[A-Za-z\s]+" title="Please enter a valid state name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Zip -->
+                                <div class="mb-3">
+                                    <label for="zip_code" class="form-label">Zip</label>
+                                    <input type="number" class="form-control" id="zip_code" name="zip_code" pattern="\d{6}" title="Please enter a 6-digit PIN code using only numbers" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Country -->
+                                <div class="mb-3">
+                                    <label for="country" class="form-label">Country</label>
+                                    <input type="text" class="form-control" id="country" name="country" pattern="[A-Za-z\s]+" title="Please enter a valid country name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Img -->
+                                <div class="mb-3">
+                                    <label for="img" class="form-label">Img</label>
+                                    <input type="file" class="form-control" id="img" name="img" accept="image/*" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit"  class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    function handleFormSubmit(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Simulate success message using SweetAlert
+        Swal.fire({
+            title: 'Success',
+            text: 'Client added successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(() => {
+            event.target.submit(); // Submit the form after the SweetAlert is closed
+        });
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    // starting date
+    $(function () {
+        $("#s_dateInput").datepicker();
+    });
+
+    // end date
+    $(function () {
+        $("#e_dateInput").datepicker();
+    });
+</script>
+
+</html>
+{% endblock content %}

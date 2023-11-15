@@ -1,0 +1,213 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NPS </title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+       
+        
+    </head>
+    <body>
+        <div class="card p-3">
+            <h3 class="text-dark mt-3 text-center">NPS FORM</h3>
+            <hr><br>
+            <form method="post" action="{% url 'add_nps' %}">
+                {% csrf_token %}
+                    <div class="row">
+                        <!-- Investor Name -->
+                        <div class="col-md-3">
+                            <label for="investor_name" class="form-label">Investor Name</label>
+                            <input type="text" id="investor_name" name="investor_name" class="form-control" required>
+                        </div>
+                        <!-- PAN No. -->
+                        <div class="col-md-3">
+                            <label for="pan_number" class="form-label">PAN No.</label>
+                            <input type="text" id="pan_number" name="pan_number" class="form-control" required>
+                        </div>
+                        <!-- Date Of Birth -->
+                        <div class="col-md-3">
+                            <label for="date_of_birth" class="form-label">Date Of Birth</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" required>
+                        </div>
+                        <!-- Email -->
+                        <div class="col-md-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <!-- Mobile -->
+                        <div class="col-md-3">
+                            <label for="mobile" class="form-label">Mobile</label>
+                            <input type="text" id="mobile" name="mobile" class="form-control" required>
+                        </div>
+                        <!-- ASP Name -->
+                        <div class="col-md-3">
+                            <label for="asp_name" class="form-label">ASP Name</label><br>
+                            <select class="form-control" id="asp_name" name="asp_name" onchange="toggleCheckboxes()" required>
+                                <option disabled selected value="none">_Select_</option>
+                                <option value="Select ASP Name">Select ASP Name</option>
+                            </select>
+                        </div>
+                        <!-- Nominee Name -->
+                        <div class="col-md-3">
+                            <label for="nominee_name" class="form-label">Nominee Name</label>
+                            <input type="text" id="nominee_name" name="nominee_name" class="form-control" required>
+                        </div>
+                        <!-- Amount -->
+                        <div class="col-md-3">
+                            <label for="amount" class="form-label">Amount</label>
+                            <input type="text" id="amount" name="amount" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div id="additionalForm" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox1" name="insurance_companies" value="Aditya Birla Sun Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox1">
+                                    Aditya Birla Sun Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox2" name="insurance_companies" value="Canara HSBC Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    Canara HSBC Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox3"  name="insurance_companies" value="Canara HSBC Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    Canara HSBC Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox3" name="insurance_companies" value="IndiaFirst Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    IndiaFirst Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox1" name="insurance_companies" value="Life Insurance Corporation Of India">
+                                <label class="form-check-label" for="checkbox1">
+                                    Life Insurance Corporation Of India
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox2" name="insurance_companies" value="Pnb Metlife India Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    Pnb Metlife India Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox3" name="insurance_companies" value="Star Union Dai-ichi Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    Star Union Dai-ichi Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox3" name="insurance_companies" value="Bajaj Allianz Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    Bajaj Allianz Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox1" name="insurance_companies" value="Edelweiss Tokio Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox1">
+                                    Edelweiss Tokio Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox2" name="insurance_companies" value="Kotak Mahindra Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    ICIC Prudential Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox3" name="insurance_companies" value="Kotak Mahindra Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    Kotak Mahindra Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox3" name="insurance_companies" value="Max Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    Max Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox1" name="insurance_companies" value="SBI Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox1">
+                                    SBI Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox2" name="insurance_companies" value="TATA AIA Life Insurance Co. Ltd">
+                                <label class="form-check-label" for="checkbox2">
+                                    TATA AIA Life Insurance Co. Ltd
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Repeat the above form-check structure for the remaining checkboxes -->
+                </div>
+                <script>
+                    function toggleCheckboxes() {
+                        console.log("Function called");
+                        var aspSelect = document.getElementById("asp_name");
+                        console.log("Selected value:", aspSelect.value);
+        
+                        var additionalForm = document.getElementById("additionalForm");
+        
+                        if (aspSelect.value === "none") {
+                            additionalForm.style.display = "none";
+                        } else {
+                            additionalForm.style.display = "block";
+                        }
+                    }
+        
+                </script>
+                <br>
+                <button type="submit" class="btn btn-primary mt-2" style="border-radius: 4px;">Submit</button>
+                <a href="{% url 'query_management' %}" class="btn btn-secondary mt-2" style="border-radius: 4px;">Back</a>
+            </form>
+        </div>
+    </body>
+{% endblock %}
+

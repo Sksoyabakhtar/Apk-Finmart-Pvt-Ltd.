@@ -1,0 +1,135 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<style>
+    /* Custom styles for the form */
+    body {
+      font-family: Arial, sans-serif;
+    }
+  
+    form {
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-top: 30px;
+
+    }
+  
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+  
+    input[type="text"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      height: 40px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  
+    th,
+    td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+  
+    th {
+      text-align: left;
+    }
+  
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+  
+    .button-group button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  
+    #add-row {
+      background-color: #4caf50;
+      color: white;
+      height: 40px;
+      border-radius: 8px;
+    }
+  
+    #submit-button {
+      background-color: rgb(78,115,223);
+      color: white;
+      height: 40px;
+      border-radius: 8px;
+    }
+  
+    .delete-row-button {
+      background-color: #f44336;
+      color: white;
+      height: 35px;
+      border-radius: 8px;
+    }
+  </style>
+  <h1 class="text-center">Create Payment</h1>
+  <hr>
+  <a href="{% url 'view_payment_vouchers' %}" class="btn-primary" style="background-color: rgb(78,115,223); text-decoration: none; padding: 10px; color: white; border-radius: 8px; text-align: right;">Create Purchase Voucher</a>
+  <form method="POST" class="p-3">
+    {% csrf_token %}
+    <div class="row">
+    <div class="col-md-4">
+    <label for="bill_no">Bill No.:</label>
+    <input type="text" id="bill_no" name="bill_no" required>
+
+    <label for="voucher_number">Voucher Number:</label>
+    <input type="text" id="voucher_number" name="voucher_number" required>
+  
+    <label for="cash_or_bank">Bank:</label>
+    <input type="text" id="cash_or_bank" name="cash_or_bank" required>
+
+    <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required >
+    </div>
+    <div class="col-md-4">
+      <label for="cash_or_bank">Customer Name:</label>
+      <input type="text" id="customer_name" name="customer_name" required>  
+  
+      <label for="account_no">Account No.:</label>
+      <input type="text" id="account_no" name="account_no" required>
+  
+      <label for="narration">Narration:</label>
+      <input type="text" id="narration" name="narration" required>
+    </div>
+     <div class="col-md-4">
+      <label for="particular">Particular:</label>
+      <input type="text" id="particular" name="particular" required>
+  
+      <label for="amount">Amount:</label>
+      <input type="text" id="amount" name="amount" required>
+  
+     
+  
+      <label for="check_no">Check No.:</label>
+      <input type="text" id="check_no" name="check_no" required>
+     </div>
+    </div>
+
+    
+  
+    <div class="button-group">
+      <button type="submit" id="submit-button">Save</button>
+    </div>
+  </form>
+
+{% endblock %}

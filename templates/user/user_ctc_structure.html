@@ -1,0 +1,424 @@
+{% extends "user_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User CTC Structure</title>
+
+</head>
+
+<body>
+    <div class="card p-3 mt-5">
+        <h3 class="text-dark ms-3 mt-3 text-center">CTC Structure</h3>
+        <hr><br>
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="input-group mb-3" style="width:300px;margin-left: -13px;">
+                        <input type="text" class="form-control ms-3" placeholder="Search" aria-label="Search"
+                            aria-describedby="search-button" id="searchInput">
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <!-- Id -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Id</label>
+                        <input type="text" class="form-control" id="" name="" value="APK_120" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- Employee Name -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Employee Name</label>
+                        <input type="text" class="form-control" id="" name="" readonly>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- Month -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Month</label>
+                        <select class="form-select" id="monthFilter">
+                            <option selected value="">All</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- Year -->
+                    <div class="mb-3">
+                        <label for="" class="form-label">Year</label>
+                        <select class="form-select" id="yearFilter">
+                            <option selected value="">All</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Sl no.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Basic Salary</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Gross Salary</th>
+                                <th scope="col" style="color: black;font-weight: bold;display: none;">Month</th>
+                                <th scope="col" style="color: black;font-weight: bold;display: none;">Year</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Employer EPF</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Employer ESI</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Net Pay</th>
+                                <th scope="col" style="color: black;font-weight: bold;">CTC</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-light">
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    1
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td style="display: none;">January</td>
+                                <td style="display: none;">2023</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><a href="#" class="text-capitalize btn btn-sm bg-dark mt-1" data-bs-toggle="modal"
+                                        data-bs-target="#viewctcModal"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="18" height="18" fill="white" class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                            <path
+                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                        </svg></a></td>
+                            </tr>
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    2
+                                </td>
+                                <td>100</td>
+                                <td></td>
+                                <td style="display: none;">March</td>
+                                <td style="display: none;">2023</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><a href="#" class="text-capitalize btn btn-sm bg-dark mt-1" data-bs-toggle="modal"
+                                        data-bs-target="#viewctcModal"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="18" height="18" fill="white" class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                            <path
+                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                        </svg></a></td>
+                            </tr>
+                            <tr class="text-dark text-center">
+                                <!-- <th scope="row">1</th> -->
+                                <td>
+                                    3
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td style="display: none;">January</td>
+                                <td style="display: none;">2024</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><a href="#" class="text-capitalize btn btn-sm bg-dark mt-1" data-bs-toggle="modal"
+                                        data-bs-target="#viewctcModal"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="18" height="18" fill="white" class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                            <path
+                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                        </svg></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination mt-2">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for View CTC -->
+    <div class="modal fade" id="viewctcModal" tabindex="-1" aria-labelledby="viewctcModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewctcModalLabel">View CTC Structure</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Basic -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Basic</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- HRA -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">HRA</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Others -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Others</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Conv. -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Conv.</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- MAX EPF Wages -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">MAX EPF Wages</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- MAX ESI Wages -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">MAX ESI Wages</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- LTA -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">LTA</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Medical -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Medical</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Rest. Allow -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Rest. Allow</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Gross salary -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Gross salary</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Net pay -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Net pay</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- CTC -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">CTC</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Rest. Allow -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Rest. Allow</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Gross salary -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Gross salary</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Net pay -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Net pay</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- CTC -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">CTC</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- Employee EPF -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Employee EPF</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Employee ESI -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Employee ESI</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Employer EPF -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Employer EPF</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- Employer ESI -->
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Employer ESI</label>
+                                    <input type="text" class="form-control" id="" name="" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const monthFilter = document.getElementById("monthFilter");
+        const yearFilter = document.getElementById("yearFilter");
+        const dataTable = document.getElementById("myTable");
+
+        monthFilter.addEventListener("change", filterTableByMonth);
+        yearFilter.addEventListener("change", filterTableByYear);
+
+        function filterTableByMonth() {
+            const selectedMonth = monthFilter.value;
+            const rows = dataTable.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+                const monthCell = rows[i].getElementsByTagName("td")[3];
+
+                if (monthCell) {
+                    const month = monthCell.textContent || monthCell.innerText;
+
+                    if (selectedMonth === "" || month === selectedMonth) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function filterTableByYear() {
+            const selectedYear = yearFilter.value;
+            const rows = dataTable.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+                const yearCell = rows[i].getElementsByTagName("td")[4];
+
+                if (yearCell) {
+                    const year = yearCell.textContent || yearCell.innerText;
+
+                    if (selectedYear === "" || year === selectedYear) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>
+{% endblock content %}

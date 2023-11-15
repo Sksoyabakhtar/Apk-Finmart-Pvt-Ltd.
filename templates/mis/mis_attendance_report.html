@@ -1,0 +1,129 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance</title>
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Attendance Report</h3>
+        <hr><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+               <div class="table-responsive">
+                <table id="myTable" class="table bg-light table-bordered mt-2">
+                    <thead class="bg-primary text-center">
+                        <tr>
+                            <th scope="col" style="color: black; font-weight: bold;">#</th>
+                            <th scope="col" style="color: black; font-weight: bold;">Employee</th>
+                            <th scope="col" style="color: black; font-weight: bold;">Company</th>
+                            <th scope="col" style="color: black; font-weight: bold;">Date</th>
+                            <th scope="col" style="color: black; font-weight: bold;">Status</th>
+                            <th scope="col" style="color: black; font-weight: bold;">Clock In</th>
+                            <th scope="col" style="color: black; font-weight: bold;">Clock Out</th>
+                        </tr>
+                    </thead>
+                
+                    <tbody class="bg-light">
+                        {% for attendance in attendances %}
+                        <tr class="text-dark text-center">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ attendance.employee.full_name }}</td>  <!-- Assuming you have a ForeignKey or OneToOneField to the Employee model -->
+                            <td>{{ attendance.company.company_name }}</td>  <!-- Assuming Employee has a company_name field -->
+                            <td>{{ attendance.date }}</td>
+                            <td>{{ attendance.status }}</td>
+                            <td>{{ attendance.clock_in }}</td>
+                            <td>{{ attendance.clock_out }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+               </div>
+                <button type="button" class="btn btn-primary" id="printButton" style="border-radius: 4px;">Print
+                    Report</button>
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+</body>
+<script>
+    // Your existing JavaScript code
+
+    // Add an event listener to the "Print Report" button
+    const printButton = document.getElementById('printButton');
+    printButton.addEventListener('click', function () {
+        window.print(); // Trigger the browser's print dialog
+    });
+</script>
+<style type="text/css">
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #myTable,
+        #myTable * {
+            visibility: visible;
+        }
+
+        #myTable {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #action {
+            display: none;
+        }
+    }
+</style>
+
+</html>
+{% endblock %}

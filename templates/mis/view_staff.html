@@ -1,0 +1,393 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+
+    .shadow-lg {
+        box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+</style>
+
+<div class="container shadow-lg">
+    <h2>View Staff Details</h2>
+    <hr>
+    <form id="staff-details-form">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input type="text" class="form-control shadow-lg" id="fullName" value="{{ employee.full_name }}" disabled>
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control shadow-lg" id="email" value="{{ employee.email }}" disabled>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="tel" class="form-control shadow-lg" id="phone" value="{{ employee.phone }}" disabled>
+            </div>
+            <div class="col-md-6">
+                <label for="dob" class="form-label">Date of Birth</label>
+                <input type="text" class="form-control shadow-lg" id="dob" value="{{ employee.dob }}" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <!-- Gender Dropdown -->
+                    <label for="gender" class="form-label">Gender</label>
+                    <select class="form-select" id="gender" disabled>
+                        <option value="{{ employee.gender }}">{{ employee.get_gender_display }}</option>
+                            <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Company Dropdown -->
+                <div class="mb-3">
+                    <label for="company" class="form-label">Company</label>
+                    <select class="form-select" id="company" disabled>
+                        <option value="{{ employee.company }}">{{ employee.company }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Department Dropdown -->
+                <div class="mb-3">
+                    <label for="department" class="form-label">Department</label>
+                    <select class="form-select" id="department" disabled>
+                        <option value="{{ employee.department }}">{{ employee.department }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Designation Dropdown -->
+                <div class="mb-3">
+                    <label for="designation" class="form-label">Designation</label>
+                    <select class="form-select" id="designation" disabled>
+                        <option value="{{ employee.designation }}">{{ employee.designation.designation_name }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Office Shift Dropdown -->
+                <div class="mb-3">
+                    <label for="officeShift" class="form-label">Office Shift</label>
+                    <select class="form-select" id="officeShift" name="office_shift" disabled>
+                        <option value="{{ employee.office_shift }}">{{ employee.office_shift }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- User Name -->
+                <div class="mb-3">
+                    <label for="userName" class="form-label">User Name</label>
+                    <input type="text" class="form-control" id="userName" name="username" value="{{ employee.user_name }}" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Role Dropdown -->
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select class="form-select" id="role" name="role" disabled>
+                        <option value="{{ employee.role }}">{{ employee.role.name }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Attendance Type Dropdown -->
+                <div class="mb-3">
+                <label for="attendanceType" class="form-label">Attendance Type</label>
+                <select class="form-select" id="attendanceType" name="attendance_type" disabled>
+                    <option value="{{ employee.attendance_type }}">{{ employee.attendance_type }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Date of Joining -->
+                <div class="mb-3">
+                    <label for="joiningDate" class="form-label">Date of Joining</label>
+                    <input type="date" class="form-control" id="joiningDate" name="joining_date"value="{{ employee.joining_date|date:'Y-m-d' }}" disabled>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Image Upload -->
+                <div class="mb-3">
+                    <label for="userImage" class="form-label">User Image</label>
+                    <img src="{{ employee.user_image.url }}" alt="User Image" style="max-width: 100px; max-height: 100px;" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid p-3 custom-border w-100">
+            <div class="row mb-4">
+                {% for salary in employee_salary %}
+                    <div class="col-md-3 mb-3">
+                        <label for="basic" class="form-label text-dark">Basic<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="basic" name="basic" value="{{ salary.basic }}" disabled required>
+                    </div>
+                
+                    <div class="col-md-3 mb-3">
+                        <label for="hra" class="form-label text-dark">HRA<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="hra" name="hra" value="{{ salary.hra }}" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="others" class="form-label text-dark">Others<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="others" name="others" value="{{ salary.others }}" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="conv" class="form-label text-dark">Conv.<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="conv" name="conv" value="{{ salary.conv }}" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="m_epf" class="form-label text-dark">MAX EPF Wages<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="m_epf" name="m_epf" value="{{ salary.m_epf }}" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="m_esi" class="form-label text-dark">MAX ESI Wages<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="m_esi" name="m_esi" value="{{ salary.m_esi }}" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="lta" class="form-label text-dark">LTA<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="lta" name="lta" value="{{ salary.lta }}" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="medical" class="form-label text-dark">Medical<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="medical" name="medical" value="{{ salary.medical }}" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="r_allow" class="form-label text-dark">Rest. Allow<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="r_allow" name="r_allow" value="{{ salary.r_allow }}" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="g_salary" class="form-label text-dark">Gross salary<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="g_salary" name="g_salary" value="{{ salary.g_salary }}" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="n_pay" class="form-label text-dark">Net pay<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="n_pay" name="n_pay" value="{{ salary.n_pay }}" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="ctc" class="form-label text-dark">CTC<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="ctc" name="ctc" value="{{ salary.ctc }}" disabled required>
+                        <input type="hidden" name="original_ctc" value="{{ salary.ctc }}">
+                    </div>
+                    <!-- Newly added fields -->
+                    <div class="col-md-3 mb-3">
+                        <label for="e_EPF" class="form-label text-dark">Employee EPF<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="e_EPF" name="e_EPF" value="{{ salary.e_epf }}" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="e_ESI" class="form-label text-dark">Employee ESI<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="e_ESI" name="e_ESI" value="{{ salary.e_esi }}" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="er_EPF" class="form-label text-dark">Employer EPF<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="er_EPF" name="er_EPF" value="{{ salary.e_epf }}" aria-describedby="" disabled required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="er_ESI" class="form-label text-dark">Employer ESI<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="er_ESI" name="er_ESI" value="{{ salary.e_esi }}" aria-describedby="" disabled required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label for="status" class="form-label text-dark">Status<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="activeStatus" {% if salary.status == 'Active' %} checked {% endif %} value="Active" disabled>
+                                <label class="form-check-label" for="activeStatus">
+                                    Active
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="inactiveStatus" {% if salary.status == 'Inactive' %} checked {% endif %} value="Inactive" disabled>
+                                <label class="form-check-label" for="inactiveStatus">
+                                    Inactive
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="wagesType" class="form-label text-dark">Wages Type<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wagesType" id="dailyWages" {% if salary.wages_type == 'Daily' %} checked {% endif %} value="Daily" disabled>
+                                <label class="form-check-label" for="dailyWages">
+                                    Daily
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wagesType" id="monthlyWages" {% if salary.wages_type == 'Monthly' %} checked {% endif %} value="Monthly" disabled>
+                                <label class="form-check-label" for="monthlyWages">
+                                    Monthly
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="billableType" class="form-label text-dark">Billable Type<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="billableType" id="billable" {% if salary.billable_type == 'Billable' %} checked {% endif %} value="Billable" disabled>
+                                <label class="form-check-label" for="billable">
+                                    Billable
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="billableType" id="nonBillable" {% if salary.billable_type == 'Non Billable' %} checked {% endif %} value="Non Billable" disabled>
+                                <label class="form-check-label" for="nonBillable">
+                                    Non Billable
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="bonus" class="form-label text-dark">Bonus<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="bonus" id="bonusYes" {% if salary.bonus == 'Yes' %} checked {% endif %} value="Yes" disabled>
+                                <label class="form-check-label" for="bonusYes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="bonus" id="bonusNo" {% if salary.bonus == 'No' %} checked {% endif %} value="No" disabled>
+                                <label class="form-check-label" for="bonusNo">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Leave encash -->
+                        <div class="col-md-2 mb-3">
+                            <label for="leaveEncash" class="form-label text-dark">Leave encash<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="leaveEncash" id="leaveEncashYes" {% if salary.leave_encash == 'Yes' %} checked {% endif %} value="Yes" disabled>
+                                <label class="form-check-label" for="leaveEncashYes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="leaveEncash" id="leaveEncashNo" {% if salary.leave_encash == 'No' %} checked {% endif %} value="No" disabled>
+                                <label class="form-check-label" for="leaveEncashNo">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="epf" class="form-label text-dark">EPF<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="epf" id="epfYes" {% if salary.epf == 'Yes' %} checked {% endif %} value="Yes" disabled>
+                                <label class="form-check-label" for="epfYes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="epf" id="epfNo" {% if salary.epf == 'No' %} checked {% endif %} value="No" disabled>
+                                <label class="form-check-label" for="epfNo">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label for="esi" class="form-label text-dark">ESI<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="esi" id="esiYes" {% if salary.esi == 'Yes' %} checked {% endif %} value="Yes" disabled>
+                                <label class="form-check-label" for="esiYes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="esi" id="esiNo" {% if salary.esi == 'No' %} checked {% endif %} value="No" disabled>
+                                <label class="form-check-label" for="esiNo">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="epfPension" class="form-label text-dark">EPF Pension<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="epfPension" id="epfPensionYes" {% if salary.epf_pension == 'Yes' %} checked {% endif %} value="Yes" disabled>
+                                <label class="form-check-label" for="epfPensionYes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="epfPension" id="epfPensionNo" {% if salary.epf_pension == 'No' %} checked {% endif %} value="No" disabled>
+                                <label class="form-check-label" for="epfPensionNo">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="tds" class="form-label text-dark">TDS<span class="text-danger">*</span></label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="tds" id="tdsYes" {% if salary.tds == 'Yes' %} checked {% endif %} value="Yes" disabled>
+                                <label class="form-check-label" for="tdsYes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="tds" id="tdsNo" {% if salary.tds == 'No' %} checked {% endif %} value="No" disabled>
+                                <label class="form-check-label" for="tdsNo">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="hr_deduction" class="form-label text-dark">HR Deduction Per Day<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="hr_deduction" name="hr_deduction" value="{{ salary.hr_deduction }}" aria-describedby="" title="Please enter a valid HR Deduction Per Day using only numbers." disabled required>
+                        </div>
+                    </div> 
+                {% endfor %}
+            </div>
+
+            <a href="{% url 'manage_staff' %}" class="btn btn-success" style="border-radius: 4px;">Back</a>
+
+        </div>
+       
+    </form>
+</div>
+{% endblock %}

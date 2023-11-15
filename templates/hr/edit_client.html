@@ -1,0 +1,163 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #564fbf;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<div class="card p-3 shadow-md bg-light">
+    <h3 class="text-dark mt-1 text-center">Edit Client</h2>
+    <hr>
+    <form id="editClientForm" action="{% url 'update_client' client.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="first_name" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ client.first_name }}" pattern="[A-Za-z\s]+" title="Please enter a valid first name. Only letters and spaces are allowed." required>
+            </div>
+            <div class="col-md-6">
+                <label for="last_name" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ client.last_name }}" pattern="[A-Za-z\s]+" title="Please enter a valid last name. Only letters and spaces are allowed." required>
+            </div>
+        </div>
+        <!-- Add other fields for editing client information -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="company" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company" name="company" value="{{ client.company }}" pattern="[A-Za-z\s]+" title="Please enter a valid comapny name. Only letters and spaces are allowed." required>
+            </div>
+            <div class="col-md-6">
+                <label for="website" class="form-label">Website</label>
+                <input type="text" class="form-control" id="website" name="website" value="{{ client.website }}" pattern="^www\.[a-zA-Z0-9-]+\.[a-z]{2,}$" title="Please enter a website URL as 'www.domain.com'" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ client.email }}" required>
+            </div>
+            <div class="col-md-6">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="phone" name="phone" value="{{ client.phone }}" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number." required required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="address" class="form-label">Address</label>
+                <textarea class="form-control" id="address" name="address" required>{{ client.address }}</textarea>
+            </div>
+            <div class="col-md-6">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" name="city" value="{{ client.city }}" pattern="[A-Za-z\s]+" title="Please enter a valid city name. Only letters and spaces are allowed." required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" id="state" name="state" value="{{ client.state }}" pattern="[A-Za-z\s]+" title="Please enter a valid state name. Only letters and spaces are allowed." required>
+            </div>
+            <div class="col-md-6">
+                <label for="zip_code" class="form-label">Zip</label>
+                <input type="number" class="form-control" id="zip_code" name="zip_code" value="{{ client.zip_code }}" pattern="\d{6}" title="Please enter a 6-digit PIN code using only numbers" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="country" class="form-label">Country</label>
+                <input type="text" class="form-control" id="country" name="country" value="{{ client.country }}" pattern="[A-Za-z\s]+" title="Please enter a valid country name. Only letters and spaces are allowed." required>
+            </div>
+            <div class="col-md-6">
+                <!-- Existing Image -->
+                <label for="img" class="form-label">Change Image</label>
+                <input type="file" class="form-control" id="img" name="img" accept="image/*">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <!-- Change Image -->
+                <label for="existing_img" class="form-label">Existing Image</label>
+                <img src="{{ client.img.url }}" alt="Existing Image" style="max-width: 100px; max-height: 100px;">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Update</button>
+    </form>
+</div>
+<script>
+    document.getElementById('editClientForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        fetch(this.action, {
+            method: this.method,
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': this.querySelector('input[name="csrfmiddlewaretoken"]').value,
+            },
+        }).then(function(response) {
+            if (response.ok) {
+                // If the response is okay, show the success message using SweetAlert
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Client updated successfully!',
+                    icon: 'success'
+                }).then(function () {
+                    // Redirect to the desired page after success
+                    window.location.href = "{% url 'client' %}";
+                });
+            } else {
+                // Show an error message using SweetAlert if the response is not okay
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while updating the client!',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

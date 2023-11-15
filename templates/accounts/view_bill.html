@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Bill</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 810px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .company-info {
+            margin-bottom: 20px;
+        }
+
+        .company-info p {
+            margin: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .total-price {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .print-button {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .print-button button {
+            display: inline-block;
+            padding: 5px 10px;
+        }
+
+        .stamp {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .stamp img {
+            max-width: 150px;
+        }
+
+        .signature {
+            margin-top: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @media print {
+            .print-button {
+                display: none;
+            }
+
+            body {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .company-info p {
+                margin: 2px;
+            }
+
+            table {
+                margin-bottom: 10px;
+            }
+
+            th, td {
+                padding: 6px;
+            }
+
+            .total-price {
+                font-size: 12px;
+            }
+
+            .stamp img {
+                max-width: 100px;
+            }
+
+            .signature {
+                margin-top: 20px;
+                font-size: 12px;
+            }
+        }
+    </style>
+    <script>
+        function printBill() {
+            var printButton = document.getElementById('print-button');
+            printButton.style.display = 'none';
+            window.print();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="table-responsive">
+            <table>
+                <tr>
+                    <td colspan="2" style="text-align: center; border: none;">
+                        <img src="{% static 'images/logo.png' %}" alt="Company Logo" height="140px" width="165px">
+                    </td>
+                    <td colspan="5" style="border: none;">
+                        <h1><b>&nbsp;APK Finmart Pvt.Ltd</b></h1>
+                        <p>&nbsp;Room-08, 2ndFloor, BMC Panchadeep Complex, Unit-4, Bhubeneswar-751001</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="background-color: rgb(171, 230, 245); text-align: center; ">
+                        <b>INVOICE</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                       <h5><strong>TO:</strong></h5>     
+                        <p><strong>Name Of The Client:</strong> {{ purchase.supplier.company_name }}</p>
+                        <p><strong>Phone Number:</strong> {{ purchase.supplier.phone_number }}</p>
+                    </td>
+                    <td colspan="3">
+                        <p><strong>Bill No:</strong> {{ purchase.id }}</p>
+                        <p><strong>GSTIN:</strong> {{ purchase.supplier.gstin_number }}</p>
+                        <p><strong>Date:</strong> {{ purchase.purchase_date }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7" style="border: none;"><hr></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border: none;">
+                        <h3>Product Details</h3>
+                    </td>
+                
+                </tr>
+                <tr>
+                    <th>Stock Purchased</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Amount</th>
+                    <th>GST(%)</th>
+                    <th>IGST(%)</th>
+                    <th>Total Price</th>
+                </tr>
+                {% for item in purchase.purchase_items.all %}
+                    <tr>
+                        <td>{{ item.stock.product_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>{{ item.amount }}</td>
+                        <td>{{ item.gst }}</td>
+                        <td>{{ item.igst }}</td>
+                        <td>{{ item.total_price }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <th colspan="4" style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th>Total Amount</th>
+                    <td ><strong>{{ total_amount }}</strong></td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th>GST</th>
+                    <td><strong>{{ total_gst|floatformat:2 }}</strong></td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th>IGST</th>
+                    <td><strong>{{ total_igst }}</strong></td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th>Grand Total</th>
+                    <td><strong>{{ purchase.total_price }}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="7">Rupees in word: <span id="grand-total-words"></span>&nbsp;Only</td>
+                </tr>
+                <tr>
+                    <td  colspan="4">Payment details: A/C NO.37546059563,SBIN0011573</td>
+                    <td colspan="4">Cash / Online Payment / Cheque / DD</td>
+                </tr>     
+            </table>
+        </div>
+        <table>
+            <tr>
+                <th>Terms of Payment:</th>
+            </tr>
+            <tr>
+                <td>We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</td>
+            </tr>
+           </table>
+           <table>
+            <tr>
+                <th>Authorized Signature with Stamps</th>
+                <th>Clint Signature with Stamps</th>
+            </tr>
+            <tr>
+                <td style="height: 80px;"></td>
+                <td></td>
+                
+            </tr>
+           </table>
+        
+        
+
+        <div class="print-button">
+            <button id="print-button" onclick="printBill()">Print Bill</button>
+        </div>
+    </div>
+    <script>
+        function convertAmountToWords(amount) {
+            var words = [
+                '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+                'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'
+            ];
+        
+            var tensWords = [
+                '', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'
+            ];
+        
+            var suffix = 'only';
+        
+            if (amount === 0) {
+                return 'Zero ' + suffix;
+            }
+        
+            if (amount < 0) {
+                suffix = 'Minus ' + suffix;
+                amount = Math.abs(amount);
+            }
+        
+            var words_string = '';
+        
+            // Separate the whole part from the decimal part
+            var wholePart = Math.floor(amount);
+            var decimalPart = Math.round((amount - wholePart) * 100); // Convert decimal part to paisa
+        
+            // Handle the whole part
+            if (Math.floor(wholePart / 10000000) > 0) {
+                words_string += convertAmountToWords(Math.floor(wholePart / 10000000)) + ' Crore ';
+                wholePart %= 10000000;
+            }
+        
+            if (Math.floor(wholePart / 100000) > 0) {
+                words_string += convertAmountToWords(Math.floor(wholePart / 100000)) + ' Lakh ';
+                wholePart %= 100000;
+            }
+        
+            if (Math.floor(wholePart / 1000) > 0) {
+                words_string += convertAmountToWords(Math.floor(wholePart / 1000)) + ' Thousand ';
+                wholePart %= 1000;
+            }
+        
+            if (Math.floor(wholePart / 100) > 0) {
+                words_string += convertAmountToWords(Math.floor(wholePart / 100)) + ' Hundred ';
+                wholePart %= 100;
+            }
+        
+            if (wholePart > 0) {
+                if (words_string !== '') {
+                    words_string += 'and ';
+                }
+        
+                if (wholePart < 20) {
+                    words_string += words[wholePart] + ' ';
+                } else {
+                    words_string += tensWords[Math.floor(wholePart / 10)];
+                    if (wholePart % 10 > 0) {
+                        words_string += ' ' + words[wholePart % 10] + ' ';
+                    }
+                }
+            }
+        
+            // Handle the decimal part (paisa)
+            if (decimalPart > 0) {
+                words_string += 'and ' + convertAmountToWords(decimalPart) + ' Paisa ';
+            }
+        
+            return words_string.trim();
+        }
+
+        // Call the function and update the "Grand Total" in words field
+        var grandTotal = {{ purchase.total_price }};
+        var grandTotalWords = convertAmountToWords(grandTotal);
+        document.getElementById("grand-total-words").textContent = grandTotalWords;
+    </script>
+</body>
+</html>

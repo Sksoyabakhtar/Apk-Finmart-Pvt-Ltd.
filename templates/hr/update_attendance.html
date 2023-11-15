@@ -1,0 +1,73 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+
+<div class="card p-3 shadow-md bg-light">
+  <h3 class="text-dark mt-1 text-center">Update Attendance</h3>
+  <hr>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-md-6">
+      <label for="employee">Employee</label>
+        <select name="employee" id="employee" class="form-control">
+          {% for employee in employees %}
+            <option value="{{ employee.id }}" {% if employee.id == attendance.employee.id %}selected{% endif %}>{{ employee.full_name }}</option>
+          {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6">
+      <label for="company">Company</label>
+        <select name="company" id="company" class="form-control">
+          {% for company in companies %}
+            <option value="{{ company.id }}" {% if company.id == attendance.company.id %}selected{% endif %}>{{ company.company_name }}</option>
+          {% endfor %}
+        </select>
+    </div>
+  </div><br>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="date">Date</label>
+      <input type="date" name="date" id="date" class="form-control" value="{{ attendance.date|date:'Y-m-d' }}">
+   </div>
+    <script>
+      // Get the current date in the format "YYYY-MM-DD"
+      function getCurrentDate() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        var yyyy = today.getFullYear();
+        return yyyy + '-' + mm + '-' + dd;
+      }
+    
+      // Wait for the DOM to be fully loaded before accessing the element
+      document.addEventListener("DOMContentLoaded", function() {
+        // Set the max attribute of the date input to the current date
+        document.getElementById("date").max = getCurrentDate();
+      });
+    </script>
+    
+    <div class="col-md-6">
+      <label for="status">Status</label>
+      <input type="text" name="status" id="status" class="form-control" value="{{ attendance.status }}">
+    </div>
+  </div><br>
+
+  <div class="row">
+    <div class="col-md-6">
+        <label for="clock_in">Clock In</label>
+        <input type="time" name="clock_in" id="clock_in" class="form-control" value="{{ attendance.clock_in|default:'00:00'|time:'H:i' }}">
+    </div>
+
+    <div class="col-md-6">
+        <label for="clock_out">Clock Out</label>
+        <input type="time" name="clock_out" id="clock_out" class="form-control" value="{{ attendance.clock_out|default:'00:00'|time:'H:i' }}">
+    </div>
+</div>
+
+  <button type="submit" class="btn btn-success mt-2">Update</button>
+  <a href="{% url 'hr_attendance_list' %}"><button type="button" class="btn btn-dark mt-2">Back to List</button></a>
+</form>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expences Report</title>
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+   
+
+    <!-- <style>
+        #dateInput {
+            border: 2px solid #ccc;
+            padding: 10px;
+            transition: border 0.3s;
+        }
+
+        #dateInput:focus {
+            border: 2px solid #007bff;
+        }
+    </style> -->
+</head>
+
+<body>
+    <div class="card p-3">
+        <h3 class="text-dark ms-3 mt-3 text-center">Expences Report</h3>
+        <hr><br>
+        <div class="card p-4">
+            <form method="GET">
+                <div class="row">
+                    <div class="col-md-4">
+                        <!-- Category  -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" aria-label="Default select example" id="category" name="category">
+                                <option value="">Select Category</option>
+                                <option value="all">For All</option>
+                                <option value="stationery">Stationery</option>
+                                <option value="fuel">Fuel</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- Start date  -->
+                        <div class="mb-3">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" name="start_date">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- End date  -->
+                        <div class="mb-3">
+                            <label for="endDate">End Date</label>
+                            <input type="date" class="form-control" id="endDate" name="end_date">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </form>
+        </div>
+        
+       
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <table id="d_table" class="table bg-light table-bordered mt-2">
+                    <thead class="bg-primary">
+                        <tr>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Sl No.</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Create Date</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Company</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Category</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">Payee</th>
+                            <th scope="col" style="color: black;font-weight: bold;text-align: center;">(INR) Amount</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-light" id="myTable">
+                        {% for expense in expenses %}
+                            <tr class="text-dark text-center">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ expense.created_date }}</td>
+                                <td>{{ expense.company }}</td>
+                                <td>{{ expense.category }}</td>
+                                <td>{{ expense.supplier.company_name }}</td>
+                                <td>{{ expense.amount }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#d_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        text: 'Export as CSV',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Export as Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'Export as PDF',
+                        className: 'btn btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'btn btn-secondary'
+                    }
+                ]
+            });
+        });
+    </script>
+
+</body>
+
+</html>
+{% endblock content %}

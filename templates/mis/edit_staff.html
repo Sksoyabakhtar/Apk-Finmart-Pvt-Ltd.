@@ -1,0 +1,524 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+
+    .shadow-lg {
+        box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="container shadow-lg">
+    <h2>Edit Employee Details</h2>
+    <hr>
+    <form id="editEmployeeForm" action="{% url 'update_employee' employee.id %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control shadow-lg" id="full_name" name="full_name" value="{{ employee.full_name }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control shadow-lg" id="email" name="email" value="{{ employee.email }}" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="tel" class="form-control shadow-lg" id="phone" name="phone" value="{{ employee.phone }}" >
+                </div>
+                <div class="col-md-6">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control shadow-lg" id="dob" name="dob" value="{{ employee.dob|date:'Y-m-d' }}" >
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <!-- Gender Dropdown -->
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-select shadow-lg" id="gender" name="gender">
+                            <option value="{{ employee.gender }}">{{ employee.gender }}</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Company Dropdown -->
+                    <div class="mb-3">
+                        <label for="company" class="form-label">Company</label>
+                        <select class="form-select shadow-lg" id="company" name="company">
+                            {% for company in companies %}
+                                <option value="{{ company.id }}" {% if company.id == employee.company_id %}selected{% endif %}>{{ company.company_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Department Dropdown -->
+                    <div class="mb-3">
+                        <label for="department" class="form-label">Department</label>
+                        <select class="form-select shadow-lg" id="department" name="department">
+                            {% for department in departments %}
+                                <option value="{{ department.id }}" {% if department.id == employee.department_id %}selected{% endif %}>{{ department.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                </div>
+    
+                <div class="col-md-6">
+                    <!-- Designation Dropdown -->
+                    <div class="mb-3">
+                        <label for="designation" class="form-label">Designation</label>
+                        <select class="form-select shadow-lg" id="designation" name="designation">
+                            {% for designation in designations %}
+                                <option value="{{ designation.id }}" {% if designation.id == employee.designation_id %}selected{% endif %}>{{ designation.designation_name }}</option>
+                            {% endfor %}   
+                        </select>
+                    </div>
+                    
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Office Shift Dropdown -->
+                    <div class="mb-3">
+                        <label for="officeShift" class="form-label">Office Shift</label>
+                        <select class="form-select shadow-lg" id="officeShift" name="office_shift" >
+                            <option value="{{ employee.office_shift }}">{{ employee.office_shift }}</option>
+                                <option value="9-5">9 AM to 5 PM</option>
+                                <option value="6-2">6 AM to 2 PM</option>
+                                <option value="2-10">2 PM to 10 PM</option>
+                                <option value="10-6">10 PM to 6 AM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- User Name -->
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">User Name</label>
+                        <input type="text" class="form-control shadow-lg" id="userName" name="username" value="{{ employee.user_name }}" >
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Role Dropdown -->
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-select shadow-lg" id="role" name="role">
+                            {% for role in roles %}
+                                <option value="{{ role.id }}" {% if role.id == employee.role.id %}selected{% endif %}>{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Attendance Type Dropdown -->
+                    <div class="mb-3">
+                        <label for="attendanceType" class="form-label">Attendance Type</label>
+                        <select class="form-select shadow-lg" id="attendanceType" name="attendance_type">
+                            <option value="{{ employee.attendance_type }}">{{ employee.attendance_type }}</option>
+                            <option value="general">General</option>
+                            <option value="ip_based">IP Based</option>
+                        </select>
+                    </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Date of Joining -->
+                    <div class="mb-3">
+                        <label for="joiningDate" class="form-label">Date of Joining</label>
+                        <input type="date" class="form-control shadow-lg" id="joiningDate" name="joining_date" value="{{ employee.joining_date|date:'Y-m-d' }}" >
+                    </div>
+                </div>
+    
+                <div class="col-md-6">
+                    <!-- Image Upload -->
+                    <div class="mb-3">
+                        <label for="changeUserImage" class="form-label">Change User Image</label>
+                        <input type="file" id="changeUserImage" name="user_image">
+                        <img src="{{ employee.user_image.url }}" alt="User Image" style="max-width: 100px; max-height: 100px;">
+                    </div>
+                </div>
+            </div>
+    
+            <div class="container-fluid p-3 custom-border w-100">
+                <div class="row mb-4">
+                    {% for salary in employee_salary %}
+                        <div class="col-md-3 mb-3">
+                            <label for="basic" class="form-label text-dark">Basic<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="basic" name="basic" value="{{ salary.basic }}" required>
+                        </div>
+                    
+                        <div class="col-md-3 mb-3">
+                            <label for="hra" class="form-label text-dark">HRA<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="hra" name="hra" value="{{ salary.hra }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="others" class="form-label text-dark">Others<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="others" name="others" value="{{ salary.others }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="conv" class="form-label text-dark">Conv.<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="conv" name="conv" value="{{ salary.conv }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="m_epf" class="form-label text-dark">MAX EPF Wages<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="m_epf" name="m_epf" value="{{ salary.m_epf }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="m_esi" class="form-label text-dark">MAX ESI Wages<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="m_esi" name="m_esi" value="{{ salary.m_esi }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="lta" class="form-label text-dark">LTA<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="lta" name="lta" value="{{ salary.lta }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="medical" class="form-label text-dark">Medical<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="medical" name="medical" value="{{ salary.medical }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="r_allow" class="form-label text-dark">Rest. Allow<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="r_allow" name="r_allow" value="{{ salary.r_allow }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="g_salary" class="form-label text-dark">Gross salary<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="g_salary" name="g_salary" value="{{ salary.g_salary }}" aria-describedby="" disabled required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="n_pay" class="form-label text-dark">Net pay<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="n_pay" name="n_pay" value="{{ salary.n_pay }}" aria-describedby="" disabled required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="ctc" class="form-label text-dark">CTC<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="ctc" name="ctc" value="{{ salary.ctc }}" disabled required>
+                            <input type="hidden" name="original_ctc" value="{{ salary.ctc }}">
+                        </div>
+                        <!-- Newly added fields -->
+                        <div class="col-md-3 mb-3">
+                            <label for="e_EPF" class="form-label text-dark">Employee EPF<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="e_EPF" name="e_EPF" value="{{ salary.e_epf }}" aria-describedby="" disabled required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="e_ESI" class="form-label text-dark">Employee ESI<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="e_ESI" name="e_ESI" value="{{ salary.e_esi }}" aria-describedby="" disabled required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="er_EPF" class="form-label text-dark">Employer EPF<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="er_EPF" name="er_EPF" value="{{ salary.e_epf }}" aria-describedby="" disabled required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="er_ESI" class="form-label text-dark">Employer ESI<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control shadow-lg" id="er_ESI" name="er_ESI" value="{{ salary.e_esi }}" aria-describedby="" disabled required>
+                        </div>
+    
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label for="status" class="form-label text-dark">Status<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status" id="activeStatus" {% if salary.status == 'Active' %} checked {% endif %} value="Active">
+                                    <label class="form-check-label" for="activeStatus">
+                                        Active
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status" id="inactiveStatus" {% if salary.status == 'Inactive' %} checked {% endif %} value="Inactive">
+                                    <label class="form-check-label" for="inactiveStatus">
+                                        Inactive
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="wagesType" class="form-label text-dark">Wages Type<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="wages_type" id="dailyWages" {% if salary.wages_type == 'Daily' %} checked {% endif %} value="Daily">
+                                    <label class="form-check-label" for="dailyWages">
+                                        Daily
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="wages_type" id="monthlyWages" {% if salary.wages_type == 'Monthly' %} checked {% endif %} value="Monthly">
+                                    <label class="form-check-label" for="monthlyWages">
+                                        Monthly
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="billableType" class="form-label text-dark">Billable Type<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="billable_type" id="billable" {% if salary.billable_type == 'Billable' %} checked {% endif %} value="Billable">
+                                    <label class="form-check-label" for="billable">
+                                        Billable
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="billable_type" id="nonBillable" {% if salary.billable_type == 'Non Billable' %} checked {% endif %} value="Non Billable">
+                                    <label class="form-check-label" for="nonBillable">
+                                        Non Billable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="bonus" class="form-label text-dark">Bonus<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="bonus" id="bonusYes" {% if salary.bonus == 'Yes' %} checked {% endif %} value="Yes">
+                                    <label class="form-check-label" for="bonusYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="bonus" id="bonusNo" {% if salary.bonus == 'No' %} checked {% endif %} value="No">
+                                    <label class="form-check-label" for="bonusNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Leave encash -->
+                            <div class="col-md-2 mb-3">
+                                <label for="leaveEncash" class="form-label text-dark">Leave encash<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="leave_encash" id="leaveEncashYes" {% if salary.leave_encash == 'Yes' %} checked {% endif %} value="Yes">
+                                    <label class="form-check-label" for="leaveEncashYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="leave_encash" id="leaveEncashNo" {% if salary.leave_encash == 'No' %} checked {% endif %} value="No">
+                                    <label class="form-check-label" for="leaveEncashNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="epf" class="form-label text-dark">EPF<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="epf" id="epfYes" {% if salary.epf == 'Yes' %} checked {% endif %} value="Yes">
+                                    <label class="form-check-label" for="epfYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="epf" id="epfNo" {% if salary.epf == 'No' %} checked {% endif %} value="No">
+                                    <label class="form-check-label" for="epfNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label for="esi" class="form-label text-dark">ESI<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="esi" id="esiYes" {% if salary.esi == 'Yes' %} checked {% endif %} value="Yes">
+                                    <label class="form-check-label" for="esiYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="esi" id="esiNo" {% if salary.esi == 'No' %} checked {% endif %} value="No">
+                                    <label class="form-check-label" for="esiNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="epfPension" class="form-label text-dark">EPF Pension<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="epf_pension" id="epfPensionYes" {% if salary.epf_pension == 'Yes' %} checked {% endif %} value="Yes">
+                                    <label class="form-check-label" for="epfPensionYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="epf_pension" id="epfPensionNo" {% if salary.epf_pension == 'No' %} checked {% endif %} value="No">
+                                    <label class="form-check-label" for="epfPensionNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="tds" class="form-label text-dark">TDS<span class="text-danger">*</span></label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tds" id="tdsYes" {% if salary.tds == 'Yes' %} checked {% endif %} value="Yes">
+                                    <label class="form-check-label" for="tdsYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tds" id="tdsNo" {% if salary.tds == 'No' %} checked {% endif %} value="No">
+                                    <label class="form-check-label" for="tdsNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="hr_deduction" class="form-label text-dark">HR Deduction Per Day<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="hr_deduction" name="hr_deduction" value="{{ salary.hr_deduction }}" aria-describedby="" title="Please enter a valid HR Deduction Per Day using only numbers.">
+                            </div>
+                        </div> 
+                    {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-success" style="border-radius: 4px;">Update</button>
+            <a href="{% url 'manage_staff' %}" class="btn btn-success" style="border-radius: 4px;">Back</a>
+        </div>
+        <!-- Add other fields for editing employee details -->
+        
+    </form>
+</div>
+<script>
+    function updateEmployeeName() {
+        const employeeIdSelect = document.getElementById('employeeIdSelect');
+        const selectedId = employeeIdSelect.value;
+        const employeeNameSelect = document.getElementById('employeeNameSelect');
+
+        // Loop through the options in the Employee Name dropdown and find the matching ID
+        for (let option of employeeNameSelect.options) {
+            if (option.value === selectedId) {
+                option.selected = true; // Set the found option as selected
+                break;
+            }
+        }
+    }
+
+</script>
+<script>
+    function calculateSalary() {
+        // Get input values
+        const basic = parseFloat(document.getElementById('basic').value) || 0;
+        const hra = parseFloat(document.getElementById('hra').value) || 0;
+        const others = parseFloat(document.getElementById('others').value) || 0;
+        const conv = parseFloat(document.getElementById('conv').value) || 0;
+        const lta = parseFloat(document.getElementById('lta').value) || 0;
+        const medical = parseFloat(document.getElementById('medical').value) || 0;
+        const r_allow = parseFloat(document.getElementById('r_allow').value) || 0;
+
+        // Calculate gross salary
+        const grossSalary = basic + hra + others + conv + lta + medical + r_allow;
+
+        // Calculate employee EPF (Basic * 12%)
+        const employeeEPF = basic * 0.12;
+
+        // Calculate employee ESI (0.75% of gross salary)
+        const employeeESI = grossSalary * 0.0075;
+
+        // Calculate employer EPF (Basic * 13%)
+        const employerEPF = basic * 0.13;
+
+        // Calculate employer ESI (3.25% of gross salary)
+        const employerESI = grossSalary * 0.0325;
+
+        // Calculate net pay (gross salary - (employee EPF + employee ESI))
+        const netPay = grossSalary - (employeeEPF + employeeESI);
+
+        // Calculate CTC (gross salary + employee EPF + employee ESI + employer EPF + employer ESI)
+        const ctc = grossSalary + employeeEPF + employeeESI + employerEPF + employerESI;
+
+        // Update the input fields with the calculated values
+        document.getElementById('g_salary').value = grossSalary.toFixed(0);
+        document.getElementById('e_EPF').value = employeeEPF.toFixed(0);
+        document.getElementById('e_ESI').value = employeeESI.toFixed(1);
+        document.getElementById('er_EPF').value = employerEPF.toFixed(0);
+        document.getElementById('er_ESI').value = employerESI.toFixed(1);
+        document.getElementById('n_pay').value = netPay.toFixed(1);
+        document.getElementById('ctc').value = ctc.toFixed(0);
+    }
+
+    // Attach the calculateSalary function to input change events
+    document.getElementById('basic').addEventListener('input', calculateSalary);
+    document.getElementById('hra').addEventListener('input', calculateSalary);
+    document.getElementById('others').addEventListener('input', calculateSalary);
+    document.getElementById('conv').addEventListener('input', calculateSalary);
+    document.getElementById('lta').addEventListener('input', calculateSalary);
+    document.getElementById('medical').addEventListener('input', calculateSalary);
+    document.getElementById('r_allow').addEventListener('input', calculateSalary);
+
+    // Initial calculation
+    calculateSalary();
+
+</script>
+
+<script>
+    document.getElementById('editEmployeeForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        fetch(this.action, {
+            method: this.method,
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': this.querySelector('input[name="csrfmiddlewaretoken"]').value,
+            },
+        }).then(function(response) {
+            if (response.ok) {
+                // If the response is okay, show the success message using SweetAlert
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Employee details updated successfully!',
+                    icon: 'success'
+                }).then(function () {
+                    // Redirect to the employee list or any other relevant page
+                    window.location.href = "{% url 'manage_staff' %}";
+                });
+            } else {
+                // Show an error message if the response is not okay
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while updating the employee details.',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

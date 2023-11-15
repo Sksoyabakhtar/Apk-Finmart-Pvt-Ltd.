@@ -1,0 +1,960 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Creation</title>
+   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.3"></script>
+   
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+
+<body>
+    <div class="card p-3 shadow-md bg-light">
+        <h3 class="text-dark mt-1 text-center">Employee Creation</h3>
+        <hr><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search..."
+                            aria-label="Search" aria-describedby="search-button">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addemployeeModal">Add Employee</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% comment %} <div class="col-md-6">
+                <button class="btn btn-dark collapsed ms-3 mt-1" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                    aria-expanded="false" aria-controls="collapseTwo">Filter</button>
+            </div> {% endcomment %}
+        </div>
+        <div id="collapseTwo" class="accordion-collapse collapse mt-3" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <div class="card p-3 bg-light">
+                    <form method="post" id="filter-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Company Dropdown -->
+                                <div class="mb-3">
+                                    <label for="company" class="form-label">Company</label>
+                                    <select class="form-select" id="company" name="company">
+                                        <option selected disabled>Select Company...</option>
+                                        {% for company in companies %}
+                                        <option value="{{ company.id }}">{{ company.company_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Department Dropdown -->
+                                <div class="mb-3">
+                                    <label for="department" class="form-label">Department</label>
+                                    <select class="form-select" id="department" name="department">
+                                        <option value="" disabled selected>Select Department...</option>
+                                        {% for department in departments %}
+                                        <option value="{{ department.id }}">{{ department.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Designation Dropdown -->
+                                <div class="mb-3">
+                                    <label for="designation" class="form-label">Designation</label>
+                                    <select class="form-select" id="designation" name="designation">
+                                        <option value="" disabled selected>Select Designation...</option>
+                                        {% for designation in designations %}
+                                        <option value="{{ designation.id }}">{{ designation.designation_name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Office Shift Dropdown -->
+                                <div class="mb-3">
+                                    <label for="o_shift" class="form-label">Office Shift</label>
+                                    <select class="form-select" id="officeShift" name="officeShift">
+                                        <option value="" disabled selected>Select Office Shift...</option>
+                                        <option value="9-5">9 AM to 5 PM</option>
+                                        <option value="6-2">6 AM to 2 PM</option>
+                                        <option value="2-10">2 PM to 10 PM</option>
+                                        <option value="10-6">10 PM to 6 AM</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-dark" id="get-filtered-data">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                            </svg>Get
+                        </button>
+                        {%csrf_token%}
+                    </form>
+                    <script>
+                        document.getElementById('get-filtered-data').addEventListener('click', function () {
+                            const formData = new FormData(document.getElementById('filter-form'));
+
+                            // Send a POST request to the '/filter/' endpoint
+                            fetch('/filter/', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-CSRFToken': getCookie('csrftoken'),  // Make sure to replace 'csrftoken' with your actual CSRF token name
+                                }
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Handle the filtered data returned from the server (data.filtered_data)
+
+                                    // Example: Assuming you have a table with ID 'filtered-data-table' to display results
+                                    const table = document.getElementById('filtered-data-table');
+                                    table.innerHTML = ''; // Clear the table
+
+                                    if (data.filtered_data && data.filtered_data.length > 0) {
+                                        // Loop through the filtered data and populate the table
+                                        data.filtered_data.forEach(employee => {
+                                            const row = table.insertRow();
+                                            const cell1 = row.insertCell(0);
+                                            const cell2 = row.insertCell(1);
+                                            const cell3 = row.insertCell(2);
+                                            const cell4 = row.insertCell(3);
+
+                                            cell1.textContent = employee.name;
+                                            cell2.textContent = employee.company;
+                                            cell3.textContent = employee.department;
+                                            cell4.textContent = employee.designation;
+                                        });
+                                    } else {
+                                        // Handle the case where no results are found
+                                        table.innerHTML = '<p>No matching records found.</p>';
+                                    }
+                                });
+                        });
+
+                        // Helper function to get the CSRF token from cookies
+                        function getCookie(name) {
+                            const value = `; ${document.cookie}`;
+                            const parts = value.split(`; ${name}=`);
+                            if (parts.length === 2) return parts.pop().split(';').shift();
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <style>
+            /* CSS for controlling the layout */
+            .employee-details {
+                width: 15%; /* Adjust the width as needed */
+            }
+        
+            .company-details {
+                width: 18%; /* Adjust the width as needed */
+            }
+        
+            .contact-details {
+                width: 18%; /* Adjust the width as needed */
+            }
+        
+            .action-details {
+                width: 10%; /* Adjust the width as needed */
+            }
+        </style>        
+        <div class="mt-auto">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <div class="table-responsive">
+                    <table id="myTable" class="table bg-light table-bordered mt-2">
+                        <thead class="bg-primary text-center">
+                            <tr>
+                                <th scope="col" style="color: black;font-weight: bold;">Emp ID.</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Employee</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Company</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Shift</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Role</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Contact</th>
+                                <th scope="col" style="color: black;font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody class="bg-light">
+                            {% for employee in employees %} <!-- Assuming 'employees' is the list of employee objects -->
+                            <tr class="text-dark text-center">
+                                <td>APK.E.ID{{ employee.id }}</td> 
+                                <td class="employee-details">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle overflow-hidden" style="width: 35px; height: 35px;">
+                                            {% if employee.user_image %}
+                                            <img src="{{ employee.user_image.url }}" alt="Profile Image" width="35" height="35">
+                                            {% else %}
+                                            <p>No image available</p>
+                                            {% endif %} 
+                                        </div>
+                                        <div class="ml-3">
+                                            <strong>{{ employee.full_name }}</strong><br>
+                                            Username: {{ employee.user_name }}<br>
+                                            Gender: {{ employee.gender }}<br>
+                                            <!-- Add more details as needed -->
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="company-details">
+                                    <strong>{{ employee.company.company_name }}</strong><br>
+                                    Department: {{ employee.department.name }}<br>
+                                    Designation: {{ employee.designation.designation_name }}
+                                </td>
+                                <td>{{ employee.get_office_shift_display }}</td>
+                                <td>{{ employee.role.name }}</td>
+                                <td class="contact-details">
+                                    <span style="font-size: 20px;">✉</span> {{ employee.email }}<br>
+                                    <span style="font-size: 20px;">☏</span> {{ employee.phone }}
+                                </td>
+                                <td>
+                                    <a href="#" class="text-capitalize btn btn-sm bg-dark edit-employee-button mt-1"
+                                        data-bs-toggle="modal" data-bs-target="#editemployeeModal"
+                                        data-employee-id="{{ employee.id }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            width="18" height="18" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path
+                                                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                        </svg></a>
+                                        <a href="#" class="text-capitalize btn btn-sm bg-danger delete-employee mt-1" data-employee-id="{{ employee.id }}">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white"
+                                            class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path
+                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                            <path
+                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                        </svg></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Display pagination links for employees -->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pagination">
+                                <ul class="pagination">
+                                    {% if employees.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=1">&laquo; First</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ employees.previous_page_number }}">Previous</a>
+                                        </li>
+                                    {% endif %}
+                
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Page {{ employees.number }} of {{ employees.paginator.num_pages }}</span>
+                                    </li>
+                
+                                    {% if employees.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ employees.next_page_number }}">Next</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ employees.paginator.num_pages }}">Last &raquo;</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
+
+            <script>
+                // Search Bar js
+                var input = document.getElementById("searchInput");
+                var table = document.getElementById("myTable");
+                var rows = table.getElementsByTagName("tr");
+
+                input.addEventListener("input", function () {
+                    var filter = input.value.toLowerCase();
+
+                    for (var i = 1; i < rows.length; i++) {
+                        var rowData = rows[i].getElementsByTagName("td");
+                        var found = false;
+
+                        for (var j = 0; j < rowData.length; j++) {
+                            var cell = rowData[j];
+                            if (cell.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                });
+            </script>
+            
+            
+            <script>
+                $(document).ready(function () {
+                    $('.delete-employee').on('click', function (e) {
+                        e.preventDefault(); // Prevent the default link behavior
+            
+                        var employeeId = $(this).data('employee-id');
+                        var button = this;
+            
+                        // Use a SweetAlert confirmation dialog
+                        Swal.fire({
+                            title: 'Delete Employee',
+                            text: 'Are you sure you want to delete this employee?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Delete',
+                            cancelButtonText: 'Cancel',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Disable the delete button to prevent multiple clicks
+                                $(button).prop('disabled', true);
+            
+                                // Make an AJAX request to delete the employee
+                                $.ajax({
+                                    url: "{% url 'delete_employee' 0 %}".replace('0', employeeId),
+                                    method: 'POST',
+                                    data: { employee_id: employeeId, csrfmiddlewaretoken: getCSRFToken() },
+                                    success: function (data) {
+                                        // Handle success, e.g., remove the row from the table
+                                        $(button).closest('tr').remove();
+                                        Swal.fire('Success!', 'Employee deleted successfully.', 'success');
+                                    },
+                                    error: function (xhr) {
+                                        // Handle errors
+                                        console.log("Error deleting employee:", xhr);
+                                        Swal.fire('Error', 'Error deleting the employee. Please try again.', 'error');
+                                    },
+                                    complete: function () {
+                                        // Re-enable the delete button
+                                        $(button).prop('disabled', false);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                });
+            
+                function getCSRFToken() {
+                    var csrfToken = null;
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.startsWith('csrftoken=')) {
+                            csrfToken = cookie.substring(10);
+                            break;
+                        }
+                    }
+                    return csrfToken;
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- Modal for Add Employee -->
+    <!-- Add these links to your HTML template -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <div class="modal fade" id="addemployeeModal" tabindex="-1" aria-labelledby="addemployeeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addemployeeModalLabel">Add New Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="employee-form" action="{% url 'add_employee' %}" method="post" enctype="multipart/form-data">
+
+                        {% csrf_token %}                  
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Full Name -->
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="fullName" name="full_name" pattern="[A-Za-z\s]+" title="Please enter a valid full name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Phone -->
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number." required>
+                                </div>                                
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Date of Birth -->
+                                <div class="mb-3">
+                                    <label for="dob" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="dob" name="dob" required>
+                                </div>
+                                <script>
+                                    // D.O.B validation in the format "YYYY-MM-DD"
+                                    function getCurrentDate() {
+                                      var today = new Date();
+                                      var dd = String(today.getDate()).padStart(2, '0');
+                                      var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+                                      var yyyy = today.getFullYear();
+                                      return yyyy + '-' + mm + '-' + dd;
+                                    }
+                                  
+                                    // Set the max attribute of the date input to the current date
+                                    document.getElementById("dob").max = getCurrentDate();
+                                  </script>
+                                  
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Gender Dropdown -->
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="" disabled selected>Select Gender...</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                   <label for="company" class="form-label">Company</label>
+                                   <select class="form-select" id="company" name="company" required>
+                                      <option selected disabled>Select Company...</option>
+                                      {% for company in companies %}
+                                      <option value="{{ company.id }}">{{ company.company_name }}</option>
+                                      {% endfor %}
+                                   </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Department Dropdown -->
+                                <div class="mb-3">
+                                    <label for="department" class="form-label">Department</label>
+                                    <select class="form-select" id="department" name="department" required>
+                                        <option value="" disabled selected>Select Department...</option>
+                                        {% for department in departments %}
+                                        <option value="{{ department.id }}">{{ department.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Designation Dropdown -->
+                                <div class="mb-3">
+                                    <label for="designation" class="form-label">Designation</label>
+                                    <select class="form-select" id="designation" name="designation" required>
+                                        <option value="" disabled selected>Select Designation...</option>
+                                        {% for designation in designations %}
+                                        <option value="{{ designation.id }}">{{ designation.designation_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Office Shift Dropdown -->
+                                <div class="mb-3">
+                                    <label for="officeShift" class="form-label">Office Shift</label>
+                                    <select class="form-select" id="officeShift" name="officeShift" required>
+                                        <option value="" disabled selected>Select Office Shift...</option>
+                                        <option value="9-5">9 AM to 5 PM</option>
+                                        <option value="6-2">6 AM to 2 PM</option>
+                                        <option value="2-10">2 PM to 10 PM</option>
+                                        <option value="10-6">10 PM to 6 AM</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- User Name -->
+                                <div class="mb-3">
+                                    <label for="userName" class="form-label">User Name</label>
+                                    <input type="text" class="form-control" id="userName" name="userName" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Role Dropdown -->
+                                <div class="mb-3">
+                                    <label for="role" class="form-label">Role</label>
+                                    <select class="form-select" id="role" name="role" required>
+                                        <option value="" disabled selected>Select Role...</option>
+                                        {% for role in roles %}
+                                        <option value="{{ role.id }}">{{ role.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Attendance Type Dropdown -->
+                                <div class="mb-3">
+                                    <label for="attendanceType" class="form-label">Attendance Type</label>
+                                    <select class="form-select" id="attendanceType" name="attendanceType" required>
+                                        <option value="" disabled selected>Select Attendance Type...</option>
+                                        <option value="general">General</option>
+                                        <option value="ip_based">IP Based</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Password -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Confirm Password -->
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                    <span id="password-error" style="color: red;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Date of Joining -->
+                                <div class="mb-3">
+                                    <label for="joiningDate" class="form-label">Date of Joining</label>
+                                    <input type="date" class="form-control" id="joiningDate" name="joiningDate" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Image Upload -->
+                                <div class="mb-3">
+                                    <label for="userImage" class="form-label">User Image</label>
+                                    <input type="file" class="form-control" id="userImage" name="userImage" accept="image/*" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="employee-form-submit" class="btn btn-primary" style="border-radius: 4px;">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>                       
+    <script>
+        $(document).ready(function() {
+            $('#employee-form').submit(function(e) {
+                var password = $('#password').val();
+                var confirmPassword = $('#confirmPassword').val();
+                
+                if (password !== confirmPassword) {
+                    e.preventDefault(); // Prevent form submission
+                    // Display an error message to the user
+                    $('#password-error').text("Password and Confirm Password do not match.");
+                } else {
+                    // Passwords match, clear any previous error messages
+                    $('#password-error').text("");
+                }
+            });
+        });
+    </script>    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('employee-form');
+    
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+    
+                // Perform form validation here if needed
+                // ...
+    
+                // If validation passes, submit the form data using AJAX
+                const formData = new FormData(form);
+    
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show the SweetAlert
+                        Swal.fire({
+                            title: 'Employee Added!',
+                            text: 'The employee has been added successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirect the user to the 'employee_creation' page
+                                window.location.href = "{% url 'employee_creation' %}";
+                            }
+                        });
+                    } else {
+                        // Display an error message if needed
+                    }
+                });
+            });
+        });
+    </script>        
+      
+   <!-- Modal for Edit Employee -->
+    <div class="modal fade" id="editemployeeModal" tabindex="-1" aria-labelledby="editemployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editemployeeModalLabel">Edit New Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="employee-form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="editEmployeeId" id="editEmployeeId">
+                        <input type="hidden" name="request_type" id="request_type">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Full Name -->
+                                <div class="mb-3">
+                                    <label for="editFullName" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="editFullName" name="full_name" pattern="[A-Za-z\s]+" title="Please enter a valid full name. Only letters and spaces are allowed." required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="editEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" name="email" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Phone -->
+                                <div class="mb-3">
+                                    <label for="editPhone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="editPhone" name="phone" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number." required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Date of Birth -->
+                                <div class="mb-3">
+                                    <label for="editDOB" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="editDOB" name="dob" required>
+                                </div>
+                                <script>
+                                    // D.O.B validation in the format "YYYY-MM-DD"
+                                    function getCurrentDate() {
+                                      var today = new Date();
+                                      var dd = String(today.getDate()).padStart(2, '0');
+                                      var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+                                      var yyyy = today.getFullYear();
+                                      return yyyy + '-' + mm + '-' + dd;
+                                    }
+                                  
+                                    // Set the max attribute of the date input to the current date
+                                    document.getElementById("editDOB").max = getCurrentDate();
+                                  </script>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Gender Dropdown -->
+                                <div class="mb-3">
+                                    <label for="editGender" class="form-label">Gender</label>
+                                    <select class="form-select" id="editGender" name="gender" required>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Company Dropdown -->
+                                <div class="mb-3">
+                                    <label for="editCompany" class="form-label">Company</label>
+                                    <select class="form-select" id="editCompany" name="company" required>
+                                        {% for company in companies %}
+                                        <option value="{{ company.id }}">{{ company.company_name }}</option>
+
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Department Dropdown -->
+                                <div class="mb-3">
+                                    <label for="editDepartment" class="form-label">Department</label>
+                                    <select class="form-select" id="editDepartment" name="department" required>
+                                        {% for department in departments %}
+                                                <option value="{{ department.id }}">{{ department.name }}</option>
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Designation Dropdown -->
+                                <div class="mb-3">
+                                    <label for="editDesignation" class="form-label">Designation</label>
+                                    <select class="form-select" id="editDesignation" name="desigination" required>
+                                        {% for designation in designations %}
+                                            <option value="{{ designation.id }}">{{ designation.designation_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Office Shift Dropdown -->
+                                <div class="mb-3">
+                                    <label for="editOfficeShift" class="form-label">Office Shift</label>
+                                    <select class="form-select" id="editOfficeShift" name="office_shift" required>
+                                        <option value="9-5">9 AM to 5 PM</option>
+                                        <option value="6-2">6 AM to 2 PM</option>
+                                        <option value="2-10">2 PM to 10 PM</option>
+                                        <option value="10-6">10 PM to 6 AM</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- User Name -->
+                                <div class="mb-3">
+                                    <label for="editUserName" class="form-label">User Name</label>
+                                    <input type="text" class="form-control" id="editUserName" name="user_name" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Role Dropdown -->
+                                <div class="mb-3">
+                                    <label for="editRole" class="form-label">Role</label>
+                                    <select class="form-select" id="editRole" name="role" required>
+                                        {% for role in roles %}
+                                            <option value="{{ role.id }}">{{ role.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Attendance Type Dropdown -->
+                                <div class="mb-3">
+                                    <label for="editAttendanceType" class="form-label">Attendance Type</label>
+                                    <select class="form-select" id="editAttendanceType" name="attendance_type" required>
+                                        <option value="general">General</option>
+                                        <option value="ip_based">IP Based</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Date of Joining -->
+                                <div class="mb-3">
+                                    <label for="editDateOfJoining" class="form-label">Date of Joining</label>
+                                    <input type="date" class="form-control" id="editDateOfJoining" name="date_of_joining" required>
+                                </div>
+                            </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <img id="editUserImagePreview" src="" alt="User Image" style="max-width: 100px; max-height: 100px;">
+                                </div>
+                                <!-- Image Upload -->
+                                <div class="mb-3">
+                                    <label for="editUserImage" class="form-label">Change User Image</label>
+                                    <input type="file" class="form-control" id="editUserImage" name="user_image" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                            
+                        </div>
+                        <label for="updateButton">
+                            <button id="updateButton" type="submit" class="btn btn-success" style="border-radius: 4px;">Update</button>
+                        </label>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.edit-employee-button', function () {
+            var employeeId = $(this).data('employee-id');
+            var modal = $('#editemployeeModal');
+
+            // Make an AJAX request to get the employee data
+            $.ajax({
+                url: "{% url 'get_employee_data' 0 %}".replace('0', employeeId),
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Populate the form fields based on the returned data
+                    modal.find('#editEmployeeId').val(data.id);
+                    modal.find('#editFullName').val(data.full_name);
+                    modal.find('#editEmail').val(data.email);
+                    modal.find('#editPhone').val(data.phone);
+                    modal.find('#editDOB').val(data.dob);
+                    modal.find('#editGender').val(data.gender);
+                    modal.find('#editCompany').val(data.company);
+                    modal.find('#editDepartment').val(data.department);
+                    modal.find('#editDesignation').val(data.designation);
+                    modal.find('#editOfficeShift').val(data.office_shift);
+                    modal.find('#editUserName').val(data.user_name);
+                    modal.find('#editRole').val(data.role);
+                    modal.find('#editAttendanceType').val(data.attendance_type);
+                    modal.find('#editDateOfJoining').val(data.date_of_joining);
+                    
+                    // Check if the user_image field exists and update the displayed image
+                    if (data.user_image) {
+                        modal.find('#editUserImagePreview').attr('src', data.user_image);
+                    } else {
+                        modal.find('#editUserImagePreview').removeAttr('src');
+                    }
+                    
+                    // Trigger the modal to open
+                    modal.modal('show');
+                },
+                error: function (xhr) {
+                    // Handle the error here
+                    // Show an error message using SweetAlert
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'An error occurred while fetching employee data!',
+                        icon: 'error'
+                    });
+                }
+            });
+        });
+
+        // Use event delegation to handle form submission
+        $(document).on('submit', '#editemployeeModal form', function (e) {
+            e.preventDefault();
+            // Make an AJAX request to update the employee data
+            var modal = $('#editemployeeModal'); // Get the modal element here
+            $.ajax({
+                url: $(this).attr('action'), // Update with your URL
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function () {
+                    // Show a success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Employee data updated successfully!',
+                        icon: 'success'
+                    }).then(function () {
+                        window.location.href = "{% url 'employee_creation' %}";
+                    });
+                },
+                error: function () {
+                    // Show an error message using SweetAlert
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'An error occurred while updating the employee data!',
+                        icon: 'error'
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    // Function to validate the password fields
+    function validatePassword() {
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Password Mismatch',
+                text: 'The "Password" and "Confirm Password" fields do not match.',
+            });
+            return false;
+        }
+        return true;
+    }
+
+    // Attach the validation function to the form submission event
+    document.getElementById('password-form').addEventListener('submit', function (e) {
+        if (!validatePassword()) {
+            e.preventDefault(); // Prevent the form submission if passwords do not match
+        }
+    });
+</script>
+
+<script>
+    $("#employee-form").submit(function (e) { 
+        e.preventDefault();
+        console.log("Hello")
+        
+    });
+</script>
+
+</html>
+{% endblock content %}
